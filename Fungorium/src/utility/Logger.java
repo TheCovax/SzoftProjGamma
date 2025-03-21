@@ -17,7 +17,8 @@ public class Logger {
     }
 
     public static void methodReturn(String methodName){
-        log("-> " + methodName + " returned");
+        indentLevel--;
+        log("<- " + methodName + " returned");
     }
 
     public static void resetIndent(){
