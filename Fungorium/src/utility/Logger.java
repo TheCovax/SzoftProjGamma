@@ -1,4 +1,4 @@
-package utility;
+package Fungorium.src.utility;
 
 /**
  * Utility class for structured console logging with indentation,

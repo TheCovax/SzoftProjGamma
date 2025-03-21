@@ -1,4 +1,4 @@
-package model.tekton;
+package Fungorium.src.model.tekton;
 
 public class HosztilisTekton {
 }

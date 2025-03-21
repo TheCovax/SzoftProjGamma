@@ -1,4 +1,4 @@
-package model.spora;
+package Fungorium.src.model.spora;
 
 public class GyorsitoSpora {
 }
