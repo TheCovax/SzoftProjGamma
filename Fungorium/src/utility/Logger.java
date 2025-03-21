@@ -1,4 +1,4 @@
-package model.utility;
+package utility;
 
 /**
  * Utility class for structured console logging with indentation,
