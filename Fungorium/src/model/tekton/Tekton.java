@@ -8,14 +8,18 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import Fungorium.src.model.GombaFonal;
 import Fungorium.src.model.GombaTest;
+import java.util.*;
+
+import Fungorium.src.model.GombaFonal;
 import Fungorium.src.model.Rovar;
 import Fungorium.src.model.spora.Spora;
+import Fungorium.src.utility.Logger;
 
 public class Tekton {
 
 	Queue<Spora> sporak;
 	List<GombaFonal> fonalak;
-	List<Tekton> neighbors;
+	List<Tekton> neighbours;
 	List<GombaTest> test;
 	List<Rovar> rovarok;
 	double splitRate;
@@ -26,7 +30,7 @@ public class Tekton {
 	public Tekton(){
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
-		neighbors = new ArrayList<>();
+		neighbours = new ArrayList<>();
 		test = new ArrayList<>();
 		rovarok = new ArrayList<>();
 		splitRate = 0.5;
@@ -36,7 +40,7 @@ public class Tekton {
 	public Tekton(double splitR, GombaTest g){
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
-		neighbors = new ArrayList<>();
+		neighbours = new ArrayList<>();
 		test = new ArrayList<>();
 		test.add(g);
 		rovarok = new ArrayList<>();
@@ -44,10 +48,10 @@ public class Tekton {
 	}
 
 		//splitRate es gombaTest beallito konstruktor
-		public Tekton(double splitR, List<Tekton> neighborsList){
+		public Tekton(double splitR, List<Tekton> neighboursList){
 			sporak = new LinkedList<>();
 			fonalak = new ArrayList<>();
-			neighbors = neighborsList;
+			neighbours = neighboursList;
 			test = new ArrayList<>();
 			rovarok = new ArrayList<>();
 			splitRate = splitR;
@@ -86,6 +90,8 @@ public class Tekton {
 		return sporak.poll();
 	}
 
+	public Spora peekSpora(){return sporak.peek();}
+
 	public void addGombaFonal(GombaFonal f){
 		fonalak.add(f);
 	}
@@ -94,7 +100,7 @@ public class Tekton {
 	public Tekton split(){
 
 		//Letrehoz egy uj listat a szomszedikrol, amiben onmaga is szerepel
-		List<Tekton> newNeighbors = new ArrayList<>(neighbors);
+		List<Tekton> newNeighbors = new ArrayList<>(neighbours);
 		newNeighbors.add(this);
 
 		//Csokkenti a split rate-t, hogy legkozelebb kisebb esellyel torjon el
@@ -137,7 +143,7 @@ public class Tekton {
 
 
 		//Hozzaadja a jelenlegi tekton szomszedjaihoz az ujjjonnan letrehozottat
-		neighbors.add(newTekton);
+		neighbours.add(newTekton);
 
 		return newTekton;
 	}
@@ -151,7 +157,71 @@ public class Tekton {
 		//Ha az elobb generalt szam kisebb, mint a splitRate igazat ad vissza
 		//Igy a 0.0 splitRate garantaltan nem torik el es az 1.0 splitRate pedig biztosan elfog
 		if(splitRate > splitCheck) return true;
-		else return false; 
+		else return false;
+	} 
 		
+	public void removeGombaFonal(GombaFonal f){
+		fonalak.remove(f);
+	}
+
+	public boolean hasGombafonal(GombaFonal gf){ return fonalak.contains(gf);}
+
+	public void addNeighbour(Tekton t){
+		neighbours.add(t);
+	}
+
+	public void removeNeighbour(Tekton t){
+		neighbours.remove(t);
+	}
+
+	public void addRovar(Rovar r){
+		rovarok.add(r);
+	}
+
+	public void removeRovar(Rovar r) {
+		rovarok.remove(r);
+	}
+
+	/**
+	 * Visszadja az összes elérhető Tekton-t a jelenlegi tektonból kiindulva (elérhető: össze vannak kapcsolódva gombafonalakkal),
+	 * adott sebesség (lépés-távolság) korlátozásával.
+	 * <p>Az algoritmus BFS (szélességi keresés) segítségével bejárja a tektonokat,
+	 * amelyek gombafonallal kapcsolódnak az aktuális tektonhoz, majd rekurzívan
+	 * folytatja a keresést a következő szinteken, amíg a sebességhatárt el nem éri.</p>
+	 *
+	 * @param speed A keresés mélysége, azaz a maximálisan bejárható távolság.
+	 * @return Egy lista a jelenlegi tektonból elérhető tektonokról.
+	 */
+	public List<Tekton> findReachableTektonWithinDistance(int speed) {
+		Logger.methodCall("tekton.findReachableTektonWithinDistance(speed)");
+
+		List<Tekton> reachable = new ArrayList<>();
+		Queue<Tekton> queue = new LinkedList<>();
+		Set<Tekton> visited = new HashSet<>();
+
+		queue.add(this);
+		visited.add(this);
+
+		int depth = 0;
+
+		while (!queue.isEmpty() && depth < speed){
+			int levelSize = queue.size();
+			for (int i = 0; i < levelSize; i++) {
+				Tekton current = queue.poll();
+
+				for (GombaFonal gf : current.getFonalak()){
+					Tekton connectedTekton = gf.getOtherEnd(current);
+					if(!visited.contains(connectedTekton)){
+						reachable.add(connectedTekton);
+						queue.add(connectedTekton);
+						visited.add(connectedTekton);
+					}
+				}
+			}
+			depth++;
+		}
+
+		Logger.methodReturn("tekton.findReachableTektonWithinDistance(speed)");
+		return reachable;
 	}
 }

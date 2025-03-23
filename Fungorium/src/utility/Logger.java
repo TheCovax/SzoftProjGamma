@@ -6,21 +6,33 @@ package Fungorium.src.utility;
  */
 public class Logger {
     private static int indentLevel = 0;
+    private static boolean enabled = true;
 
     public static void log(String message){
-        System.out.println("\t".repeat(indentLevel) + message);
+        if (enabled) {
+            System.out.println("\t".repeat(indentLevel) + message);
+        }
     }
 
     public static void methodCall(String methodName){
-        log("-> " + methodName + " called");
-        indentLevel++;
+        if (enabled){
+            log("-> " + methodName);
+            indentLevel++;
+        }
     }
 
     public static void methodReturn(String methodName){
-        indentLevel--;
-        log("<- " + methodName + " returned");
+        if (enabled){
+            indentLevel--;
+            log("<- " + methodName);
+        }
     }
 
+
+
+    public static void setEnabled(boolean state){
+        enabled = state;
+    }
     public static void resetIndent(){
         indentLevel = 0;
     }
