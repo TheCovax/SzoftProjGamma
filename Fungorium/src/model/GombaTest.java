@@ -10,19 +10,19 @@ public class GombaTest {
     int level;
 
 
-    GombaTest() {
-        fonalak = new ArrayList<>(Tekton tekton, String owner);
+    GombaTest(Tekton tekton, String owner) {
+        fonalak = new ArrayList<>();
         this.tekton = tekton;
         this.owner = owner;
         level = 0;
     }
 
     void produceSpora() {
-            //TODO
+        //TODO
     }
 
     void clear() {
-            //TODO
+         //TODO
     }
 
     void upgradeTest() {
@@ -37,7 +37,7 @@ public class GombaTest {
     }
 
     void setRecursiveConnectivity() {
-            //TODO
+        //TODO
     }
 
 
