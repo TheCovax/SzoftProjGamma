@@ -6,7 +6,12 @@ import utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  A Rovarászok által irányított karakterek.
+ *  A Rovar képes mozogni a tektonok között, spórákat fogyasztani és gombafonalakt vágni.
+ */
 public class Rovar {
+    public static final int DEFAULT_SPEED = 2;
 
     private Tekton tekton;
     private boolean isParalyzed;
@@ -15,9 +20,22 @@ public class Rovar {
     private int collectedNutrition;
     private String owner;
 
-    public Rovar(){
+    public Rovar(){}
+
+    public Rovar(Tekton startTekton, String owner){
+        this.tekton = startTekton;
+        this.owner = owner;
+        this.isParalyzed = false;
+        this.speed = DEFAULT_SPEED;
+        this.duration = 0;
+        this.collectedNutrition = 0;
     }
 
+    /**
+     * Megpróbálja a rovart a megadott cél tektonra mozgatni.
+     * @param dst A cél tekton.
+     * @return Igaz, ha a mozgás sikeres, egyébként hamis.
+     */
     public boolean move(Tekton dst){
         Logger.methodCall("Rovar.move(dstTekton)");
 
@@ -55,6 +73,11 @@ public class Rovar {
         return true;
     }
 
+    /**
+     * Elfogyasztja a megadott spórát és alkalmazza annak effektjeit.
+     * @param sp A fogyasztandó spóra.
+     * @return Igaz, ha a spóra elfogyasztása sikeres volt, egyébként hamis.
+     */
     public boolean eatSpora(Spora sp){
         Logger.methodCall("Rovar.eatSpora()");
 
@@ -70,7 +93,7 @@ public class Rovar {
 
         // 3. Add spore nutrition to collectedNutrition (optional placeholder)
         Logger.log("Collecting nutrition from spora (placeholder).");
-        // collectedNutrition += sp.getNutrition(); // once Spora has getter
+        collectedNutrition += sp.getNutrition();
 
         // 4. remove spora from tekton
 
@@ -78,6 +101,11 @@ public class Rovar {
         return false;
     }
 
+    /**
+     * Elvágja a megadott gombafonalat.
+     * @param gf Az átvágandó gombafonal.
+     * @return Igaz, ha az átvágás sikeres, egyébként hamis.
+     */
     public boolean cutGombaFonal(GombaFonal gf){
         Logger.methodCall("Rovar.cutGombaFonal(gf)");
 
