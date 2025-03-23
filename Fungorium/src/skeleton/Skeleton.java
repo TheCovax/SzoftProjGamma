@@ -3,7 +3,6 @@ package Fungorium.src.skeleton;
 import java.util.Scanner;
 
 import Fungorium.src.model.GombaTest;
-import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.GombaFonal;
 import Fungorium.src.model.Rovar;
 import Fungorium.src.model.spora.*;
@@ -31,7 +30,7 @@ public class Skeleton {
             System.out.println("0. Kilepes");
             System.out.println("1. Fonal novesztese");
             System.out.println("2. Tekton torese");
-            System.out.println("3. ....");
+            System.out.println("3. Spora lovese");
             System.out.println("4. ....");
             System.out.println("5. ....");
             System.out.println("6. Rovar mozgatása");
@@ -62,7 +61,7 @@ public class Skeleton {
                 splitTestCase();
                 break;
             case "3":
-                
+                sporaLovesTestCase();
                 break;
             case "4":
 
@@ -92,6 +91,28 @@ public class Skeleton {
 
                 break;
         }
+    }
+
+    static void sporaLovesTestCase(){
+
+        //Teszt tektonok letrehozasa
+        StabilTekton tekton1 = new StabilTekton(0.0, new GombaTest());
+        StabilTekton tekton2 = new StabilTekton();
+
+        //Spora hozzaadasa az elso tektonhoz
+        tekton1.addSpora(new Spora());
+
+        tekton1.getTestek().get(0).setTekton(tekton1);
+
+        System.out.println("Tekton1 Sporaszam:" + tekton1.getSporak().size());
+        System.out.println("Tekton2 Sporaszam:" + tekton2.getSporak().size());
+
+        System.out.println("Spora lovese tekton 1-rol tekton 2-re");
+        tekton1.getTestek().get(0).shootSpora(tekton2);
+        
+        System.out.println("Tekton1 Sporaszam:" + tekton1.getSporak().size());
+        System.out.println("Tekton2 Sporaszam:" + tekton2.getSporak().size());
+
     }
 
     static void fonalNoveszteseTestCase(){
@@ -174,6 +195,9 @@ public class Skeleton {
         System.out.println("Az uj tekton tipusa: " + ujTekton.getClass());
 
     }
+
+
+
 
     /**
      * Teszteset a Rovar mozgatásának ellenőrzésére.

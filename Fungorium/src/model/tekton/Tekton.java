@@ -57,6 +57,10 @@ public class Tekton {
 			splitRate = splitR;
 		}
 
+	public List<GombaTest> getTestek(){
+		return test;
+	}
+
 	public List<GombaFonal> getFonalak(){
 		return fonalak;
 	}
