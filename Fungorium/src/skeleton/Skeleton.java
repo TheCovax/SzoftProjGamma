@@ -10,6 +10,9 @@ import Fungorium.src.model.tekton.ElszigeteltTekton;
 import Fungorium.src.model.tekton.StabilTekton;
 import Fungorium.src.model.tekton.Tekton;
 import Fungorium.src.utility.Logger;
+import java.util.List;
+import java.util.ArrayList;
+
 
 public class Skeleton {
     public static void main(String[] args) {
@@ -31,14 +34,15 @@ public class Skeleton {
             System.out.println("1. Fonal novesztese");
             System.out.println("2. Tekton torese");
             System.out.println("3. Spora lovese");
-            System.out.println("4. ....");
+            System.out.println("4. Spora termelese");
             System.out.println("5. ....");
             System.out.println("6. Rovar mozgatása");
             System.out.println("7. Gombafonal elvágása");
             System.out.println("8. Lassító spóra megevése");
             System.out.println("9. Gyorsító spóra megevése");
             System.out.println("10. Bénító spóra megevése");
-            System.out.println("11. ....");
+            System.out.println("11. Jatek vege (maxpontszám)");
+            System.out.println("12. Játék vége (nincs több GombaTest)");
 
     
             System.out.println("----------------------------");
@@ -64,7 +68,7 @@ public class Skeleton {
                 sporaLovesTestCase();
                 break;
             case "4":
-
+                testProduceSpora();
                 break;
             case "5":
 
@@ -85,10 +89,10 @@ public class Skeleton {
                 testEatBenitoSpora();
                 break;
             case "11":
-
+                testJatekVege();
                 break;
             case "12":
-
+                testJatekVegeElfogyottGombaTest();
                 break;
         }
     }
@@ -257,6 +261,38 @@ public class Skeleton {
         Logger.log("==========================");
     }
 
+    /**
+     * Teszteset a spóra termelésének ellenőrzésére.
+     *
+     * A teszt célja, hogy validálja, a gombatest képes-e spórát termelni és azt a megfelelő tektonra helyezni.
+     * A teszt a következőket vizsgálja:
+     *
+     * 1. A spóra termelése sikeresen növeli a tektonon található spórák számát eggyel.
+     * 2. A gombatesthez tartozó tekton megfelelően frissül az új spórával.
+     */
+
+    static void testProduceSpora() {
+        Logger.log("\n==========================");
+        Logger.log("Teszt: Spóra termelés");
+        Logger.log("==========================");
+
+        // Inicializálás
+        StabilTekton tekton = new StabilTekton(0.0, new GombaTest());
+        GombaTest gt = tekton.getTestek().get(0);
+        gt.setTekton(tekton);
+
+        // Spóra termelés
+        gt.produceSpora();
+
+        // Eredmény ellenőrzése
+        System.out.println("Spórák száma a tektonon: " + tekton.getSporak().size());
+
+        Logger.log("==========================");
+        Logger.log("Spóra termelés teszt vége");
+        Logger.log("==========================");
+    }
+
+
 
     /**
      * Teszteset a rovar gombafonal elvágásának ellenőrzésére.
@@ -392,4 +428,67 @@ public class Skeleton {
         r.setParalyzed(false);
         r.eatSpora(sp);
     }
+
+    /**
+     * Teszteset a játék végének ellenőrzésére pontszám alapján.
+     *
+     * A játék akkor ér véget, ha bármelyik játékos (A vagy B) eléri a maximális pontszámot.
+     * Ha ez megtörtént, az a csapat nyer, amelyiknek több pontja van.
+     */
+    /**
+     * Teszteset a játék végének ellenőrzésére, amikor A játékos eléri a maximális pontszámot.
+     */
+    static void testJatekVege() {
+        Logger.log("\n==========================");
+        Logger.log("Teszt: Játék vége (A játékos eléri a maximális pontszámot)");
+        Logger.log("==========================");
+
+        int maxScore = 10;
+
+        int scoreA = 10;  // A játékos pontszáma
+        int scoreB = 8;   // B játékos pontszáma
+
+        if (scoreA >= maxScore || scoreB >= maxScore) {
+            Logger.log("A játék véget ér!");
+
+            if (scoreA > scoreB) {
+                Logger.log("A játékos A több pontot ért el.");
+            } else if (scoreB > scoreA) {
+                Logger.log("A játékos B több pontot ért el.");
+            } else {
+                Logger.log("Mindkét játékos ugyanannyi pontot ért el (döntetlen).");
+            }
+
+        } else {
+            Logger.log("A játék folytatódik.");
+        }
+
+        Logger.log("==========================");
+        Logger.log("Játék vége teszt vége");
+        Logger.log("==========================");
+    }
+
+    /**
+     * Teszteset: A játék véget ér, ha elfogytak a GombaTest példányok.
+     */
+    static void testJatekVegeElfogyottGombaTest() {
+        Logger.log("\n==========================");
+        Logger.log("Teszt: Játék vége (elfogyott az összes GombaTest)");
+        Logger.log("==========================");
+
+        List<GombaTest> gombatestek = new ArrayList<>(); // üres lista
+
+        if (gombatestek.isEmpty()) {
+            Logger.log("A játék véget ér: nincs több GombaTest a pályán.");
+        } else {
+            Logger.log("A játék folytatódik: van még legalább egy GombaTest.");
+        }
+
+        Logger.log("==========================");
+        Logger.log("Játék vége teszt vége");
+        Logger.log("==========================");
+    }
+
+
+
 }
