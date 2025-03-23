@@ -64,10 +64,10 @@ public class Skeleton {
                 sporaLovesTestCase();
                 break;
             case "4":
-
+                gombaTestFejlesztesTestCase();
                 break;
             case "5":
-
+                gombaTestNovesztesTestCase();
                 break;
             case "6":
                 rovarMoveTestCase();
@@ -193,6 +193,77 @@ public class Skeleton {
 
 
         System.out.println("Az uj tekton tipusa: " + ujTekton.getClass());
+
+    }
+
+
+    /**
+     * Teszteset a GombaTest fejlesztés ellenőrzésére.
+     *
+     * A teszt ellenőrzi az alábbi eseteket:
+     * 1. Ha a GombaTest fejlettségi szintje <4, akkor képes fejlődni egy szintet.
+     * 2. Ha a GombaTest fejlettségi szintje 4-es, akkor már nem lehet tovább fejleszteni.
+     */
+    public static void gombaTestFejlesztesTestCase() {
+
+
+        // Initialization
+        // --------------
+        // Creating a Tekton
+        Tekton tekton = new Tekton();
+
+        // Adding GombaTest to Tekton
+        GombaTest gt = new GombaTest(tekton, "Gomba1");
+
+        // setting GombaTest's level 3
+        gt.setLevel(3);
+
+        // Test case if GombaTest is upgradeable
+        gt.upgradeTest();
+        if(gt.getLevel() == 4) {
+            Logger.log("\n==> Test: GombaTest's level is 4, its upgrade was successful.");
+        }
+        else {
+            Logger.log("\n==> Test: GombaTest's level is not 4, its upgrade was not successful.");
+        }
+
+        // Test case if GombaTest is not upgradeable
+        gt.upgradeTest();
+        if(gt.getLevel() == 4) {
+            Logger.log("\n==> Test: GombaTest's level is still 4, success.");
+        }
+        else {
+            Logger.log("\n==> Test: GombaTest's level is not 4, its upgrade was not successful.");
+        }
+    }
+
+    /**
+     * Teszteset a GombaTest növesztés ellenőrzésére.
+     *
+     * A teszt ellenőrzi az alábbi eseteket:
+     * 1. Ha nem megfelelő a tekton, akkor nem növeszt gombatestet.
+     * 2. Ha megfelelő a tekton, gombatestet növesztünk.
+     * 3. .
+     */
+    public static void gombaTestNovesztesTestCase() {
+        // Initialization
+        // --------------
+        // Creating a Tekton where GombaTest cannot grow
+        // Creating a Tekton where GombaTest can grow
+        Tekton koparTekton = new KoparTekton();
+        Tekton stabilTekton = new StabilTekton();
+
+        
+        // TODO: az egyes tekton fajtákon belül ezeket implemenetálni kellene
+        // enged létrehozni vagy nem enged
+        koparTekton.addGombaTest();
+
+
+        stabilTekton.addGombaTest();
+        
+        
+
+
 
     }
 
