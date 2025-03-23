@@ -1,4 +1,4 @@
 package Fungorium.src.model.tekton;
 
-public class ElszigeteltTekton {
+public class ElszigeteltTekton extends Tekton{
 }
