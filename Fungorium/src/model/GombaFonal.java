@@ -1,4 +1,4 @@
-package Fungorium.src.model;
+package model;
 
 public class GombaFonal {
 }

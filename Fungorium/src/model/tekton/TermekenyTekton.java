@@ -1,4 +1,4 @@
-package Fungorium.src.model.tekton;
+package model.tekton;
 
 public class TermekenyTekton {
 }

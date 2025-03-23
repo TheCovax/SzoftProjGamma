@@ -1,4 +1,12 @@
-package Fungorium.src.model.spora;
+package model.spora;
 
-public class GyorsitoSpora {
+import model.Rovar;
+import utility.Logger;
+
+public class GyorsitoSpora extends Spora {
+    @Override
+    public  void applyEffect(Rovar rovar){
+        Logger.methodCall("GyorsitoSpora.applyEffect()");
+        Logger.methodReturn("Gyorsito.applyEffect()");
+    };
 }

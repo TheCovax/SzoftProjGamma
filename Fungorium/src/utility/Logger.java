@@ -1,4 +1,4 @@
-package Fungorium.src.utility;
+package utility;
 
 /**
  * Utility class for structured console logging with indentation,
@@ -12,13 +12,13 @@ public class Logger {
     }
 
     public static void methodCall(String methodName){
-        log("-> " + methodName + " called");
+        log("-> " + methodName);
         indentLevel++;
     }
 
     public static void methodReturn(String methodName){
         indentLevel--;
-        log("<- " + methodName + " returned");
+        log("<- " + methodName);
     }
 
     public static void resetIndent(){
