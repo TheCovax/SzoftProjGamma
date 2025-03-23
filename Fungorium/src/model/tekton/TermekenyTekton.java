@@ -1,4 +1,15 @@
 package Fungorium.src.model.tekton;
 
-public class TermekenyTekton {
+import java.util.List;
+
+public class TermekenyTekton extends Tekton {
+
+        		//splitRate es gombaTest beallito konstruktor
+		public TermekenyTekton(double splitR, List<Tekton> neighborsList){
+			super(splitR, neighborsList);
+		}
+
+        public TermekenyTekton(){
+			super();
+		}
 }

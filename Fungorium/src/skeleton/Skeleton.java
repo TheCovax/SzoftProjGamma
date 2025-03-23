@@ -2,6 +2,7 @@ package Fungorium.src.skeleton;
 
 import java.util.Scanner;
 
+import Fungorium.src.model.GombaTest;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.ElszigeteltTekton;
 import Fungorium.src.model.tekton.StabilTekton;
@@ -24,8 +25,8 @@ public class Skeleton {
             System.out.println("----------------------------");
     
             System.out.println("0. Kilepes");
-            System.out.println("1. Spora loves");
-            System.out.println("2. ....");
+            System.out.println("1. Fonal novesztese");
+            System.out.println("2. Tekton torese");
             System.out.println("3. ....");
     
             System.out.println("----------------------------");
@@ -45,7 +46,7 @@ public class Skeleton {
                 fonalNoveszteseTestCase();
                 break;
             case "2":
-                
+                splitTestCase();
                 break;
             case "3":
                 
@@ -107,6 +108,31 @@ public class Skeleton {
 
         System.out.println("Stabil tekton fonalak szama: " + stabilTekton.getFonalak().size());
         System.out.println("Elszigetelt tekton fonalak szama: " + elszigeteltTekton.getFonalak().size());
+
+    }
+
+    static void splitTestCase(){
+
+        Tekton test1 = new Tekton(1.0, new GombaTest());
+        Tekton test2 = new Tekton(0, new GombaTest());
+
+        test2.split();
+
+        System.out.println("0.0 split rate-el rendelkezo tekton canSplit() erdemnye: " + test2.canSplit());
+        System.out.println("1.0 split rate-el rendelkezo tekton canSplit() erdemnye: " + test1.canSplit());
+
+        System.out.println("Az eltorheto tekton eltorese");
+
+        Tekton ujTekton = null;
+
+        ujTekton = test1.split();
+
+        if(ujTekton != null) System.out.println("A tekton sikeresen eltort");
+        else System.out.println("A tekton eltorese nem sikerult");
+
+
+        System.out.println("Az uj tekton tipusa: " + ujTekton.getClass());
+
 
     }
 }
