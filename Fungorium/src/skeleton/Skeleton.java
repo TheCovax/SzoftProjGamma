@@ -116,7 +116,6 @@ public class Skeleton {
         
         System.out.println("Tekton1 Sporaszam:" + tekton1.getSporak().size());
         System.out.println("Tekton2 Sporaszam:" + tekton2.getSporak().size());
-
     }
 
     static void fonalNoveszteseTestCase(){
