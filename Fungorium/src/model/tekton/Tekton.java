@@ -86,6 +86,14 @@ public class Tekton {
 		}
 	}
 
+	public void addGombaTest(GombaTest gt) {
+		test.add(gt);
+	}
+
+	public List<GombaTest> getGombaTestek() {
+		return test;
+	}
+
 	public void addSpora(Spora s){
 		sporak.add(s);
 	}

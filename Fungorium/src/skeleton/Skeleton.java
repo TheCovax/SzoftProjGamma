@@ -214,56 +214,58 @@ public class Skeleton {
 
         // Adding GombaTest to Tekton
         GombaTest gt = new GombaTest(tekton, "Gomba1");
+        System.out.println("A gombatest fejlettségi szintje: " + gt.getLevel());
 
         // setting GombaTest's level 3
+        System.out.println("A gombatest fejlettségi szintjét 3-ra állítjuk");
         gt.setLevel(3);
+        System.out.println("A gombatest fejlettségi szintje: " + gt.getLevel());
+
 
         // Test case if GombaTest is upgradeable
+        System.out.println("A gombatestet fejlesztjük");
+
         gt.upgradeTest();
-        if(gt.getLevel() == 4) {
-            Logger.log("\n==> Test: GombaTest's level is 4, its upgrade was successful.");
-        }
-        else {
-            Logger.log("\n==> Test: GombaTest's level is not 4, its upgrade was not successful.");
-        }
+        System.out.println("Teszt: ha a GombaTest szintje 4, a fejlesztés sikeres volt.");
+        System.out.println("A gombatest fejlettségi szintje: " + gt.getLevel());
+
+    
 
         // Test case if GombaTest is not upgradeable
         gt.upgradeTest();
-        if(gt.getLevel() == 4) {
-            Logger.log("\n==> Test: GombaTest's level is still 4, success.");
-        }
-        else {
-            Logger.log("\n==> Test: GombaTest's level is not 4, its upgrade was not successful.");
-        }
+        System.out.println("Teszt: ha a GombaTest szintje még mindig 4, akkor sikeres a teszt.");
+        System.out.println("A gombatest fejlettségi szintje: " + gt.getLevel());
+
     }
 
     /**
      * Teszteset a GombaTest növesztés ellenőrzésére.
-     *
      * A teszt ellenőrzi az alábbi eseteket:
-     * 1. Ha nem megfelelő a tekton, akkor nem növeszt gombatestet.
-     * 2. Ha megfelelő a tekton, gombatestet növesztünk.
-     * 3. .
+     * 1. Egy gombatestet növesztünk a tektonra.
+     * 2. Ha van spóra a tektonon, növesztünk gombatestet.
      */
     public static void gombaTestNovesztesTestCase() {
-        // Initialization
-        // --------------
-        // Creating a Tekton where GombaTest cannot grow
-        // Creating a Tekton where GombaTest can grow
-        Tekton koparTekton = new KoparTekton();
-        Tekton stabilTekton = new StabilTekton();
-
-        
-        // TODO: az egyes tekton fajtákon belül ezeket implemenetálni kellene
-        // enged létrehozni vagy nem enged
-        koparTekton.addGombaTest();
+        // Létrehozunk egy tektont
+        Tekton tekton1 = new Tekton();
+        System.out.println("A tekton gombatesteinek száma: " + tekton1.getGombaTestek().size());
+        // Növesztünk rá egy gombatestet
+        System.out.println("Növesztünk egy gombatestet a tektonra");
+        GombaTest gt1 = new GombaTest(tekton1, "gomba1");
+        tekton1.addGombaTest(gt1);
+        System.out.println("A tekton gombatesteinek száma: " + tekton1.getGombaTestek().size());
 
 
-        stabilTekton.addGombaTest();
-        
-        
-
-
+        // Létrehozunk egy tektont
+        Tekton tekton2 = new Tekton();
+        tekton2.addSpora(new Spora());
+        System.out.println("A tekton gombatesteinek száma: " + tekton1.getGombaTestek().size());
+        System.out.println("A tekton spóráinak száma: " + tekton2.getSporak().size());
+        // Növesztünk rá egy gombatestet
+        GombaTest gt2 = new GombaTest(tekton1, "gomba1");
+        tekton2.addGombaTest(gt2);
+        tekton2.removeSpora();
+        System.out.println("A tekton gombatesteinek száma: " + tekton1.getGombaTestek().size());
+        System.out.println("A tekton spóráinak száma: " + tekton2.getSporak().size());
 
     }
 
