@@ -35,14 +35,16 @@ public class Skeleton {
             System.out.println("2. Tekton torese");
             System.out.println("3. Spora lovese");
             System.out.println("4. Spora termelese");
-            System.out.println("5. ....");
-            System.out.println("6. Rovar mozgatása");
-            System.out.println("7. Gombafonal elvágása");
-            System.out.println("8. Lassító spóra megevése");
-            System.out.println("9. Gyorsító spóra megevése");
-            System.out.println("10. Bénító spóra megevése");
-            System.out.println("11. Jatek vege (maxpontszám)");
-            System.out.println("12. Játék vége (nincs több GombaTest)");
+            System.out.println("5. GombaTest fejlesztése");
+            System.out.println("6. GombaTest növesztése");
+            System.out.println("7. Rovar mozgatása");
+            System.out.println("8. Gombafonal elvágása");
+            System.out.println("9. Lassító spóra megevése");
+            System.out.println("10. Gyorsító spóra megevése");
+            System.out.println("11. Bénító spóra megevése");
+            System.out.println("12. Jatek vege (maxpontszám)");
+            System.out.println("13. Játék vége (nincs több GombaTest)");
+            
 
     
             System.out.println("----------------------------");
@@ -68,34 +70,33 @@ public class Skeleton {
                 sporaLovesTestCase();
                 break;
             case "4":
-<<<<<<< HEAD
-                gombaTestFejlesztesTestCase();
-=======
                 testProduceSpora();
->>>>>>> c45d25b8e6b6a056ef2df06ec1e4df48d5994152
                 break;
             case "5":
-                gombaTestNovesztesTestCase();
+                gombaTestFejlesztesTestCase();
                 break;
             case "6":
-                rovarMoveTestCase();
+                gombaTestNovesztesTestCase();
                 break;
             case "7":
-                cutGombaFonalTestCase();
+                rovarMoveTestCase();
                 break;
             case "8":
-                testEatLassitoSpora();
+                cutGombaFonalTestCase();
                 break;
             case "9":
-                testEatGyoritoSpora();;
+                testEatLassitoSpora();
                 break;
             case "10":
-                testEatBenitoSpora();
+                testEatGyoritoSpora();;
                 break;
             case "11":
-                testJatekVege();
+                testEatBenitoSpora();
                 break;
             case "12":
+                testJatekVege();
+                break;
+            case "13":
                 testJatekVegeElfogyottGombaTest();
                 break;
         }
