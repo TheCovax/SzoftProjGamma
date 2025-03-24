@@ -2,6 +2,9 @@ package Fungorium.src.model;
 
 import Fungorium.src.model.tekton.Tekton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GombaTest {
 
     List<GombaFonal> fonalak;
@@ -10,11 +13,15 @@ public class GombaTest {
     int level;
 
 
-    GombaTest(Tekton tekton, String owner) {
+    public GombaTest(Tekton tekton, String owner) {
         fonalak = new ArrayList<>();
         this.tekton = tekton;
         this.owner = owner;
         level = 0;
+    }
+
+    public GombaTest() {
+
     }
 
     void produceSpora() {
@@ -36,8 +43,21 @@ public class GombaTest {
         }
     }
 
+    //beallitja az elerheto tektonok isConnected valtozojat igazra
     void setRecursiveConnectivity() {
-        //TODO
+
+        List<Tekton> nodes = tekton.checkConnectivity();
+        while(nodes.size()>0){
+            List<Tekton> curr = new ArrayList<>();
+            for(Tekton node : nodes){
+                for(Tekton t:node.checkConnectivity()){
+                    curr.add(t);
+                    t.setIsConnected(true);
+                }
+            }
+            nodes.addAll(curr);
+        }
+
     }
 
 

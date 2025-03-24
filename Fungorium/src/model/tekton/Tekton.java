@@ -25,7 +25,6 @@ public class Tekton {
 	double splitRate;
 
 
-
 	//Parameter nelkuli konstruktor
 	public Tekton(){
 		sporak = new LinkedList<>();
@@ -112,7 +111,7 @@ public class Tekton {
 
 
 		//Letrehoz egy uj tektont, a csokkentett splitRate-el és az elobb letrehozott uj szomszedokkal
-		
+
 		Tekton newTekton = null;
 
 		int newTektonType;
@@ -120,22 +119,22 @@ public class Tekton {
 		//Ha mar nem torhet tovabb a tekton, automatikusan stabil lesz, egyebkent random a tipusa
 		if(splitRate <= 0) newTektonType = 0;
 		else newTektonType = ThreadLocalRandom.current().nextInt(0, 5);
-		
+
 		switch (newTektonType) {
 			case 0:
-				newTekton = new StabilTekton(splitRate, newNeighbors); 
+				newTekton = new StabilTekton(splitRate, newNeighbors);
 				break;
 			case 1:
-				newTekton = new ElszigeteltTekton(splitRate, newNeighbors); 
+				newTekton = new ElszigeteltTekton(splitRate, newNeighbors);
 					break;
 			case 2:
-				newTekton = new HosztilisTekton(splitRate, newNeighbors); 
+				newTekton = new HosztilisTekton(splitRate, newNeighbors);
 					break;
 			case 3:
-				newTekton = new KoparTekton(splitRate, newNeighbors); 
+				newTekton = new KoparTekton(splitRate, newNeighbors);
 					break;
 			case 4:
-				newTekton = new TermekenyTekton(splitRate, newNeighbors); 
+				newTekton = new TermekenyTekton(splitRate, newNeighbors);
 					break;
 			default:
 				break;
@@ -162,8 +161,8 @@ public class Tekton {
 		//Igy a 0.0 splitRate garantaltan nem torik el es az 1.0 splitRate pedig biztosan elfog
 		if(splitRate > splitCheck) return true;
 		else return false;
-	} 
-		
+	}
+
 	public void removeGombaFonal(GombaFonal f){
 		fonalak.remove(f);
 	}
