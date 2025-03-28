@@ -76,7 +76,7 @@ public class GombaTest {
          //TODO
     }
 
-    void upgradeTest() {
+    public void upgradeTest() {
         if(getLevel() < 4) {
             setLevel(getLevel() + 1);
             tekton.removeSpora();
@@ -88,7 +88,7 @@ public class GombaTest {
     }
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
-    void setRecursiveConnectivity() {
+    /*void setRecursiveConnectivity() {
 
         List<Tekton> nodes = tekton.checkConnectivity();
         while(nodes.size()>0){
@@ -102,7 +102,7 @@ public class GombaTest {
             nodes.addAll(curr);
         }
 
-    }
+    }*/
 
 
     //Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
@@ -114,11 +114,11 @@ public class GombaTest {
         tekton = t;
     }
 
-    int getLevel() {
+    public int getLevel() {
         return this.level;
     }
 
-    void setLevel(int level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 
