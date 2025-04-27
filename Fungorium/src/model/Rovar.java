@@ -139,6 +139,11 @@ public class Rovar {
         this.tekton = tekton;
     }
 
+
+    /**
+     * Megdja hogy a rovar le van-e benitva
+     * @return A rovar le van-e benitva
+     */
     public boolean isParalyzed() {
         Logger.methodCall("r.isParalyzed()");
         Logger.methodReturn("r.isParalyzed()");
@@ -163,6 +168,10 @@ public class Rovar {
         return duration;
     }
 
+    /**
+     * 
+     * @param duration a beallitando idotartam
+     */
     public void setDuration(int duration) {
         Logger.methodCall("r.setDuration(effectDuration)");
         Logger.methodReturn("r.setDuration(effectDuration)");
@@ -185,4 +194,22 @@ public class Rovar {
         this.owner = owner;
     }
 
+    /**
+     * Frissitit a rovar allapotat
+     * Ha van letelt a duration visszaallitja a rovart alap allapotba
+     */
+    public void update(){
+        if(duration == 0){
+            isParalyzed = false;
+            speed = DEFAULT_SPEED;
+        }
+        if(duration > 0) duration--;
+    }
+
+    /**
+     * Egy uj rovart hoz letre, ugyan arra a tektonra
+     */
+    public void split(){
+        tekton.addRovar(new Rovar(tekton, owner));
+    }
 }

@@ -6,6 +6,13 @@ import Fungorium.src.utility.Logger;
 public class LassitoSpora extends Spora {
     public static final int DEFAULT_SLOW_DOWN_VALUE = 1;
 
+    int slowDownValue;
+
+    public LassitoSpora(){
+        slowDownValue = DEFAULT_SLOW_DOWN_VALUE;
+    }
+
+
     @Override
     public  void applyEffect(Rovar r){
         Logger.methodCall("LassitoSpora.applyEffect(r)");

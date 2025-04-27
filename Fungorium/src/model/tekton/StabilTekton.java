@@ -8,7 +8,9 @@ import Fungorium.src.model.GombaTest;
 
 public class StabilTekton extends Tekton {
 
-    		//splitRate es gombaTest beallito konstruktor
+    	/**
+		 * splitRate es gombaTest beallito konstruktor
+		 */
 		public StabilTekton(double splitR, List<Tekton> neighborsList){
 			super(splitR, neighborsList);
 		}

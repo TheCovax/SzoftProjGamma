@@ -20,6 +20,8 @@ public class GombaTest {
     Tekton tekton;
     String owner;
     int level;
+    int shotCounter;
+
 
 
     public GombaTest(Tekton tekton, String owner) {
@@ -76,6 +78,9 @@ public class GombaTest {
          //TODO
     }
 
+    /**
+     * Egy szintel fejleszti a gombatestet
+     */
     public void upgradeTest() {
         if(getLevel() < 4) {
             setLevel(getLevel() + 1);
@@ -105,7 +110,9 @@ public class GombaTest {
     }*/
 
 
-    //Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
+    /**
+     * Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
+     */
     public void shootSpora(Tekton dst){
         dst.addSpora(tekton.removeSpora());
     }
@@ -118,9 +125,11 @@ public class GombaTest {
         return this.level;
     }
 
+    /**
+     * Beallitja a gombatest szintjet
+     */
     public void setLevel(int level) {
         this.level = level;
     }
-
     
 }

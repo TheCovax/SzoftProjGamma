@@ -23,9 +23,11 @@ public class Tekton {
 	List<GombaTest> test;
 	List<Rovar> rovarok;
 	double splitRate;
+	boolean isConnected;
 
-
-	//Parameter nelkuli konstruktor
+	/**
+	 * Parameter nelkuli konstruktor
+	 */
 	public Tekton(){
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
@@ -35,7 +37,9 @@ public class Tekton {
 		splitRate = 0.5;
 	}
 
-	//splitRate es gombaTest beallito konstruktor (elsosorban a tesztekhez)
+	/**
+	 * splitRate es gombaTest beallito konstruktor (elsosorban a tesztekhez)
+	 */
 	public Tekton(double splitR, GombaTest g){
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
@@ -46,15 +50,17 @@ public class Tekton {
 		splitRate = splitR;
 	}
 
-		//splitRate es gombaTest beallito konstruktor
-		public Tekton(double splitR, List<Tekton> neighboursList){
-			sporak = new LinkedList<>();
-			fonalak = new ArrayList<>();
-			neighbours = neighboursList;
-			test = new ArrayList<>();
-			rovarok = new ArrayList<>();
-			splitRate = splitR;
-		}
+	/**
+	 * splitRate es gombaTest beallito konstruktor
+	 */
+	public Tekton(double splitR, List<Tekton> neighboursList){
+		sporak = new LinkedList<>();
+		fonalak = new ArrayList<>();
+		neighbours = neighboursList;
+		test = new ArrayList<>();
+		rovarok = new ArrayList<>();
+		splitRate = splitR;
+	}
 
 	public List<GombaTest> getTestek(){
 		return test;
@@ -107,7 +113,9 @@ public class Tekton {
 		fonalak.add(f);
 	}
 
-	//Kettetori a tektont
+	/**
+	 * Kettetori a tektont
+	 */
 	public Tekton split(){
 
 		//Letrehoz egy uj listat a szomszedikrol, amiben onmaga is szerepel
@@ -159,7 +167,9 @@ public class Tekton {
 		return newTekton;
 	}
 
-	//Meghatarozza, hogy egy tekton eltorjon-e az adott korben
+	/**
+	 * Meghatarozza, hogy egy tekton eltorjon-e az adott korben
+	 */
 	public boolean canSplit(){
 
 		//Random szam 0 és 1 között, amire: 0 < szam < 1
@@ -171,10 +181,16 @@ public class Tekton {
 		else return false;
 	}
 
+	/**
+	 * Eltavolit egy adott gombafonalat
+	 */
 	public void removeGombaFonal(GombaFonal f){
 		fonalak.remove(f);
 	}
 
+	/**
+	 * Megadja, hogy egy adott gombafonal a tektonon van-e
+	 */
 	public boolean hasGombafonal(GombaFonal gf){ return fonalak.contains(gf);}
 
 	public void addNeighbour(Tekton t){
@@ -234,5 +250,17 @@ public class Tekton {
 
 		Logger.methodReturn("tekton.findReachableTektonWithinDistance(speed)");
 		return reachable;
+	}
+
+	public void update(){
+		if(canSplit()) split();
+	}
+
+	public void removeGombatest(GombaTest t){
+		test.remove(test.indexOf(t));
+	}
+
+	public List<Rovar> getRovarok(){
+		return rovarok;
 	}
 }

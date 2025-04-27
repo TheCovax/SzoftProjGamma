@@ -6,7 +6,9 @@ import java.util.List;
 
 public class KoparTekton extends Tekton {
 
-    		//splitRate es gombaTest beallito konstruktor
+    	/**
+		 * splitRate es gombaTest beallito konstruktor
+		 */
 		public KoparTekton(double splitR, List<Tekton> neighborsList){
 			super(splitR, neighborsList);
 		}
@@ -14,4 +16,6 @@ public class KoparTekton extends Tekton {
         public KoparTekton(){
 			super();
 		}
+
+		
 }

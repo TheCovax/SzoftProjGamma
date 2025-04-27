@@ -1,5 +1,10 @@
 package Fungorium.src.model;
 
+import java.lang.runtime.TemplateRuntime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import Fungorium.src.model.tekton.Tekton;
 import Fungorium.src.utility.Logger;
 
@@ -13,6 +18,9 @@ public class GombaFonal {
 	Tekton src;	
 	Tekton dst;
 	String owner;
+	int roundsToDestruction;
+	boolean scheduleForDestruction;
+	double eatParalyzedRovarRate;
 
 	/**
 	 * Konstruktor a GombaFonal létrehozásához.
@@ -24,6 +32,7 @@ public class GombaFonal {
 		src = s;
 		dst = d;
 		owner = o;
+		eatParalyzedRovarRate = 0.5;
 	}
 
 	/**
@@ -54,4 +63,88 @@ public class GombaFonal {
 		}
 	}
 
+	/**
+	 * Beíllitja, hogy mennyi ido mulva semmisuljon meg a gombafonal és jelzi, hogy meg fog semmisulni
+	 * @param time a beallitando ido
+	 * @return sikerult-e a beallitas
+	 */
+	public boolean scheduleDestruction(int time){
+		
+		if(scheduleForDestruction) return false;
+
+		roundsToDestruction = time;
+		scheduleForDestruction = true;
+		return true;
+	}
+
+	/**
+	 * Adott esellyej megeszi a benult rovarokat, minden korben no az esely
+	 */
+	void eatParalyzedRovar(){
+		if(shouldEatRovar()){
+		List<Rovar> rovar = paralysedRovar(src);
+		if(rovar != null ) killRovar(rovar);
+
+		rovar = paralysedRovar(dst);
+		if(rovar != null) killRovar(rovar);
+		}
+	}
+
+	
+	/**Eltavolit egy adott rovarok listajaat az tektonjaikrol
+     * @param r Azon rovarok listaja, amit meg fog olni
+	 * 
+     */
+	void killRovar(List<Rovar> r){
+
+		//Minden benult rovaron vegigmegy
+		for (Rovar rovar : r) {
+			//A tektonon levo rovarok listaja
+			List<Rovar> rovarok = rovar.getTekton().getRovarok();
+			//Eltavolitas a rovarok listajabol
+			rovarok.remove(rovarok.indexOf(rovar));
+		}
+
+
+	}
+
+	/**Megadja az adott tektonon levo lebenintott rovarrokat,
+	*ha nincs egy se, null-t ad
+	*@param t Az atnezendo tekton
+	*/
+	List<Rovar> paralysedRovar(Tekton t){
+		List<Rovar> paralysed = new ArrayList<>();
+		for (Rovar r : t.getRovarok()) {
+			if(r.isParalyzed()) paralysed.add(r);
+		}
+
+		if(paralysed.isEmpty()) return paralysed;
+		else return null;
+	}
+
+
+	/**
+	 * Megadja hogy a korben egye a benult rovart, vagy sem
+	 */
+	boolean shouldEatRovar(){
+
+		//Random szam 0 és 1 között, amire: 0 < szam < 1
+		double splitCheck = ThreadLocalRandom.current().nextDouble(Double.MIN_VALUE, 1.0);
+
+		//Ha az elobb generalt szam kisebb, mint az eatParalyzedRovarRate igazat ad vissza
+		//Igy a 0.0 splitRate garantaltan hamis lesz es az 1.0 splitRate pedig biztosan igaz lesz
+		//Ha nem sikerul, noveli az eselyt
+		if(splitCheck < eatParalyzedRovarRate) return true;
+		else{
+			eatParalyzedRovarRate += 0.1;
+			return false;
+		} 
+	}
+
+	/**
+	 * Frissiti a gombafonal allapotat
+	 */
+	public void update(){
+		eatParalyzedRovar();
+	}
 }
