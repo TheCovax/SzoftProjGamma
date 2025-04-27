@@ -4,6 +4,7 @@ public class Player {
 
     int score;
     String name;
+    int team;
 
     public Player() {
         score = 0;
@@ -27,6 +28,14 @@ public class Player {
 
     void setScore(int score) {
         this.score = score;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
     }
 
 

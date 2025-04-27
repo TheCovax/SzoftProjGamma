@@ -1,7 +1,8 @@
-package Fungorium.src.skeleton;
+package Fungorium.src.model;
 
-import Fungorium.src.model.*;
+import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
+import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.tekton.*;
 import java.util.*;
 
@@ -36,10 +37,27 @@ public class Game {
         scanner = new Scanner(System.in);
 
         // Itt állítod össze a játék kezdeti állapotát (demo kedvéért pár dummy érték)
-        Player p1 = new Player();
-        Player p2 = new Player();
+        Player p1 = new Gombasz();
+        Player p2 = new Gombasz();
+        Player p3 = new Rovarasz();
+        Player p4 = new Rovarasz();
+        
+        System.out.println("First player's name (Team 1, Gombasz): ");
+        p1.setName(scanner.nextLine());
+
+        System.out.println("Second player's name (Team 2, Gombasz): ");
+        p2.setName(scanner.nextLine());
+
+        System.out.println("Third player's name (Team 1, Rovarasz): ");
+        p3.setName(scanner.nextLine());
+
+        System.out.println("Fourth player's name (Team 2, Rovarasz): ");
+        p4.setName(scanner.nextLine());
+
         players.add(p1);
         players.add(p2);
+        players.add(p3);
+        players.add(p4);
 
         StabilTekton t1 = new StabilTekton();
         StabilTekton t2 = new StabilTekton();
@@ -75,10 +93,10 @@ public class Game {
                     nextPlayer();
                     break;
                 case "0":
-                    System.out.println("Kilépés...");
+                    System.out.println("Exiting...");
                     break;
                 default:
-                    System.out.println("Ismeretlen parancs.");
+                    System.out.println("Unknown Command");
             }
         }
     }
@@ -86,16 +104,16 @@ public class Game {
     private void showMainMenu() {
         System.out.println("\nEntities on map:");
         for (Tekton t : tektonok) {
-            System.out.println(t.getID());
+            //System.out.println(t.getID());
         }
         for (GombaFonal f : gombaFonalak) {
-            System.out.println(f.getID());
+            //System.out.println(f.getID());
         }
         for (GombaTest g : gombaTestek) {
-            System.out.println(g.getID());
+            //System.out.println(g.getID());
         }
         for (Rovar r : rovarok) {
-            System.out.println(r.getID());
+            //System.out.println(r.getID());
         }
         System.out.println("-----------------");
         System.out.println("0) Exit");
@@ -110,7 +128,7 @@ public class Game {
         String name = scanner.nextLine();
 
         // Tekton keresése
-        for (Tekton t : tektonok) {
+        /*for (Tekton t : tektonok) {
             if (t.getId().equals(name)) {
                 System.out.println("Tekton: " + t.getId());
 
@@ -136,9 +154,9 @@ public class Game {
                     }
                 }
             }
-        }
+        }*/
 
-        System.out.println("Nem található ilyen nevű tekton: " + name);
+        System.out.println("Tekton with this ID ("+ name + ") could not be found");
     }
 
     private void selectEntity() {
@@ -146,7 +164,7 @@ public class Game {
         String name = scanner.nextLine();
 
         // Rovar kiválasztása
-        for (Rovar r : rovarok) {
+        /*for (Rovar r : rovarok) {
             if (r.getId().equals(name)) {
                 selectRovar(r);
                 return;
@@ -159,9 +177,9 @@ public class Game {
                 selectGombaTest(g);
                 return;
             }
-        }
+        }*/
 
-        System.out.println("Nem található ilyen nevű entitás: " + name);
+        System.out.println("Entity with this ID ("+ name + ") could not be found");
     }
 
     private void selectRovar(Rovar rovar) {
@@ -178,25 +196,25 @@ public class Game {
 
             switch (input) {
                 case "1":
-                    System.out.println("Rovar megpróbál spórát enni (demo)");
+                    System.out.println("Rovar tries to eat Spora (demo)");
                     // ide jöhet majd a rovar.eatSpora() logika
                     break;
                 case "2":
                     System.out.print("Target Tekton name: ");
                     String targetTektonName = scanner.nextLine();
                     // move logic ide
-                    System.out.println("Rovar mozgatása (demo) cél: " + targetTektonName);
+                    System.out.println("Rovar moves to: " + targetTektonName + " (demo)");
                     break;
                 case "3":
                     System.out.print("Target GombaFonal name: ");
                     String targetFonalName = scanner.nextLine();
                     // cut logic ide
-                    System.out.println("Gombafonal elvágása (demo) cél: " + targetFonalName);
+                    System.out.println("Cut Gombafonal: " + targetFonalName + " (demo)");
                     break;
                 case "0":
                     break;
                 default:
-                    System.out.println("Ismeretlen opció.");
+                    System.out.println("Invalid Option");
             }
         }
     }
@@ -215,21 +233,21 @@ public class Game {
 
             switch (input) {
                 case "1":
-                    System.out.println("Gombafonal növesztés (demo)");
+                    System.out.println("Grow Gombafonal (demo)");
                     // growFonal logic
                     break;
                 case "2":
-                    System.out.println("Spóra lövés (demo)");
+                    System.out.println("Shoot Spora (demo)");
                     // shootSpora logic
                     break;
                 case "3":
-                    System.out.println("GombaTest fejlesztés (demo)");
+                    System.out.println("Upgrade GombaTest (demo)");
                     // upgrade logic
                     break;
                 case "0":
                     break;
                 default:
-                    System.out.println("Ismeretlen opció.");
+                    System.out.println("Invalid Option");
             }
         }
     }
@@ -238,7 +256,7 @@ public class Game {
 
     private void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        System.out.println("Következő játékos: " + players.get(currentPlayerIndex).getName());
+        System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
 
         checkGameEnd();  // mindig ellenőrizzük a játék végét
     }
@@ -247,15 +265,16 @@ public class Game {
         // 1. Pontszám elérés
         for (Player p : players) {
             if (p.getScore() >= WINNING_SCORE) {
-                System.out.println("Játék vége! " + p.getName() + " elérte a " + WINNING_SCORE + " pontot!");
+                System.out.println("Game Over! " + p.getName() + " reached " + WINNING_SCORE + " points!");
                 System.exit(0);
             }
         }
 
         // 2. GombaTestek elfogytak
         if (gombaTestek.isEmpty()) {
-            System.out.println("Játék vége! Elfogytak a GombaTestek!");
+            System.out.println("Game Over! Someone ran out of GombaTest!");
             System.exit(0);
         }
     }
 }
+
