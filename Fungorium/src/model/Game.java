@@ -10,13 +10,10 @@ public class Game {
 
     private static final int WINNING_SCORE = 10;
     private List<Player> players;
-    private List<GombaTest> gombaTestek;
-    private List<Rovar> rovarok;
-    private List<GombaFonal> gombaFonalak;
-    private List<Tekton> tektonok;
     private int currentPlayerIndex = 0;
     private Scanner scanner;
 
+    Map map;
 
 
 
@@ -29,11 +26,8 @@ public class Game {
 
     private void initializeGame() {
 
+        map = new Map();
         players = new ArrayList<>();
-        gombaTestek = new ArrayList<>();
-        rovarok = new ArrayList<>();
-        gombaFonalak = new ArrayList<>();
-        tektonok = new ArrayList<>();
         scanner = new Scanner(System.in);
 
         // Itt állítod össze a játék kezdeti állapotát (demo kedvéért pár dummy érték)
@@ -83,20 +77,11 @@ public class Game {
             input = scanner.nextLine();
 
             switch (input) {
-                case "1":
-                    inspectEntity();
-                    break;
-                case "2":
-                    selectEntity();
-                    break;
-                case "3":
-                    nextPlayer();
-                    break;
-                case "0":
-                    System.out.println("Exiting...");
-                    break;
-                default:
-                    System.out.println("Unknown Command");
+                case "1" -> inspectEntity();
+                case "2" -> selectEntity();
+                case "3" -> nextPlayer();
+                case "0" -> System.out.println("Exiting...");
+                default -> System.out.println("Unknown Command");
             }
         }
     }
