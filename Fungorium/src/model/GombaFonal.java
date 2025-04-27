@@ -1,6 +1,7 @@
 package Fungorium.src.model;
 
 //import java.lang.runtime.TemplateRuntime;
+import Fungorium.src.model.player.Player;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class GombaFonal {
 	 * @param d A cél Tekton.
 	 * @param o A gombafonal tulajdonosának neve.
 	 */
-	public GombaFonal(Tekton s, Tekton d, String o){
+	public GombaFonal(Tekton s, Tekton d, Player o){
 		src = s;
 		dst = d;
 		owner = o;

@@ -1,11 +1,8 @@
 package Fungorium.src.model.player;
 
-import Fungorium.src.model.spora;
-import Fungorium.src.model.player;
-import Fungorium.src.model.tekton;
+import Fungorium.src.model.GombaTest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Gombasz extends Player {
 

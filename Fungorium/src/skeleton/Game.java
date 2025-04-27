@@ -1,10 +1,8 @@
 package Fungorium.src.skeleton;
 
 import Fungorium.src.model.*;
-import Fungorium.src.model.spora.*;
+import Fungorium.src.model.player.Player;
 import Fungorium.src.model.tekton.*;
-import Fungorium.src.utility.Logger;
-
 import java.util.*;
 
 public class Game {
@@ -18,7 +16,18 @@ public class Game {
     private int currentPlayerIndex = 0;
     private Scanner scanner;
 
-    public Game() {
+  
+    
+
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.initializeGame();
+        game.start();
+    }
+
+
+    private void initializeGame() {
+
         players = new ArrayList<>();
         gombaTestek = new ArrayList<>();
         rovarok = new ArrayList<>();
@@ -26,29 +35,26 @@ public class Game {
         tektonok = new ArrayList<>();
         scanner = new Scanner(System.in);
 
-        initializeGame();
-    }
-
-    private void initializeGame() {
         // Itt állítod össze a játék kezdeti állapotát (demo kedvéért pár dummy érték)
+        Player p1 = new Player();
+        Player p2 = new Player();
+        players.add(p1);
+        players.add(p2);
 
         StabilTekton t1 = new StabilTekton();
         StabilTekton t2 = new StabilTekton();
         tektonok.add(t1);
         tektonok.add(t2);
 
-        GombaTest g1 = new GombaTest(t1, "GA1");
+        GombaTest g1 = new GombaTest(t1, p1);
         gombaTestek.add(g1);
         t1.addGombaTest(g1);
 
-        Rovar r1 = new Rovar(t2, "Player1");
+        Rovar r1 = new Rovar(t2, p1);
         rovarok.add(r1);
         t2.addRovar(r1);
 
-        Player p1 = new Player("Player1");
-        Player p2 = new Player("Player2");
-        players.add(p1);
-        players.add(p2);
+        
     }
 
     public void start() {
@@ -80,16 +86,16 @@ public class Game {
     private void showMainMenu() {
         System.out.println("\nEntities on map:");
         for (Tekton t : tektonok) {
-            System.out.println(t.getID());
+            //TODO: System.out.println(t.getID());
         }
         for (GombaFonal f : gombaFonalak) {
-            System.out.println(f.getID());
+            //TODO: System.out.println(f.getID());
         }
         for (GombaTest g : gombaTestek) {
-            System.out.println(g.getID());
+            //TODO: System.out.println(g.getID());
         }
         for (Rovar r : rovarok) {
-            System.out.println(r.getID());
+            //TODO: System.out.println(r.getID());
         }
         System.out.println("-----------------");
         System.out.println("0) Exit");

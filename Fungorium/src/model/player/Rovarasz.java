@@ -1,11 +1,8 @@
 package Fungorium.src.model.player;
 
-import Fungorium.src.model.spora;
-import Fungorium.src.model.player;
-import Fungorium.src.model.tekton;
+import Fungorium.src.model.Rovar;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Rovarasz extends Player {
 
@@ -29,9 +26,9 @@ public class Rovarasz extends Player {
         return rovarok;
     }
 
-    //.............................
+    /*//.............................
     @Override
     void takeAction(Action action) {
         //  TO  DO
-    }
+    }*/
 }
