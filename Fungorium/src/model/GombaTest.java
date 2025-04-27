@@ -13,13 +13,13 @@ public class GombaTest {
 
     List<GombaFonal> fonalak;
     Tekton tekton;
-    String owner;
+    Player owner;
     int level;
     int shotCounter;
 
 
 
-    public GombaTest(Tekton tekton, String owner) {
+    public GombaTest(Tekton tekton, Player owner) {
         fonalak = new ArrayList<>();
         this.tekton = tekton;
         this.owner = owner;
@@ -133,7 +133,7 @@ public class GombaTest {
         return fonalak;
     }
 
-    public String getOwner() {
+    public Player getOwner() {
         return owner;
     }
 

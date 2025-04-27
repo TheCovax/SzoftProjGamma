@@ -23,7 +23,7 @@ public class ElszigeteltTekton extends Tekton{
 		 * @param owner tulajdonos jatekos
 		 */
 		@Override
-		public void growFonal(Tekton dst, String owner){
+		public void growFonal(Tekton dst, Player owner){
 			
 			if(this.sporak.size() >= 2 && (!(dst instanceof ElszigeteltTekton) || dst.fonalak.isEmpty()) && fonalak.isEmpty()){
 

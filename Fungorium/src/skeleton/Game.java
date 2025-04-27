@@ -80,16 +80,16 @@ public class Game {
     private void showMainMenu() {
         System.out.println("\nEntities on map:");
         for (Tekton t : tektonok) {
-            System.out.println(t.get());
+            System.out.println(t.getID());
         }
         for (GombaFonal f : gombaFonalak) {
-            System.out.println(f.get());
+            System.out.println(f.getID());
         }
         for (GombaTest g : gombaTestek) {
-            System.out.println(g.get());
+            System.out.println(g.getID());
         }
         for (Rovar r : rovarok) {
-            System.out.println(r.get());
+            System.out.println(r.getID());
         }
         System.out.println("-----------------");
         System.out.println("0) Exit");

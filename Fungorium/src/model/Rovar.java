@@ -16,9 +16,9 @@ public class Rovar {
     private int speed;
     private int duration;
     private int collectedNutrition;
-    private String owner;
+    private Player owner;
 
-    public Rovar(Tekton startTekton, String owner){
+    public Rovar(Tekton startTekton, Player owner){
         this.tekton = startTekton;
         this.owner = owner;
         this.isParalyzed = false;
@@ -184,11 +184,11 @@ public class Rovar {
         this.collectedNutrition = collectedNutrition;
     }
 
-    public String getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(Player owner) {
         this.owner = owner;
     }
 

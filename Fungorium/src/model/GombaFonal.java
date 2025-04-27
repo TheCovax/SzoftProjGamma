@@ -15,7 +15,7 @@ public class GombaFonal {
 	
 	Tekton src;	
 	Tekton dst;
-	String owner;
+	Player owner;
 	int roundsToDestruction;
 	boolean scheduleForDestruction;
 	double eatParalyzedRovarRate;
@@ -41,8 +41,8 @@ public class GombaFonal {
 		if(dst != null) dst.removeGombaFonal(this);
 	}
 
-	public boolean isOwner(String s){
-		return owner.equals(s);
+	public boolean isOwner(Player p){
+		return owner.equals(p);
 	}
 
 	/**
@@ -145,4 +145,8 @@ public class GombaFonal {
 	public void update(){
 		eatParalyzedRovar();
 	}
+
+    public int getRoundsToDestruction() {
+        return roundsToDestruction;
+    }
 }
