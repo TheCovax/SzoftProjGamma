@@ -12,15 +12,15 @@ public class Rovarasz extends Player {
         rovarok = new ArrayList<>();
     }
 
-    void addRovar(Rovar rovar) {
+    public void addRovar(Rovar rovar) {
         rovarok.add(rovar);
     }
 
-    void removeRovar(Rovar rovar) {
+    public void removeRovar(Rovar rovar) {
         rovarok.remove(rovar);
     }
 
-    List<Rovar> getRovarok() {
+    public List<Rovar> getRovarok() {
         return rovarok;
     }
 

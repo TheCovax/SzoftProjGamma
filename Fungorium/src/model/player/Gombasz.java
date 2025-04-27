@@ -12,17 +12,18 @@ public class Gombasz extends Player {
     
     public Gombasz() {
         gombak = new ArrayList<>();
+        fonalak = new ArrayList<>();
     }
 
-    void addGombaTest(GombaTest gombatest) {
+    public void addGombaTest(GombaTest gombatest) {
         gombak.add(gombatest);
     }
 
-    void removeGombaTest(GombaTest gombatest) {
+    public void removeGombaTest(GombaTest gombatest) {
         gombak.remove(gombatest);
     }
 
-    List<GombaTest> getGombak() {
+    public List<GombaTest> getGombak() {
         return gombak;
     }
 

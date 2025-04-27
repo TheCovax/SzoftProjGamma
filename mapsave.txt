@@ -1,0 +1,14 @@
+#Tektons
+TA Stabil
+TB Stabil
+TC Kopar
+TD Termekeny
+TE Hosztilis
+
+#Neighbours
+TA TB TC TD
+TB TC
+TC TA TB
+TD TA TE
+TE TD
+

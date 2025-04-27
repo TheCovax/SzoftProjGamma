@@ -3,6 +3,7 @@ package Fungorium.src.model;
 import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
+import Fungorium.src.model.spora.OsztoSpora;
 import Fungorium.src.model.tekton.*;
 import java.io.IOException;
 import java.util.*;
@@ -37,10 +38,10 @@ public class Game {
         scanner = new Scanner(System.in);
 
         // Itt állítod össze a játék kezdeti állapotát (demo kedvéért pár dummy érték)
-        Player p1 = new Gombasz();
-        Player p2 = new Gombasz();
-        Player p3 = new Rovarasz();
-        Player p4 = new Rovarasz();
+        Gombasz p1 = new Gombasz();
+        Gombasz p2 = new Gombasz();
+        Rovarasz p3 = new Rovarasz();
+        Rovarasz p4 = new Rovarasz();
         
         System.out.println("First player's name (Team 1, Gombasz): ");
         p1.setName(scanner.nextLine());
@@ -59,70 +60,29 @@ public class Game {
         players.add(p3);
         players.add(p4);
 
-        map.loadMap("./SzoftProjGamma/Fungorium/src/gamesave.txt");
+        map.loadMap("mapsave.txt");        
 
 
-        System.out.println(map.getTektonok().size());
-        for (Tekton t: map.getTektonok()){
-            System.out.println(t);
-        }
+        p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
+        p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
+        p4.addRovar(new Rovar(map.getTektonById("TB"), p4));
+        p4.addRovar(new Rovar(map.getTektonById("TB"), p4));
 
-        /*
-        StabilTekton t1 = new StabilTekton();
-        StabilTekton t2 = new StabilTekton();
 
-        Rovar r1 = new Rovar(t1, p1);
-        Rovar r2 = new Rovar(t1, p1);
-        Rovar r3 = new Rovar(t1, p2);
-        Rovar r4 = new Rovar(t2, p2);
-        Rovar r5 = new Rovar("R1", t2, p2);
+        p1.addGombaTest( new GombaTest(map.getTektonById("TA"), p1));
+        p1.addGombaTest( new GombaTest(map.getTektonById("TC"), p1));
+        p2.addGombaTest( new GombaTest(map.getTektonById("TD"), p2));
+        p2.addGombaTest( new GombaTest(map.getTektonById("TB"), p2));
 
-        rovarok.add(r1);
-        rovarok.add(r2);
-        rovarok.add(r3);
-        rovarok.add(r4);
-        rovarok.add(r5);
+        p1.addFonal(new GombaFonal(map.getTektonById("TA"), map.getTektonById("TB"), p1));
+        p1.addFonal(new GombaFonal(map.getTektonById("TB"), map.getTektonById("TC"), p1));
+        p1.addFonal(new GombaFonal(map.getTektonById("TA"), map.getTektonById("TC"), p1));
+        p2.addFonal(new GombaFonal(map.getTektonById("TA"), map.getTektonById("TD"), p1));
+        p2.addFonal(new GombaFonal(map.getTektonById("TD"), map.getTektonById("TE"), p1));
 
-        for (int i = 0; i < 5; i++) {
-            System.out.println(rovarok.get(i).getID());
-        }
+        map.getTektonById("TE").addSpora(new OsztoSpora());
 
-        GombaFonal gf1 = new GombaFonal(t1,t2,p1);
-        GombaFonal gf2 = new GombaFonal(t1,t2,p2);
-        GombaFonal gf3 = new GombaFonal("F1", t1,t2,p1);
-
-        gombaFonalak.add(gf1);
-        gombaFonalak.add(gf2);
-        gombaFonalak.add(gf3);
-
-        for (int i = 0; i < 3; i++) {
-            System.out.println(gombaFonalak.get(i).getID());
-        }
-
-        GombaTest g1 = new GombaTest(t1,p1);
-        GombaTest g2 = new GombaTest(t2,p2);
-
-        System.out.println(g1.getID());
-        System.out.println(g2.getID());
-
-        System.out.println(t1.getID());
-        System.out.println(t2.getID());
-
-        /*
-        StabilTekton t1 = new StabilTekton();
-        StabilTekton t2 = new StabilTekton();
-        tektonok.add(t1);
-        tektonok.add(t2);
-
-        GombaTest g1 = new GombaTest(t1, p1);
-        gombaTestek.add(g1);
-        t1.addGombaTest(g1);
-
-        Rovar r1 = new Rovar(t2, p1);
-        rovarok.add(r1);
-        t2.addRovar(r1);
-        */
-
+        populateCollections();
     }
 
     public void start() {
@@ -143,18 +103,24 @@ public class Game {
     }
 
     private void showMainMenu() {
+        populateCollections();
         System.out.println("\nEntities on map:");
+
+        System.out.println("\nTektonok:");
         for (Tekton t : map.getTektonok()) {
-            System.out.println(t.getID());
+            System.out.println(t);
         }
+        System.out.println("\n\nFonalak:");
         for (GombaFonal f : gombaFonalak) {
-            //System.out.println(f.getID());
+            System.out.println(f.getID());
         }
+        System.out.println("\n\nTestek:");
         for (GombaTest g : gombaTestek) {
-            //System.out.println(g.getID());
+            System.out.println(g.getID());
         }
+        System.out.println("\n\nRovarok:");
         for (Rovar r : rovarok) {
-            //System.out.println(r.getID());
+            System.out.println(r.getID());
         }
         System.out.println("-----------------");
         System.out.println("0) Exit");
@@ -169,6 +135,7 @@ public class Game {
         System.out.print("Name an entity to inspect: ");
         String name = scanner.nextLine();
 
+        
         // Tekton keresése
         for (Tekton t : map.getTektonok()) {
             if (t.getID().equals(name)) {
@@ -237,26 +204,23 @@ public class Game {
             input = scanner.nextLine();
 
             switch (input) {
-                case "1":
-                    System.out.println("Rovar tries to eat Spora (demo)");
-                    // ide jöhet majd a rovar.eatSpora() logika
-                    break;
-                case "2":
+                case "1" -> System.out.println("Rovar tries to eat Spora (demo)");
+                // ide jöhet majd a rovar.eatSpora() logika
+                case "2" -> {
                     System.out.print("Target Tekton name: ");
                     String targetTektonName = scanner.nextLine();
                     // move logic ide
                     System.out.println("Rovar moves to: " + targetTektonName + " (demo)");
-                    break;
-                case "3":
+                }
+                case "3" -> {
                     System.out.print("Target GombaFonal name: ");
                     String targetFonalName = scanner.nextLine();
                     // cut logic ide
                     System.out.println("Cut Gombafonal: " + targetFonalName + " (demo)");
-                    break;
-                case "0":
-                    break;
-                default:
-                    System.out.println("Invalid Option");
+                }
+                case "0" -> {
+                }
+                default -> System.out.println("Invalid Option");
             }
         }
     }
@@ -295,6 +259,30 @@ public class Game {
     }
 
 
+    private void populateCollections(){
+        List<GombaFonal> tmpFonalak = new ArrayList<>();
+        List<GombaTest> tmpTestek = new ArrayList<>();
+        List<Rovar> tmpRovarok = new ArrayList<>();
+        for (Player p : players) {
+            if (p instanceof Gombasz gombasz) {
+                for (GombaFonal f : gombasz.getFonalak()) {
+                    tmpFonalak.add(f);
+                }
+                for (GombaTest g : gombasz.getGombak()) {
+                    tmpTestek.add(g);
+                }
+                
+            }
+            if (p instanceof Rovarasz rovarasz) {
+                for (Rovar r : rovarasz.getRovarok()) {
+                    tmpRovarok.add(r);
+                }
+            }
+        }
+        this.gombaFonalak = tmpFonalak;
+        this.gombaTestek = tmpTestek;
+        this.rovarok = tmpRovarok;
+    }
 
     private void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();

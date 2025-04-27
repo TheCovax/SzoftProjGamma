@@ -1,13 +1,10 @@
 package Fungorium.src.model;
 
 import Fungorium.src.model.tekton.*;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Map {
     private ArrayList<Tekton> tektonok;
