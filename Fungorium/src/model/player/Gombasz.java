@@ -10,7 +10,8 @@ public class Gombasz extends Player {
     List<GombaTest> gombak;
     List<GombaFonal> fonalak;
     
-    public Gombasz() {
+    public Gombasz(String id) {
+        super(id);
         gombak = new ArrayList<>();
         fonalak = new ArrayList<>();
     }

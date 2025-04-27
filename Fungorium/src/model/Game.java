@@ -3,8 +3,10 @@ package Fungorium.src.model;
 import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
-import Fungorium.src.model.spora.OsztoSpora;
+import Fungorium.src.model.spora.*;
 import Fungorium.src.model.tekton.*;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -39,11 +41,11 @@ public class Game {
         scanner = new Scanner(System.in);
 
         // Itt állítod össze a játék kezdeti állapotát (demo kedvéért pár dummy érték)
-        Gombasz p1 = new Gombasz();
-        Gombasz p2 = new Gombasz();
-        Rovarasz p3 = new Rovarasz();
-        Rovarasz p4 = new Rovarasz();
-        
+        Gombasz p1 = new Gombasz("GB1");
+        Gombasz p2 = new Gombasz("GB2");
+        Rovarasz p3 = new Rovarasz("RS3");
+        Rovarasz p4 = new Rovarasz("RS4");
+
         System.out.println("First player's name (Team 1, Gombasz): ");
         p1.setName(scanner.nextLine());
 
@@ -62,8 +64,9 @@ public class Game {
         players.add(p4);
 
         map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
 
-
+        /*
         p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
         p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
         p4.addRovar(new Rovar(map.getTektonById("TB"), p4));
@@ -82,6 +85,7 @@ public class Game {
         p2.addFonal(new GombaFonal(map.getTektonById("TD"), map.getTektonById("TE"), p1));
 
         map.getTektonById("TE").addSpora(new OsztoSpora());
+        */
 
         populateCollections();
     }
@@ -329,6 +333,86 @@ public class Game {
         }
     }
 
-    
+    private Player findPlayerById(String id) {
+        for (Player p : players) {
+            if (p.getID().equals(id)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private void loadEntitiesFromFile(String filename) throws IOException {
+        Scanner fileScanner = new Scanner(new File(filename));
+        String mode = "";
+
+        while (fileScanner.hasNextLine()) {
+            String line = fileScanner.nextLine().trim();
+            if (line.isEmpty()) continue;
+
+            if (line.startsWith("#")) {
+                if (line.toLowerCase().contains("gombatestek")) {
+                    mode = "gombatest";
+                } else if (line.toLowerCase().contains("rovarok")) {
+                    mode = "rovar";
+                } else if (line.toLowerCase().contains("gombafonalak")) {
+                    mode = "gombafonal";
+                } else if (line.toLowerCase().contains("sporak")) {
+                    mode = "spora";
+                }else {
+                    mode = "";
+                }
+                continue;
+            }
+
+            String[] parts = line.split("\\s+");
+            if (mode.equals("gombatest") && parts.length >= 3) {
+                String id = parts[0];
+                Tekton tekton = map.getTektonById(parts[1]);
+                Player owner = findPlayerById(parts[2]);
+
+                if (tekton != null && owner != null) {
+                    GombaTest gt = new GombaTest(id, tekton, owner);
+                    tekton.addGombaTest(gt);
+                    if (owner instanceof Gombasz gombasz) gombasz.addGombaTest(gt);
+                }
+            } else if (mode.equals("rovar") && parts.length >= 3) {
+                String id = parts[0];
+                Tekton tekton = map.getTektonById(parts[1]);
+                Player owner = findPlayerById(parts[2]);
+                if (tekton != null && owner != null) {
+                    Rovar r = new Rovar(id, tekton, owner);
+                    tekton.addRovar(r);
+                    if (owner instanceof Rovarasz rovarasz) rovarasz.addRovar(r);
+                }
+            } else if (mode.equals("gombafonal") && parts.length >= 4) {
+                String id = parts[0];
+                Tekton src = map.getTektonById(parts[1]);
+                Tekton dst = map.getTektonById(parts[2]);
+                Player owner = findPlayerById(parts[3]);
+                if (src != null && dst != null && owner != null) {
+                    GombaFonal gf = new GombaFonal(id, src, dst, owner);
+                    src.addGombaFonal(gf);
+                    dst.addGombaFonal(gf);
+                    if (owner instanceof Gombasz gombasz) gombasz.addFonal(gf);
+                }
+            } else if (mode.equals("spora") && parts.length >= 2) {
+                String sporaType = parts[0];
+                Tekton tekton = map.getTektonById(parts[1]);
+
+                if (tekton != null) {
+                    switch (sporaType.toLowerCase()) {
+                        case "osztospora" -> tekton.addSpora(new OsztoSpora());
+                        case "gyorsitospora" -> tekton.addSpora(new GyorsitoSpora());
+                        case "lassitospora" -> tekton.addSpora(new LassitoSpora());
+                        case "benitospora" -> tekton.addSpora(new BenitoSpora());
+                        default -> System.out.println("Unknown Spora type: " + sporaType);
+                    }
+                }
+            }
+        }
+
+        fileScanner.close();
+    }
 }
 

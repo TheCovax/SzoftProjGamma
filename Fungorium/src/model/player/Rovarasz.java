@@ -8,7 +8,9 @@ public class Rovarasz extends Player {
 
     List<Rovar> rovarok;
     
-    public Rovarasz() {
+    public Rovarasz(String id)
+    {
+        super(id);
         rovarok = new ArrayList<>();
     }
 

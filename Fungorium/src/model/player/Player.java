@@ -1,12 +1,13 @@
 package Fungorium.src.model.player;
 
 public class Player {
-
+    private final String id;
     int score;
     String name;
     int team;
 
-    public Player() {
+    public Player(String id) {
+        this.id = id;
         score = 0;
     }
 
@@ -38,6 +39,9 @@ public class Player {
         this.team = team;
     }
 
+    public String getID(){
+        return id;
+    }
 
 
 
