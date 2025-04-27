@@ -4,6 +4,7 @@ import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.OsztoSpora;
+import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
 import java.io.IOException;
 import java.util.*;
@@ -204,20 +205,69 @@ public class Game {
             input = scanner.nextLine();
 
             switch (input) {
-                case "1" -> System.out.println("Rovar tries to eat Spora");
-                // ide jöhet majd a rovar.eatSpora() logika
+                case "1" -> {
+                    if (rovar.getTekton().getSporak().isEmpty()) {
+                        System.out.println("Nincs spora ezen a Tektonon, nem tudsz enni.");
+                    } else {
+                        // A lista első spóráját próbálja megenni
+                        Spora spora = rovar.getTekton().getSporak().peek();
+                        if (rovar.eatSpora(spora)) {
+                            System.out.println("Sikeresen megetted a sporat: " + spora.getClass().getSimpleName());
+                        } else {
+                            System.out.println("Nem sikerult megenni a sporat.");
+                        }
+                    }
+                }
+
                 case "2" -> {
                     System.out.print("Target Tekton name: ");
                     String targetTektonName = scanner.nextLine();
-                    // move logic ide
-                    System.out.println("Rovar moves to: " + targetTektonName);
+                    Tekton targetTekton = map.getTektonById(targetTektonName);
+
+                    if (targetTekton == null) {
+                        System.out.println("No Tekton found with the name: " + targetTektonName);
+                        return;
+                    }
+
+                    // Find reachable Tektons based on the Rovar's speed
+                    List<Tekton> reachable = rovar.getTekton().findReachableTektonWithinDistance(rovar.getSpeed());
+
+                    if (reachable.contains(targetTekton)) {
+                        rovar.move(targetTekton);
+                        System.out.println("Rovar successfully moved to: " + targetTektonName);
+                    } else {
+                        System.out.println("Target Tekton is out of reach.");
+                    }
                 }
+
                 case "3" -> {
                     System.out.print("Target GombaFonal name: ");
                     String targetFonalName = scanner.nextLine();
-                    // cut logic ide
-                    System.out.println("Cut Gombafonal: " + targetFonalName );
+
+                    // Assuming we have a list of Tekton objects (or reachable Tekton(s) in the game world)
+                    // Iterate over each Tekton to find the GombaFonal by name
+                    GombaFonal targetFonal = null;
+                    for (Tekton tekton : map.getTektonok()) { // Use map.getTektonok() to get all Tektons
+                        for (GombaFonal gf : tekton.getFonalak()) {
+                            if (gf.getID().equals(targetFonalName)) {
+                                targetFonal = gf;
+                                break;
+                            }
+                        }
+                        if (targetFonal != null) break; // Exit once the GombaFonal is found
+                    }
+
+                    // If the GombaFonal is found, remove it
+                    if (targetFonal != null) {
+                        // Clean up the GombaFonal from both Tektons it connects
+                        targetFonal.clean();  // Assumes the clean method disconnects the GombaFonal from the Tektons
+                        System.out.println("Cut Gombafonal: " + targetFonalName);
+                    } else {
+                        System.out.println("No Gombafonal found with the name: " + targetFonalName);
+                    }
                 }
+
+
                 case "0" -> {
                 }
                 default -> System.out.println("Invalid Option");
