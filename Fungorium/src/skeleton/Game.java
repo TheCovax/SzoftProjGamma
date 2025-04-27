@@ -80,16 +80,16 @@ public class Game {
     private void showMainMenu() {
         System.out.println("\nEntities on map:");
         for (Tekton t : tektonok) {
-            System.out.println(t.getID());
+            System.out.println(t.getId());
         }
         for (GombaFonal f : gombaFonalak) {
-            System.out.println(f.getID());
+            System.out.println(f.getId());
         }
         for (GombaTest g : gombaTestek) {
-            System.out.println(g.getID());
+            System.out.println(g.getId());
         }
         for (Rovar r : rovarok) {
-            System.out.println(r.getID());
+            System.out.println(r.getId());
         }
         System.out.println("-----------------");
         System.out.println("0) Exit");
@@ -103,17 +103,140 @@ public class Game {
         System.out.print("Name an entity to inspect: ");
         String name = scanner.nextLine();
 
-        // keresés az entitások között név alapján
-        // itt érdemes lenne minden entitásnak legyen getId()
+        // Tekton keresése
+        for (Tekton t : tektonok) {
+            if (t.getId().equals(name)) {
+                System.out.println("Tekton: " + t.getId());
+
+                System.out.println("Fonalak:");
+                for (GombaFonal gf : t.getFonalak()) {
+                    System.out.println(" - " + gf.getId());
+                }
+
+                System.out.println("Gombatestek:");
+                for (GombaTest g : t.getGombaTestek()) {
+                    System.out.println(" - " + g.getId());
+                }
+
+                System.out.println("Rovarok:");
+                for (Rovar r : t.getRovarok()) {
+                    System.out.println(" - " + r.getId() + " (sebesség: " + r.getSpeed() + ")");
+
+                    //Elérhető tektonok kiírása a rovar sebessége alapján:
+                    List<Tekton> reachable = t.findReachableTektonWithinDistance(r.getSpeed());
+                    System.out.println("   -> Elérhető tektonok:");
+                    for (Tekton reachableT : reachable) {
+                        System.out.println("      * " + reachableT.getId());
+                    }
+                }
+
+                System.out.println("Spórák:");
+                for (Spora sp : t.getSporak()) {
+                    System.out.println(" - " + sp.getClass().getSimpleName());
+                }
+                return;
+            }
+        }
+
+        System.out.println("Nem található ilyen nevű tekton: " + name);
     }
+
+
 
     private void selectEntity() {
         System.out.print("Name an entity to select: ");
         String name = scanner.nextLine();
 
-        // Kiválasztás logika: Pl. ha rovar -> move, cutFonal, eatSpora
-        // Ha gombatest -> growFonal, shootSpora, upgradeTest
+        // Rovar kiválasztása
+        for (Rovar r : rovarok) {
+            if (r.getId().equals(name)) {
+                selectRovar(r);
+                return;
+            }
+        }
+
+        // GombaTest kiválasztása
+        for (GombaTest g : gombaTestek) {
+            if (g.getId().equals(name)) {
+                selectGombaTest(g);
+                return;
+            }
+        }
+
+        System.out.println("Nem található ilyen nevű entitás: " + name);
     }
+
+    private void selectRovar(Rovar rovar) {
+        String input = "";
+
+        while (!input.equals("0")) {
+            System.out.println("\n0) Exit");
+            System.out.println("1) Eat Spora");
+            System.out.println("2) Move Rovar");
+            System.out.println("3) Cut Fonal");
+            System.out.print("Choose option: ");
+
+            input = scanner.nextLine();
+
+            switch (input) {
+                case "1":
+                    System.out.println("Rovar megpróbál spórát enni (demo)");
+                    // ide jöhet majd a rovar.eatSpora() logika
+                    break;
+                case "2":
+                    System.out.print("Target Tekton name: ");
+                    String targetTektonName = scanner.nextLine();
+                    // move logic ide
+                    System.out.println("Rovar mozgatása (demo) cél: " + targetTektonName);
+                    break;
+                case "3":
+                    System.out.print("Target GombaFonal name: ");
+                    String targetFonalName = scanner.nextLine();
+                    // cut logic ide
+                    System.out.println("Gombafonal elvágása (demo) cél: " + targetFonalName);
+                    break;
+                case "0":
+                    break;
+                default:
+                    System.out.println("Ismeretlen opció.");
+            }
+        }
+    }
+
+    private void selectGombaTest(GombaTest gombaTest) {
+        String input = "";
+
+        while (!input.equals("0")) {
+            System.out.println("\n0) Exit");
+            System.out.println("1) Grow Fonal (1 spora)");
+            System.out.println("2) Shoot Spora (2 spora)");
+            System.out.println("3) Upgrade GombaTest (4 spora)");
+            System.out.print("Choose option: ");
+
+            input = scanner.nextLine();
+
+            switch (input) {
+                case "1":
+                    System.out.println("Gombafonal növesztés (demo)");
+                    // growFonal logic
+                    break;
+                case "2":
+                    System.out.println("Spóra lövés (demo)");
+                    // shootSpora logic
+                    break;
+                case "3":
+                    System.out.println("GombaTest fejlesztés (demo)");
+                    // upgrade logic
+                    break;
+                case "0":
+                    break;
+                default:
+                    System.out.println("Ismeretlen opció.");
+            }
+        }
+    }
+
+
 
     private void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
