@@ -17,6 +17,10 @@ public class ElszigeteltTekton extends Tekton{
 			super();
 		}
 
+		public ElszigeteltTekton(String id){
+		super(id);
+	}
+
 		/**
 		 * Amellett, hogy teszteli a spora szamot es hogy a cel tektonra tud-e noni
 		 * azt is teszteli, hogy a jelenlegin van-e meg hely

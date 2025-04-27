@@ -4,12 +4,14 @@ import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
 import Fungorium.src.utility.Logger;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *  A Rovarászok által irányított karakterek.
  *  A Rovar képes mozogni a tektonok között, spórákat fogyasztani és gombafonalakt vágni.
  */
-public class Rovar {
+public class Rovar extends Entity{
+    private static final AtomicInteger generatedCounter = new AtomicInteger(0);
     public static final int DEFAULT_SPEED = 2;
 
     private Tekton tekton;
@@ -17,11 +19,21 @@ public class Rovar {
     private int speed;
     private int duration;
     private int collectedNutrition;
-    private Player owner;
 
-    public Rovar(Tekton startTekton, Player owner){
+    // Constructor with given ID
+    public Rovar(String id, Tekton startTekton, Player owner){
+        super(id, owner);
         this.tekton = startTekton;
-        this.owner = owner;
+        this.isParalyzed = false;
+        this.speed = DEFAULT_SPEED;
+        this.duration = 0;
+        this.collectedNutrition = 0;
+    }
+
+    // Constructor for dynamically generated Rovar with generated ID
+    public Rovar(Tekton tekton, Player owner) {
+        super(owner);
+        this.tekton = tekton;
         this.isParalyzed = false;
         this.speed = DEFAULT_SPEED;
         this.duration = 0;
@@ -185,18 +197,16 @@ public class Rovar {
         this.collectedNutrition = collectedNutrition;
     }
 
-    public Player getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = owner;
+    @Override
+    protected String getPrefix() {
+        return "R";
     }
 
     /**
      * Frissitit a rovar allapotat
      * Ha van letelt a duration visszaallitja a rovart alap allapotba
      */
+    @Override
     public void update(){
         if(duration == 0){
             isParalyzed = false;

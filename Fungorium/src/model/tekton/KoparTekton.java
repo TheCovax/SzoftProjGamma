@@ -15,5 +15,9 @@ public class KoparTekton extends Tekton {
 			super();
 		}
 
+		public KoparTekton(String id){
+		super(id);
+	}
+
 		
 }

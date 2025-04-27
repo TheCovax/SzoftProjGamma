@@ -20,6 +20,10 @@ public class HosztilisTekton extends Tekton {
 		super();
 	}
 
+	public HosztilisTekton(String id){
+		super(id);
+	}
+
 	/**
 	 * Felulirja az ososztaly fuggvenyet,
 	 * a szettores mellett azt is ellenorzi, hogy megolje-e a rajta levo gombatestet

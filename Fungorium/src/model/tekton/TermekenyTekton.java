@@ -14,4 +14,8 @@ public class TermekenyTekton extends Tekton {
         public TermekenyTekton(){
 			super();
 		}
+
+		public TermekenyTekton(String id){
+		super(id);
+	}
 }

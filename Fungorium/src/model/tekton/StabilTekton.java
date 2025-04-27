@@ -19,4 +19,9 @@ public class StabilTekton extends Tekton {
         public StabilTekton(){
 			super();
 		}
+
+		public StabilTekton(String id){
+		super(id);
+	}
+
 }
