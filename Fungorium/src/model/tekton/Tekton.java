@@ -318,7 +318,7 @@ public class Tekton {
 		sb.append(", IsConnected=").append(isConnected);
 		sb.append(", SplitRate=").append(splitRate);
 
-		// 列出 GombaTestek
+		// list GombaTestek
 		sb.append(", GombaTestek=[");
 		for (int i = 0; i < test.size(); i++) {
 			sb.append(test.get(i).getID());
@@ -328,7 +328,7 @@ public class Tekton {
 		}
 		sb.append("]");
 
-		// 列出 Rovarok
+		// list Rovarok
 		sb.append(", Rovarok=[");
 		for (int i = 0; i < rovarok.size(); i++) {
 			sb.append(rovarok.get(i).getID());
@@ -338,7 +338,7 @@ public class Tekton {
 		}
 		sb.append("]");
 
-		// 列出 GombaFonalak
+		// list GombaFonalak
 		sb.append(", GombaFonalak=[");
 		for (int i = 0; i < fonalak.size(); i++) {
 			sb.append(fonalak.get(i).getID());
@@ -348,7 +348,7 @@ public class Tekton {
 		}
 		sb.append("]");
 
-		// Spora数量还是直接显示数量
+		// write Spora number
 		sb.append(", SporakCount=").append(sporak.size());
 
 		sb.append(" }");
@@ -371,4 +371,5 @@ public class Tekton {
 		usedIds.add(newId);
 		return newId;
 	}
+
 }

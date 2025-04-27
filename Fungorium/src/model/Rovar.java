@@ -109,7 +109,7 @@ public class Rovar extends Entity{
         tekton.removeSpora();
 
         Logger.methodReturn("r.eatSpora(): true");
-        return false;
+        return true;
     }
 
     /**

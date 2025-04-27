@@ -22,8 +22,6 @@ public class Game {
     private Scanner scanner;
     public Map map = new Map();
 
-
-
     public static void main(String[] args) throws IOException {
         Game game = new Game();
         game.initializeGame();
@@ -33,14 +31,28 @@ public class Game {
 
     private void initializeGame() throws IOException {
 
+        // Initialize variables
         map = new Map();
         players = new ArrayList<>();
         gombaTestek = new ArrayList<>();
         rovarok = new ArrayList<>();
         gombaFonalak = new ArrayList<>();
+        entities = new ArrayList<>();
         scanner = new Scanner(System.in);
 
-        // Itt állítod össze a játék kezdeti állapotát (demo kedvéért pár dummy érték)
+        // Initialize players
+        initPlayers();
+
+        // Load Game map from file
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
+
+        // Synchronize entities from Player class
+        populateCollections();
+    }
+
+    public void initPlayers(){
+        // Create Players
         Gombasz p1 = new Gombasz("GB1");
         Gombasz p2 = new Gombasz("GB2");
         Rovarasz p3 = new Rovarasz("RS3");
@@ -62,32 +74,6 @@ public class Game {
         players.add(p2);
         players.add(p3);
         players.add(p4);
-
-        map.loadMap("./SzoftProjGamma/mapsave.txt");
-        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
-
-        /*
-        p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
-        p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
-        p4.addRovar(new Rovar(map.getTektonById("TB"), p4));
-        p4.addRovar(new Rovar(map.getTektonById("TB"), p4));
-
-
-        p1.addGombaTest( new GombaTest(map.getTektonById("TA"), p1));
-        p1.addGombaTest( new GombaTest(map.getTektonById("TC"), p1));
-        p2.addGombaTest( new GombaTest(map.getTektonById("TD"), p2));
-        p2.addGombaTest( new GombaTest(map.getTektonById("TB"), p2));
-
-        p1.addFonal(new GombaFonal(map.getTektonById("TA"), map.getTektonById("TB"), p1));
-        p1.addFonal(new GombaFonal(map.getTektonById("TB"), map.getTektonById("TC"), p1));
-        p1.addFonal(new GombaFonal(map.getTektonById("TA"), map.getTektonById("TC"), p1));
-        p2.addFonal(new GombaFonal(map.getTektonById("TA"), map.getTektonById("TD"), p1));
-        p2.addFonal(new GombaFonal(map.getTektonById("TD"), map.getTektonById("TE"), p1));
-
-        map.getTektonById("TE").addSpora(new OsztoSpora());
-        */
-
-        populateCollections();
     }
 
     public void start() {
@@ -120,25 +106,6 @@ public class Game {
     }
 
     private void showMainMenu() {
-        /*
-        System.out.println("\nEntities on map:");
-
-        System.out.println("\nTektonok:");
-        for (Tekton t : map.getTektonok()) {
-            System.out.println(t);
-        }
-        System.out.println("\n\nFonalak:");
-        for (GombaFonal f : gombaFonalak) {
-            System.out.println(f.getID());
-        }
-        System.out.println("\n\nTestek:");
-        for (GombaTest g : gombaTestek) {
-            System.out.println(g.getID());
-        }
-        System.out.println("\n\nRovarok:");
-        for (Rovar r : rovarok) {
-            System.out.println(r.getID());
-        }*/
         System.out.println("-----------------");
         System.out.println("0) Exit");
         System.out.println("1) Inspect Entity");
@@ -296,8 +263,6 @@ public class Game {
 
                 }
 
-
-
                 case "2" -> {
                     System.out.println("Shoot Spora. Name a target Tekton: ");
                     String target_id = scanner.nextLine();
@@ -366,6 +331,10 @@ public class Game {
         System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
 
         checkGameEnd();
+    }
+
+    private Player getCurrentPlayer() {
+        return players.get(currentPlayerIndex);
     }
 
     private void checkGameEnd() {

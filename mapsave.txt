@@ -33,3 +33,4 @@ R3 TB RS4
 
 #Sporak
 OsztoSpora TE
+LassitoSpora TA
