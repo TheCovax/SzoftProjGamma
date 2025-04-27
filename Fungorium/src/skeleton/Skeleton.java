@@ -1,3 +1,5 @@
+
+/*
 package Fungorium.src.skeleton;
 
 import Fungorium.src.model.GombaFonal;
@@ -14,6 +16,7 @@ import java.util.Scanner;
 
 
 public class Skeleton {
+
     public static void main(String[] args) {
         testCases();
     }
@@ -184,7 +187,7 @@ public class Skeleton {
      * A teszt ellenőrzi az alábbi eseteket:
      * 1. Ha a GombaTest fejlettségi szintje <4, akkor képes fejlődni egy szintet.
      * 2. Ha a GombaTest fejlettségi szintje 4-es, akkor már nem lehet tovább fejleszteni.
-     */
+
     public static void gombaTestFejlesztesTestCase() {
 
 
@@ -224,7 +227,7 @@ public class Skeleton {
      * A teszt ellenőrzi az alábbi eseteket:
      * 1. Egy gombatestet növesztünk a tektonra.
      * 2. Ha van spóra a tektonon, növesztünk gombatestet.
-     */
+
     public static void gombaTestNovesztesTestCase() {
         // Létrehozunk egy tektont
         Tekton tekton1 = new Tekton();
@@ -260,7 +263,7 @@ public class Skeleton {
      * 1. Ha a rovar bénult, nem mozdulhat el.
      * 2. Ha a cél tekton nem elérhető, a mozgás sikertelen.
      * 3. Sikeres mozgás esetén a rovar áthelyeződik az új tektonra.
-     */
+
     static void rovarMoveTestCase(){
         Logger.log("\n==========================");
         Logger.log("Teszt: Rovar mozgás teszteset indítása");
@@ -319,7 +322,7 @@ public class Skeleton {
      *
      * 1. A spóra termelése sikeresen növeli a tektonon található spórák számát eggyel.
      * 2. A gombatesthez tartozó tekton megfelelően frissül az új spórával.
-     */
+
 
     static void testProduceSpora() {
         Logger.log("\n==========================");
@@ -349,7 +352,7 @@ public class Skeleton {
      * A teszt két fő esetet vizsgál:
      * 1. A rovar bénult állapotban van, ezért nem képes elvágni a gombafonalat.
      * 2. A rovar nem bénult, ezért sikeresen elvágja a gombafonalat, amely eltávolításra kerül a kapcsolódó tektonokból.
-     */
+
     public static void cutGombaFonalTestCase(){
         Logger.log("\n==========================");
         Logger.log("Teszt: Gombafonal elvágás teszteset indítása");
@@ -487,7 +490,7 @@ public class Skeleton {
      */
     /**
      * Teszteset a játék végének ellenőrzésére, amikor A játékos eléri a maximális pontszámot.
-     */
+
     static void testJatekVege() {
         Logger.log("\n==========================");
         Logger.log("Teszt: Játék vége (A játékos eléri a maximális pontszámot)");
@@ -520,7 +523,7 @@ public class Skeleton {
 
     /**
      * Teszteset: A játék véget ér, ha elfogytak a GombaTest példányok.
-     */
+
     static void testJatekVegeElfogyottGombaTest() {
         Logger.log("\n==========================");
         Logger.log("Teszt: Játék vége (elfogyott az összes GombaTest)");
@@ -539,6 +542,5 @@ public class Skeleton {
         Logger.log("==========================");
     }
 
-
-
 }
+*/

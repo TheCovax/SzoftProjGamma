@@ -1,0 +1,17 @@
+#Tektons
+T0 Stabil
+T1 Stabil
+T2 Kopar
+T3 Termekeny
+T4 Hosztilis
+T5 Termekeny
+T6 Kopar
+
+#Neighbours
+T0 T1 T2
+T1 T0 T3
+T2 T0 T3
+T3 T2 T1 T5 T4
+T4 T3 T5 T6
+T5 T3 T4
+T6 T4

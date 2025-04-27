@@ -6,17 +6,17 @@ import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A GombaFonal osztály egy gombafonal kapcsolatot reprezentál két Tekton között.
  * A gombafonalakon át a rovarok közlekedhetnek a tektonok között.
  * Minden gombafonal rendelkezik egy tulajdonossal (owner), amely az adott játékoshoz vagy irányítóhoz kapcsolható.
  */
-public class GombaFonal {
-	
-	Tekton src;	
+public class GombaFonal extends Entity{
+	private static final AtomicInteger generatedCounter = new AtomicInteger(0);
+	Tekton src;
 	Tekton dst;
-	Player owner;
 	int roundsToDestruction;
 	boolean scheduleForDestruction;
 	double eatParalyzedRovarRate;
@@ -28,9 +28,16 @@ public class GombaFonal {
 	 * @param o A gombafonal tulajdonosának neve.
 	 */
 	public GombaFonal(Tekton s, Tekton d, Player o){
+        super(o);
+        src = s;
+		dst = d;
+		eatParalyzedRovarRate = 0.5;
+	}
+
+	public GombaFonal(String id, Tekton s, Tekton d, Player o){
+		super(id, o);
 		src = s;
 		dst = d;
-		owner = o;
 		eatParalyzedRovarRate = 0.5;
 	}
 
@@ -140,12 +147,19 @@ public class GombaFonal {
 		} 
 	}
 
+	@Override
+	protected String getPrefix() {
+		return "F";
+	}
+
 	/**
 	 * Frissiti a gombafonal allapotat
 	 */
+	@Override
 	public void update(){
 		eatParalyzedRovar();
 	}
+
 
     public int getRoundsToDestruction() {
         return roundsToDestruction;

@@ -9,26 +9,30 @@ import Fungorium.src.model.tekton.Tekton;
 import Fungorium.src.utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class GombaTest {
+public class GombaTest extends Entity{
 
+    private static final AtomicInteger generatedCounter = new AtomicInteger(0);
     List<GombaFonal> fonalak;
     Tekton tekton;
-    Player owner;
     int level;
     int shotCounter;
 
 
 
     public GombaTest(Tekton tekton, Player owner) {
+        super(owner);
         fonalak = new ArrayList<>();
         this.tekton = tekton;
-        this.owner = owner;
         level = 0;
     }
 
-    public GombaTest() {
-
+    public GombaTest(String id, Tekton tekton, Player owner) {
+        super(id, owner);
+        fonalak = new ArrayList<>();
+        this.tekton = tekton;
+        level = 0;
     }
 
     public void produceSpora() {
@@ -134,12 +138,20 @@ public class GombaTest {
         return fonalak;
     }
 
-    public Player getOwner() {
-        return owner;
-    }
 
     public int getShotCounter() {
         return shotCounter;
     }
-    
+
+    @Override
+    protected String getPrefix() {
+        return "G";
+    }
+
+    @Override
+    public void update() {
+        // TODO: produce spora
+    }
+
+
 }

@@ -8,8 +8,12 @@ import Fungorium.src.model.spora.Spora;
 import Fungorium.src.utility.Logger;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Tekton {
+	private static final AtomicInteger idCounter = new AtomicInteger(0);
+	private static final Set<String> usedIds = new HashSet<>();
+	private final String id;
 
 	Queue<Spora> sporak;
 	List<GombaFonal> fonalak;
@@ -29,6 +33,21 @@ public class Tekton {
 		test = new ArrayList<>();
 		rovarok = new ArrayList<>();
 		splitRate = 0.5;
+		id = generateAutoId();
+	}
+
+	/**
+	 * Parameter nelkuli konstruktor
+	 */
+	public Tekton(String id){
+		sporak = new LinkedList<>();
+		fonalak = new ArrayList<>();
+		neighbours = new ArrayList<>();
+		test = new ArrayList<>();
+		rovarok = new ArrayList<>();
+		splitRate = 0.5;
+		this.id = id;
+		registerExplicitId(id);
 	}
 
 	/**
@@ -42,6 +61,8 @@ public class Tekton {
 		test.add(g);
 		rovarok = new ArrayList<>();
 		splitRate = splitR;
+
+		id = "T" + idCounter.incrementAndGet();
 	}
 
 	/**
@@ -54,6 +75,8 @@ public class Tekton {
 			test = new ArrayList<>();
 			rovarok = new ArrayList<>();
 			splitRate = splitR;
+
+			id = "T" + idCounter.incrementAndGet();
 		}
 
 	public List<GombaTest> getTestek(){
@@ -271,5 +294,40 @@ public class Tekton {
 
 	public List<Rovar> getRovarok(){
 		return rovarok;
+	}
+
+	public String getID(){
+		return id;
+	}
+
+	@Override
+	public String toString(){
+		String out = "";
+		out = id + " neighbours: ";
+		for (int i = 0; i < neighbours.size(); i++) {
+			out = out + neighbours.get(i).getID();
+			if (i < neighbours.size() - 1) {
+				out = out + ", ";
+			}
+		}
+
+		return out;
+	}
+
+	private static String registerExplicitId(String id) {
+		if (usedIds.contains(id)) {
+			throw new IllegalStateException("Duplicate ID: " + id);
+		}
+		usedIds.add(id);
+		return id;
+	}
+
+	protected String generateAutoId() {
+		String newId;
+		do {
+			newId = "T" + idCounter.incrementAndGet();
+		} while (usedIds.contains(newId)); // 确保唯一
+		usedIds.add(newId);
+		return newId;
 	}
 }
