@@ -13,13 +13,6 @@ public class Player {
         this.score += points;
     }
 
-    
-    // ...................
-    void takeAction() {
-        //TODO
-    }
-
-
     public String getName(){
         return this.name;
     }
@@ -27,7 +20,6 @@ public class Player {
     public void setName(String name){
         this.name = name;
     }
-
 
     public int getScore() {
         return this.score;

@@ -9,10 +9,8 @@ public class Gombasz extends Player {
     List<GombaTest> gombak;
     
     public Gombasz() {
-        gombak = new ArrayList();
+        gombak = new ArrayList<>();
     }
-
-
 
     void addGombaTest(GombaTest gombatest) {
         gombak.add(gombatest);
@@ -24,12 +22,6 @@ public class Gombasz extends Player {
 
     List<GombaTest> getGombak() {
         return gombak;
-    }
-
-    //....................................
-    @Override
-    void takeAction() {
-        //  TO  DO
     }
 
 }

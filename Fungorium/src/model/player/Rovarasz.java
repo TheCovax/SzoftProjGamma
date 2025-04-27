@@ -9,15 +9,13 @@ public class Rovarasz extends Player {
     List<Rovar> rovarok;
     
     public Rovarasz() {
-        rovarok = new ArrayList();
+        rovarok = new ArrayList<>();
     }
-
 
     void addRovar(Rovar rovar) {
         rovarok.add(rovar);
     }
 
-    
     void removeRovar(Rovar rovar) {
         rovarok.remove(rovar);
     }
@@ -26,9 +24,4 @@ public class Rovarasz extends Player {
         return rovarok;
     }
 
-    /*//.............................
-    @Override
-    void takeAction(Action action) {
-        //  TO  DO
-    }*/
 }
