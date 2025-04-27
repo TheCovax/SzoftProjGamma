@@ -153,5 +153,15 @@ public class GombaTest extends Entity{
         // TODO: produce spora
     }
 
+    @Override
+    public String toString() {
+        return "GombaTest{" +
+                "ID='" + getID() + '\'' +
+                ", Owner=" + (owner != null ? owner.getName() : "None") +
+                ", CurrentTekton=" + (tekton != null ? tekton.getID() : "None") +
+                ", Level=" + level +
+                ", ShotCounter=" + shotCounter +
+                '}';
+    }
 
 }

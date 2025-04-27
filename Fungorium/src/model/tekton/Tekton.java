@@ -302,16 +302,57 @@ public class Tekton {
 
 	@Override
 	public String toString(){
-		String out = "";
-		out = id + " neighbours: ";
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append(" { ");
+		sb.append("ID='").append(getID()).append('\'');
+
+		sb.append(", Neighbours=[");
 		for (int i = 0; i < neighbours.size(); i++) {
-			out = out + neighbours.get(i).getID();
+			sb.append(neighbours.get(i).getID());
 			if (i < neighbours.size() - 1) {
-				out = out + ", ";
+				sb.append(", ");
 			}
 		}
+		sb.append("]");
 
-		return out;
+		sb.append(", IsConnected=").append(isConnected);
+		sb.append(", SplitRate=").append(splitRate);
+
+		// 列出 GombaTestek
+		sb.append(", GombaTestek=[");
+		for (int i = 0; i < test.size(); i++) {
+			sb.append(test.get(i).getID());
+			if (i < test.size() - 1) {
+				sb.append(", ");
+			}
+		}
+		sb.append("]");
+
+		// 列出 Rovarok
+		sb.append(", Rovarok=[");
+		for (int i = 0; i < rovarok.size(); i++) {
+			sb.append(rovarok.get(i).getID());
+			if (i < rovarok.size() - 1) {
+				sb.append(", ");
+			}
+		}
+		sb.append("]");
+
+		// 列出 GombaFonalak
+		sb.append(", GombaFonalak=[");
+		for (int i = 0; i < fonalak.size(); i++) {
+			sb.append(fonalak.get(i).getID());
+			if (i < fonalak.size() - 1) {
+				sb.append(", ");
+			}
+		}
+		sb.append("]");
+
+		// Spora数量还是直接显示数量
+		sb.append(", SporakCount=").append(sporak.size());
+
+		sb.append(" }");
+		return sb.toString();
 	}
 
 	private static String registerExplicitId(String id) {
