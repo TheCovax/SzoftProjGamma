@@ -1,16 +1,10 @@
 package Fungorium.src.model.player;
 
-import Fungorium.src.model.spora;
-import Fungorium.src.model.player;
-import Fungorium.src.model.tekton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Player {
 
     int score;
-    
+    String name;
+
     public Player() {
         score = 0;
     }
@@ -22,13 +16,20 @@ public class Player {
     
     // ...................
     void takeAction() {
-        //  TO  DO
+        //TODO
     }
 
 
+    public String getName(){
+        return this.name;
+    }
+    
+    public void setName(String name){
+        this.name = name;
+    }
 
 
-    int getScore() {
+    public int getScore() {
         return this.score;
     }
 

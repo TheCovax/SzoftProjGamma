@@ -1,4 +1,5 @@
 package Fungorium.src.model.tekton;
+import Fungorium.src.model.player.Player;
 import Fungorium.src.model.GombaFonal;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package Fungorium.src.model;
 
+import Fungorium.src.model.player.Player;
 import Fungorium.src.model.spora.BenitoSpora;
 import Fungorium.src.model.spora.GyorsitoSpora;
 import Fungorium.src.model.spora.LassitoSpora;
