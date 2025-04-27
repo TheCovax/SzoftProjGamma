@@ -205,19 +205,19 @@ public class Game {
             input = scanner.nextLine();
 
             switch (input) {
-                case "1" -> System.out.println("Rovar tries to eat Spora (demo)");
+                case "1" -> System.out.println("Rovar tries to eat Spora");
                 // ide jöhet majd a rovar.eatSpora() logika
                 case "2" -> {
                     System.out.print("Target Tekton name: ");
                     String targetTektonName = scanner.nextLine();
                     // move logic ide
-                    System.out.println("Rovar moves to: " + targetTektonName + " (demo)");
+                    System.out.println("Rovar moves to: " + targetTektonName);
                 }
                 case "3" -> {
                     System.out.print("Target GombaFonal name: ");
                     String targetFonalName = scanner.nextLine();
                     // cut logic ide
-                    System.out.println("Cut Gombafonal: " + targetFonalName + " (demo)");
+                    System.out.println("Cut Gombafonal: " + targetFonalName );
                 }
                 case "0" -> {
                 }
@@ -239,22 +239,35 @@ public class Game {
             input = scanner.nextLine();
 
             switch (input) {
-                case "1":
-                    System.out.println("Grow Gombafonal (demo)");
+                case "1" -> {
+                    System.out.println("Grow Gombafonal");
                     // growFonal logic
-                    break;
-                case "2":
-                    System.out.println("Shoot Spora (demo)");
-                    // shootSpora logic
-                    break;
-                case "3":
-                    System.out.println("Upgrade GombaTest (demo)");
-                    // upgrade logic
-                    break;
-                case "0":
-                    break;
-                default:
-                    System.out.println("Invalid Option");
+
+                }
+
+
+
+                case "2" -> {
+                    System.out.println("Shoot Spora. Name a target Tekton: ");
+                    String target_id = scanner.nextLine();
+                    Tekton source = gombaTest.tekton;
+                    Tekton target = map.getTektonById(target_id);
+                    if( source.findReachableTektonWithinDistance(1).contains(target)){
+                        gombaTest.shootSpora(target);
+                    }else{
+                        System.out.println("Target is unreachable.");
+                    }
+
+                // shootSpora logic
+                }
+                case "3" -> {
+                    System.out.println("Upgrade GombaTest");
+                }
+
+                // upgrade logic
+                case "0" -> {
+                }
+                default -> System.out.println("Invalid Option");
             }
         }
     }
