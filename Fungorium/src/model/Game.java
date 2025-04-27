@@ -245,8 +245,6 @@ public class Game {
                     System.out.print("Target GombaFonal name: ");
                     String targetFonalName = scanner.nextLine();
 
-                    // Assuming we have a list of Tekton objects (or reachable Tekton(s) in the game world)
-                    // Iterate over each Tekton to find the GombaFonal by name
                     GombaFonal targetFonal = null;
                     for (Tekton tekton : map.getTektonok()) { // Use map.getTektonok() to get all Tektons
                         for (GombaFonal gf : tekton.getFonalak()) {
