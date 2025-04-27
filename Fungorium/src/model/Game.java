@@ -250,6 +250,8 @@ public class Game {
                 case "2" -> {
                     System.out.println("Shoot Spora. Name a target Tekton: ");
                     String target_id = scanner.nextLine();
+
+                    // shootSpora logic
                     Tekton source = gombaTest.tekton;
                     Tekton target = map.getTektonById(target_id);
                     if( source.findReachableTektonWithinDistance(1).contains(target)){
@@ -262,6 +264,8 @@ public class Game {
                 }
                 case "3" -> {
                     System.out.println("Upgrade GombaTest");
+                    // upgrade logic
+                    gombaTest.upgradeTest();
                 }
 
                 // upgrade logic
@@ -310,7 +314,7 @@ public class Game {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
 
-        checkGameEnd();  // mindig ellenőrizzük a játék végét
+        checkGameEnd();
     }
 
     private void checkGameEnd() {
