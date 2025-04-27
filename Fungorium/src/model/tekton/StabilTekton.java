@@ -1,10 +1,7 @@
 package Fungorium.src.model.tekton;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import Fungorium.src.model.GombaTest;
+import java.util.List;
 
 public class StabilTekton extends Tekton {
 

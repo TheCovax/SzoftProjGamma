@@ -1,12 +1,10 @@
 package Fungorium.src.model;
 
-import java.lang.runtime.TemplateRuntime;
+//import java.lang.runtime.TemplateRuntime;
+import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
-import Fungorium.src.model.tekton.Tekton;
-import Fungorium.src.utility.Logger;
 
 /**
  * A GombaFonal osztály egy gombafonal kapcsolatot reprezentál két Tekton között.

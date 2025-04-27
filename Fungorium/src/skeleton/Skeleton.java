@@ -1,17 +1,16 @@
 package Fungorium.src.skeleton;
 
-import java.util.Scanner;
-
-import Fungorium.src.model.GombaTest;
 import Fungorium.src.model.GombaFonal;
+import Fungorium.src.model.GombaTest;
 import Fungorium.src.model.Rovar;
 import Fungorium.src.model.spora.*;
 import Fungorium.src.model.tekton.ElszigeteltTekton;
 import Fungorium.src.model.tekton.StabilTekton;
 import Fungorium.src.model.tekton.Tekton;
 import Fungorium.src.utility.Logger;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 
 public class Skeleton {
@@ -60,45 +59,21 @@ public class Skeleton {
 
     static void selectTestCase(String input){
         switch (input) {
-            case "1":
-                fonalNoveszteseTestCase();
-                break;
-            case "2":
-                splitTestCase();
-                break;
-            case "3":
-                sporaLovesTestCase();
-                break;
-            case "4":
-                testProduceSpora();
-                break;
-            case "5":
-                gombaTestFejlesztesTestCase();
-                break;
-            case "6":
-                gombaTestNovesztesTestCase();
-                break;
-            case "7":
-                rovarMoveTestCase();
-                break;
-            case "8":
-                cutGombaFonalTestCase();
-                break;
-            case "9":
-                testEatLassitoSpora();
-                break;
-            case "10":
-                testEatGyoritoSpora();;
-                break;
-            case "11":
-                testEatBenitoSpora();
-                break;
-            case "12":
-                testJatekVege();
-                break;
-            case "13":
-                testJatekVegeElfogyottGombaTest();
-                break;
+            case "1" -> fonalNoveszteseTestCase();
+            case "2" -> splitTestCase();
+            case "3" -> sporaLovesTestCase();
+            case "4" -> testProduceSpora();
+            case "5" -> gombaTestFejlesztesTestCase();
+            case "6" -> gombaTestNovesztesTestCase();
+            case "7" -> rovarMoveTestCase();
+            case "8" -> cutGombaFonalTestCase();
+            case "9" -> testEatLassitoSpora();
+            case "10" -> {
+                testEatGyoritoSpora();
+            }
+            case "11" -> testEatBenitoSpora();
+            case "12" -> testJatekVege();
+            case "13" -> testJatekVegeElfogyottGombaTest();
         }
     }
 
@@ -192,9 +167,7 @@ public class Skeleton {
 
         System.out.println("Az eltorheto tekton eltorese");
 
-        Tekton ujTekton = null;
-
-        ujTekton = test1.split();
+        Tekton ujTekton = test1.split();
 
         if(ujTekton != null) System.out.println("A tekton sikeresen eltort");
         else System.out.println("A tekton eltorese nem sikerult");

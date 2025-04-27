@@ -21,4 +21,8 @@ public class GyorsitoSpora extends Spora {
 
         Logger.methodReturn("Gyorsito.applyEffect()");
     };
+
+    public int getSpeedUpVale() {
+        return speedUpVale;
+    }
 }

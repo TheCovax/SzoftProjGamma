@@ -1,16 +1,11 @@
 package Fungorium.src.model;
 
+import Fungorium.src.model.spora.BenitoSpora;
 import Fungorium.src.model.spora.GyorsitoSpora;
 import Fungorium.src.model.spora.LassitoSpora;
-import Fungorium.src.model.spora.BenitoSpora;
 import Fungorium.src.model.spora.Spora;
-import Fungorium.src.utility.Logger;
-import java.util.List;
-import java.util.ArrayList;
-
-
 import Fungorium.src.model.tekton.Tekton;
-
+import Fungorium.src.utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,22 +38,23 @@ public class GombaTest {
 
         Spora spora;
         switch (r) {
-            case 0:
+            case 0 -> {
                 Logger.log("Gyorsító spóra létrehozása");
                 spora = new GyorsitoSpora();
-                break;
-            case 1:
+            }
+            case 1 -> {
                 Logger.log("Lassító spóra létrehozása");
                 spora = new LassitoSpora();
-                break;
-            case 2:
+            }
+            case 2 -> {
                 Logger.log("Bénító spóra létrehozása");
                 spora = new BenitoSpora();
-                break;
-            default:
+            }
+            default -> {
                 Logger.log("Nem sikerült spóra típust választani");
                 Logger.methodReturn("g.produceSpora()");
                 return;
+            }
         }
 
         // 2. Spóra hozzáadása a megfelelő Tektonhoz
@@ -74,6 +70,7 @@ public class GombaTest {
     }
 
 
+    
     void clear() {
          //TODO
     }
@@ -82,21 +79,21 @@ public class GombaTest {
      * Egy szintel fejleszti a gombatestet
      */
     public void upgradeTest() {
+        //TODO: azert ezt majd finomitsuk xd
         if(getLevel() < 4) {
             setLevel(getLevel() + 1);
             tekton.removeSpora();
         }
         else {
             System.out.println("A gombatest elérte a maximális fejlettségi szintet, nem lehet tovább fejleszteni!");
-            return;
         }
     }
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
-    /*void setRecursiveConnectivity() {
+    void setRecursiveConnectivity() {
 
         List<Tekton> nodes = tekton.checkConnectivity();
-        while(nodes.size()>0){
+        while(!nodes.isEmpty()){
             List<Tekton> curr = new ArrayList<>();
             for(Tekton node : nodes){
                 for(Tekton t:node.checkConnectivity()){
@@ -107,7 +104,7 @@ public class GombaTest {
             nodes.addAll(curr);
         }
 
-    }*/
+    }
 
 
     /**
@@ -130,6 +127,18 @@ public class GombaTest {
      */
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public List<GombaFonal> getFonalak() {
+        return fonalak;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public int getShotCounter() {
+        return shotCounter;
     }
     
 }

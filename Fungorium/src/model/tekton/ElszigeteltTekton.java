@@ -1,10 +1,6 @@
 package Fungorium.src.model.tekton;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import Fungorium.src.model.GombaFonal;
+import java.util.List;
 
 public class ElszigeteltTekton extends Tekton{
 
@@ -40,6 +36,6 @@ public class ElszigeteltTekton extends Tekton{
 			fonalak.add(ujFonal);
 			dst.addGombaFonal(ujFonal);
 
-		}
+			}
 		} 
 }

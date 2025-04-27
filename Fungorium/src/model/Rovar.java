@@ -2,8 +2,6 @@ package Fungorium.src.model;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
 import Fungorium.src.utility.Logger;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

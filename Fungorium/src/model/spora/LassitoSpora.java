@@ -22,4 +22,8 @@ public class LassitoSpora extends Spora {
 
         Logger.methodReturn("LassitoSpora.applyEffect(r)");
     };
+
+    public int getSlowDownValue() {
+        return slowDownValue;
+    }
 }

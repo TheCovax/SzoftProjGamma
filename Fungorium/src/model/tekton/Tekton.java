@@ -1,19 +1,12 @@
 package Fungorium.src.model.tekton;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ThreadLocalRandom;
-
 import Fungorium.src.model.GombaFonal;
 import Fungorium.src.model.GombaTest;
-import java.util.*;
-
-import Fungorium.src.model.GombaFonal;
 import Fungorium.src.model.Rovar;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.utility.Logger;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Tekton {
 
@@ -53,14 +46,14 @@ public class Tekton {
 	/**
 	 * splitRate es gombaTest beallito konstruktor
 	 */
-	public Tekton(double splitR, List<Tekton> neighboursList){
-		sporak = new LinkedList<>();
-		fonalak = new ArrayList<>();
-		neighbours = neighboursList;
-		test = new ArrayList<>();
-		rovarok = new ArrayList<>();
-		splitRate = splitR;
-	}
+		public Tekton(double splitR, List<Tekton> neighboursList){
+			sporak = new LinkedList<>();
+			fonalak = new ArrayList<>();
+			neighbours = neighboursList;
+			test = new ArrayList<>();
+			rovarok = new ArrayList<>();
+			splitRate = splitR;
+		}
 
 	public List<GombaTest> getTestek(){
 		return test;
@@ -137,23 +130,13 @@ public class Tekton {
 		else newTektonType = ThreadLocalRandom.current().nextInt(0, 5);
 
 		switch (newTektonType) {
-			case 0:
-				newTekton = new StabilTekton(splitRate, newNeighbors);
-				break;
-			case 1:
-				newTekton = new ElszigeteltTekton(splitRate, newNeighbors);
-					break;
-			case 2:
-				newTekton = new HosztilisTekton(splitRate, newNeighbors);
-					break;
-			case 3:
-				newTekton = new KoparTekton(splitRate, newNeighbors);
-					break;
-			case 4:
-				newTekton = new TermekenyTekton(splitRate, newNeighbors);
-					break;
-			default:
-				break;
+			case 0 -> newTekton = new StabilTekton(splitRate, newNeighbors);
+			case 1 -> newTekton = new ElszigeteltTekton(splitRate, newNeighbors);
+			case 2 -> newTekton = new HosztilisTekton(splitRate, newNeighbors);
+			case 3 -> newTekton = new KoparTekton(splitRate, newNeighbors);
+			case 4 -> newTekton = new TermekenyTekton(splitRate, newNeighbors);
+			default -> {
+                }
 		}
 
 		//A jelenlegi tektonrol torli a fonalakat es a gombatestet;
@@ -208,6 +191,31 @@ public class Tekton {
 	public void removeRovar(Rovar r) {
 		rovarok.remove(r);
 	}
+
+	public List<Tekton> checkConnectivity(){
+		List<GombaFonal> loc_fonalak = this.getFonalak();
+		
+		List<Tekton> targets = new ArrayList<>();
+
+            while (!loc_fonalak.isEmpty()){
+				GombaFonal fonal = loc_fonalak.get(0);
+				Tekton candidate = fonal.getOtherEnd(this);
+				if(!targets.contains(candidate)){
+					targets.add(candidate);
+					 candidate.getFonalak();
+				}
+				loc_fonalak.remove(fonal);
+            } 
+
+		return targets;
+	}
+
+	public void setIsConnected(boolean b) {
+		isConnected = b;
+	}
+
+	public boolean getIsConnected(){ return isConnected;}
+
 
 	/**
 	 * Visszadja az összes elérhető Tekton-t a jelenlegi tektonból kiindulva (elérhető: össze vannak kapcsolódva gombafonalakkal),
