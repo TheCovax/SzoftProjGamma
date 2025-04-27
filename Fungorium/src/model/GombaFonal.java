@@ -160,8 +160,17 @@ public class GombaFonal extends Entity{
 		eatParalyzedRovar();
 	}
 
-
     public int getRoundsToDestruction() {
         return roundsToDestruction;
     }
+
+	@Override
+	public String toString() {
+		return "GombaFonal{" +
+				"ID='" + getID() + '\'' +
+				", Owner=" + (owner != null ? owner.getName() : "None") +
+				", SrcTekton=" + (src != null ? src.getID() : "None") +
+				", DstTekton=" + (dst != null ? dst.getID() : "None") +
+				'}';
+	}
 }

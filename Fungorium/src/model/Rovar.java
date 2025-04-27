@@ -221,4 +221,16 @@ public class Rovar extends Entity{
     public void split(){
         tekton.addRovar(new Rovar(tekton, owner));
     }
+
+    @Override
+    public String toString(){
+        return "Rovar{" +
+                "ID='" + getID() + '\'' +
+                ", Owner=" + (owner != null ? owner.getName() : "None") +
+                ", CurrentTekton=" + (tekton != null ? tekton.getID() : "None") +
+                ", Speed=" + speed +
+                ", IsParalyzed=" + isParalyzed +
+                ", CollectedNutrition=" + collectedNutrition +
+                '}';
+    }
 }

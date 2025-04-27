@@ -16,6 +16,7 @@ public class Game {
     private List<GombaTest> gombaTestek;
     private List<Rovar> rovarok;
     private List<GombaFonal> gombaFonalak;
+    private List<Entity> entities;
     private int currentPlayerIndex = 0;
     private Scanner scanner;
     public Map map = new Map();
@@ -61,7 +62,7 @@ public class Game {
         players.add(p3);
         players.add(p4);
 
-        map.loadMap("mapsave.txt");        
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
 
 
         p3.addRovar(new Rovar(map.getTektonById("TA"), p3));
@@ -90,6 +91,7 @@ public class Game {
         String input = "";
 
         while (!input.equals("0")) {
+            populateCollections();
             showMainMenu();
             input = scanner.nextLine();
 
@@ -97,14 +99,25 @@ public class Game {
                 case "1" -> inspectEntity();
                 case "2" -> selectEntity();
                 case "3" -> nextPlayer();
+                case "4" -> listAllEntities();
                 case "0" -> System.out.println("Exiting...");
                 default -> System.out.println("Unknown Command");
             }
         }
     }
 
+    private void listAllEntities() {
+        for (Tekton t: map.getTektonok()){
+            System.out.println(t.getID());
+        }
+
+        for (Entity e: entities){
+            System.out.println(e.getID());
+        }
+    }
+
     private void showMainMenu() {
-        populateCollections();
+        /*
         System.out.println("\nEntities on map:");
 
         System.out.println("\nTektonok:");
@@ -122,51 +135,39 @@ public class Game {
         System.out.println("\n\nRovarok:");
         for (Rovar r : rovarok) {
             System.out.println(r.getID());
-        }
+        }*/
         System.out.println("-----------------");
         System.out.println("0) Exit");
         System.out.println("1) Inspect Entity");
         System.out.println("2) Select Entity");
         System.out.println("3) Next Player");
+        System.out.println("4) List all Entities");
         System.out.print("Choose option: ");
     }
 
 
     private void inspectEntity() {
-        System.out.print("Name an entity to inspect: ");
-        String name = scanner.nextLine();
+        System.out.print("Name an entity ID to inspect: ");
+        String id = scanner.nextLine();
 
-
-        // Tekton keresése
+        // 1. Search ID in tektonok
         for (Tekton t : map.getTektonok()) {
-            if (t.getID().equals(name)) {
-                System.out.println("Tekton: " + t.getID());
-
-                System.out.println("Fonalak:");
-                for (GombaFonal gf : t.getFonalak()) {
-                    System.out.println(" - " + gf.getID());
-                }
-
-                System.out.println("Gombatestek:");
-                for (GombaTest g : t.getGombaTestek()) {
-                    System.out.println(" - " + g.getID());
-                }
-
-                System.out.println("Rovarok:");
-                for (Rovar r : t.getRovarok()) {
-                    System.out.println(" - " + r.getID() + " (sebesség: " + r.getSpeed() + ")");
-
-                    //Elérhető tektonok kiírása a rovar sebessége alapján:
-                    List<Tekton> reachable = t.findReachableTektonWithinDistance(r.getSpeed());
-                    System.out.println("   -> Elérhető tektonok:");
-                    for (Tekton reachableT : reachable) {
-                        System.out.println("      * " + reachableT.getID());
-                    }
-                }
+            if (t.getID().equals(id)) {
+                System.out.println(t);
+                return;  // return if ID found in tektonok
             }
         }
 
-        System.out.println("Tekton with this ID ("+ name + ") could not be found");
+        // 2. Search ID in entities
+        for (Entity e : entities) {
+            if (e.getID().equals(id)) {
+                System.out.println(e);
+                return;
+            }
+        }
+
+        // 3. ID not found
+        System.out.println("Entity with this ID ("+ id + ") could not be found");
     }
 
     private void selectEntity() {
@@ -291,14 +292,16 @@ public class Game {
                 case "1" -> {
                     System.out.println("Grow Gombafonal");
                     // growFonal logic
-                    
-                }
-                
 
-                
+                }
+
+
+
                 case "2" -> {
                     System.out.println("Shoot Spora. Name a target Tekton: ");
                     String target_id = scanner.nextLine();
+
+                    // shootSpora logic
                     Tekton source = gombaTest.tekton;
                     Tekton target = map.getTektonById(target_id);
                     if( source.findReachableTektonWithinDistance(1).contains(target)){
@@ -306,13 +309,15 @@ public class Game {
                     }else{
                         System.out.println("Target is unreachable.");
                     }
-                    
+
                 // shootSpora logic
                 }
                 case "3" -> {
                     System.out.println("Upgrade GombaTest");
+                    // upgrade logic
+                    gombaTest.upgradeTest();
                 }
-                
+
                 // upgrade logic
                 case "0" -> {
                 }
@@ -326,6 +331,8 @@ public class Game {
         List<GombaFonal> tmpFonalak = new ArrayList<>();
         List<GombaTest> tmpTestek = new ArrayList<>();
         List<Rovar> tmpRovarok = new ArrayList<>();
+        List<Entity> tmpEntities = new ArrayList<>();
+
         for (Player p : players) {
             if (p instanceof Gombasz gombasz) {
                 for (GombaFonal f : gombasz.getFonalak()) {
@@ -342,16 +349,22 @@ public class Game {
                 }
             }
         }
+
+        tmpEntities.addAll(tmpFonalak);
+        tmpEntities.addAll(tmpTestek);
+        tmpEntities.addAll(tmpRovarok);
+
         this.gombaFonalak = tmpFonalak;
         this.gombaTestek = tmpTestek;
         this.rovarok = tmpRovarok;
+        this.entities = tmpEntities;
     }
 
     private void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
 
-        checkGameEnd();  // mindig ellenőrizzük a játék végét
+        checkGameEnd();
     }
 
     private void checkGameEnd() {

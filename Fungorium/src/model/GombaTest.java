@@ -44,34 +44,35 @@ public class GombaTest extends Entity{
         Spora spora;
         switch (r) {
             case 0 -> {
-                Logger.log("Gyorsító spóra létrehozása");
+                //Logger.log("Gyorsító spóra létrehozása");
                 spora = new GyorsitoSpora();
             }
             case 1 -> {
-                Logger.log("Lassító spóra létrehozása");
+                //Logger.log("Lassító spóra létrehozása");
                 spora = new LassitoSpora();
             }
             case 2 -> {
-                Logger.log("Bénító spóra létrehozása");
+                //Logger.log("Bénító spóra létrehozása");
                 spora = new BenitoSpora();
             }
             default -> {
-                Logger.log("Nem sikerült spóra típust választani");
-                Logger.methodReturn("g.produceSpora()");
+                System.out.println("error");
+                //Logger.log("Nem sikerült spóra típust választani");
+                //Logger.methodReturn("g.produceSpora()");
                 return;
             }
         }
 
         // 2. Spóra hozzáadása a megfelelő Tektonhoz
         if (tekton != null) {
-            Logger.methodCall("tekton.addSpora(spora)");
+            //Logger.methodCall("tekton.addSpora(spora)");
             tekton.addSpora(spora);
-            Logger.methodReturn("tekton.addSpora(spora)");
+            //Logger.methodReturn("tekton.addSpora(spora)");
         } else {
-            Logger.log("Nincs tekton hozzárendelve ehhez a gombatesthez.");
+            //Logger.log("Nincs tekton hozzárendelve ehhez a gombatesthez.");
         }
 
-        Logger.methodReturn("g.produceSpora()");
+        //Logger.methodReturn("g.produceSpora()");
     }
 
 
@@ -90,7 +91,7 @@ public class GombaTest extends Entity{
             tekton.removeSpora();
         }
         else {
-            System.out.println("A gombatest elérte a maximális fejlettségi szintet, nem lehet tovább fejleszteni!");
+            System.out.println("Maximum level reached!");
         }
     }
 
@@ -153,5 +154,15 @@ public class GombaTest extends Entity{
         // TODO: produce spora
     }
 
+    @Override
+    public String toString() {
+        return "GombaTest{" +
+                "ID='" + getID() + '\'' +
+                ", Owner=" + (owner != null ? owner.getName() : "None") +
+                ", CurrentTekton=" + (tekton != null ? tekton.getID() : "None") +
+                ", Level=" + level +
+                ", ShotCounter=" + shotCounter +
+                '}';
+    }
 
 }
