@@ -1,6 +1,7 @@
 package Fungorium.src.model;
 
 //import java.lang.runtime.TemplateRuntime;
+import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class GombaFonal extends Entity{
 	Tekton src;
 	Tekton dst;
 	int roundsToDestruction;
-	boolean scheduleForDestruction;
+	boolean scheduledForDestruction;
 	double eatParalyzedRovarRate;
 
 	/**
@@ -39,14 +40,6 @@ public class GombaFonal extends Entity{
 		src = s;
 		dst = d;
 		eatParalyzedRovarRate = 0.5;
-	}
-
-	/**
-	 * Eltávolítja a gombafonalat a kapcsolódó tektonokból.
-	 */
-	public void clean(){
-		if(src != null) src.removeGombaFonal(this);
-		if(dst != null) dst.removeGombaFonal(this);
 	}
 
 	public boolean isOwner(Player p){
@@ -76,10 +69,10 @@ public class GombaFonal extends Entity{
 	 */
 	public boolean scheduleDestruction(int time){
 		
-		if(scheduleForDestruction) return false;
+		if(scheduledForDestruction) return false;
 
 		roundsToDestruction = time;
-		scheduleForDestruction = true;
+		scheduledForDestruction = true;
 		return true;
 	}
 
@@ -158,9 +151,24 @@ public class GombaFonal extends Entity{
 	@Override
 	public void update(){
 		eatParalyzedRovar();
+
+		if (scheduledForDestruction){
+			roundsToDestruction--;
+			if (roundsToDestruction<=0){
+				this.delete();
+			}
+		}
 	}
 
-    public int getRoundsToDestruction() {
+	@Override
+	public void delete() {
+		if(src != null) src.removeGombaFonal(this);
+		if(dst != null) dst.removeGombaFonal(this);
+		((Gombasz) owner).removeFonal(this);
+
+	}
+
+	public int getRoundsToDestruction() {
         return roundsToDestruction;
     }
 

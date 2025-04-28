@@ -1,5 +1,6 @@
 package Fungorium.src.model;
 
+import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.spora.BenitoSpora;
 import Fungorium.src.model.spora.GyorsitoSpora;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GombaTest extends Entity{
 
     private static final AtomicInteger generatedCounter = new AtomicInteger(0);
-    List<GombaFonal> fonalak;
+    //List<GombaFonal> fonalak;
     Tekton tekton;
     int level;
     int shotCounter;
@@ -24,14 +25,12 @@ public class GombaTest extends Entity{
 
     public GombaTest(Tekton tekton, Player owner) {
         super(owner);
-        fonalak = new ArrayList<>();
         this.tekton = tekton;
         level = 0;
     }
 
     public GombaTest(String id, Tekton tekton, Player owner) {
         super(id, owner);
-        fonalak = new ArrayList<>();
         this.tekton = tekton;
         level = 0;
     }
@@ -72,10 +71,10 @@ public class GombaTest extends Entity{
         }
     }
 
-
-    
-    void clear() {
-         //TODO
+    @Override
+    public void delete() {
+        tekton.removeGombatest(this);
+        ((Gombasz) owner).removeGombaTest(this);
     }
 
     /**
@@ -129,10 +128,6 @@ public class GombaTest extends Entity{
      */
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public List<GombaFonal> getFonalak() {
-        return fonalak;
     }
 
 

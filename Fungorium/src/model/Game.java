@@ -228,7 +228,7 @@ public class Game {
                     // If the GombaFonal is found, remove it
                     if (targetFonal != null) {
                         // Clean up the GombaFonal from both Tektons it connects
-                        targetFonal.clean();  // Assumes the clean method disconnects the GombaFonal from the Tektons
+                        targetFonal.delete();  // Assumes the clean method disconnects the GombaFonal from the Tektons
                         System.out.println("Cut Gombafonal: " + targetFonalName);
                     } else {
                         System.out.println("No Gombafonal found with the name: " + targetFonalName);
