@@ -64,7 +64,11 @@ public class GombaTest extends Entity{
 
         // 2. Spóra hozzáadása a megfelelő Tektonhoz
         if (tekton != null) {
-            tekton.addSpora(spora);
+            //Logger.methodCall("tekton.addSpora(spora)");
+            tekton.addSpora(spora, owner);
+            //Logger.methodReturn("tekton.addSpora(spora)");
+        } else {
+            //Logger.log("Nincs tekton hozzárendelve ehhez a gombatesthez.");
         }
     }
 
@@ -109,7 +113,7 @@ public class GombaTest extends Entity{
      * Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
      */
     public void shootSpora(Tekton dst){
-        dst.addSpora(tekton.removeSpora());
+        dst.addSpora(tekton.removeSpora(), owner);
     }
 
     public void setTekton(Tekton t){
