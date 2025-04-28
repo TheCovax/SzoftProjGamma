@@ -11,7 +11,10 @@ import java.util.*;
 
 public class Game {
 
-    private static final int WINNING_SCORE = 10;
+    private int roundCounter = 0;
+    private static final int MAX_ROUNDS = 15;
+    private static final int WINNING_GOMBATEST_COUNT = 10;
+    private static final int WINNING_SPORA_SCORE = 30;
     private List<Player> players;
     private List<GombaTest> gombaTestek;
     private List<Rovar> rovarok;
@@ -327,30 +330,50 @@ public class Game {
 
     private void nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+
+        if (currentPlayerIndex == 0) {
+            roundCounter++;
+            System.out.println("Round " + roundCounter + " started.");
+        }
+
         System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
 
         checkGameEnd();
     }
+
 
     private Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
     private void checkGameEnd() {
-        // 1. Pontszám elérés
+        boolean gombaszWin = false;
+        boolean rovaraszWin = false;
+
         for (Player p : players) {
-            if (p.getScore() >= WINNING_SCORE) {
-                System.out.println("Game Over! " + p.getName() + " reached " + WINNING_SCORE + " points!");
-                System.exit(0);
+            if (p instanceof Gombasz gombasz) {
+                if (gombasz.getGombak().size() >= WINNING_GOMBATEST_COUNT) {
+                    gombaszWin = true;
+                    System.out.println("Game Over! Gombász " + gombasz.getName() + " has developed " + gombasz.getGombak().size() + " GombaTests!");
+                }
+            } else if (p instanceof Rovarasz rovarasz) {
+                if (rovarasz.getScore() >= WINNING_SPORA_SCORE) {
+                    rovaraszWin = true;
+                    System.out.println("Game Over! Rovarász " + rovarasz.getName() + " collected " + rovarasz.getScore() + " points!");
+                }
             }
         }
 
-        // 2. GombaTestek elfogytak
-        if (gombaTestek.isEmpty()) {
-            System.out.println("Game Over! Someone ran out of GombaTest!");
+        if (gombaszWin || rovaraszWin) {
+            System.exit(0);
+        }
+
+        if (roundCounter >= MAX_ROUNDS) {
+            System.out.println("Game Over! Maximum rounds (" + MAX_ROUNDS + ") reached.");
             System.exit(0);
         }
     }
+
 
     private Player findPlayerById(String id) {
         for (Player p : players) {
