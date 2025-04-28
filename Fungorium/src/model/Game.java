@@ -268,10 +268,15 @@ public class Game {
 
                     Tekton target = map.getTektonById(target_id);
 
-                    gombaTest.shootSpora(target);
+                    if (target == null) {
+                        System.out.println("Invalid target Tekton ID.");
+                        return;
+                    }
 
-                // shootSpora logic
+                    gombaTest.shootSpora(target);
                 }
+
+
                 case "3" -> {
                     System.out.println("Upgrade GombaTest");
                     // upgrade logic
