@@ -5,11 +5,10 @@ import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
 import Fungorium.src.utility.Logger;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *  A Rovarászok által irányított karakterek.
- *  A Rovar képes mozogni a tektonok között, spórákat fogyasztani és gombafonalakt vágni.
+ * Represents a Rovar Entity controlled by players.
+ * A Rovar can move between Tektons, consume spora, and cut Gombafonal.
  */
 public class Rovar extends Entity{
     public static final int DEFAULT_SPEED = 2;
@@ -21,7 +20,9 @@ public class Rovar extends Entity{
     private int collectedNutrition;
     private int remainingActions;
 
-    // Constructor with given ID
+    /**
+     * Constructs a Rovar with a specific ID, Tekton, and owner.
+     */
     public Rovar(String id, Tekton startTekton, Player owner){
         super(id, owner);
         this.tekton = startTekton;
@@ -32,7 +33,9 @@ public class Rovar extends Entity{
         this.remainingActions = speed;
     }
 
-    // Constructor for dynamically generated Rovar with generated ID
+    /**
+     * Constructs a Rovar with a generated ID and given Tekton and owner.
+     */
     public Rovar(Tekton tekton, Player owner) {
         super(owner);
         this.tekton = tekton;
@@ -124,7 +127,7 @@ public class Rovar extends Entity{
 
         // Execute cutting gombafonal
         // successful holds if the gombafonal is successfully scheduled for destruction
-        if (!gf.scheduleDestruction(2)){
+        if (!gf.cut()){
             return false;
         }else {
             remainingActions--;
@@ -136,7 +139,9 @@ public class Rovar extends Entity{
      * Egy uj rovart hoz letre, ugyan arra a tektonra
      */
     public void split(){
-        tekton.addRovar(new Rovar(tekton, owner));
+        Rovar r2 = new Rovar(tekton,owner);
+        tekton.addRovar(r2);
+        ((Rovarasz) owner).addRovar(r2);
     }
 
     @Override
@@ -218,4 +223,9 @@ public class Rovar extends Entity{
     public void setCollectedNutrition(int collectedNutrition) {
         this.collectedNutrition = collectedNutrition;
     }
+
+    public int getRemainingActions() {
+        return remainingActions;
+    }
+
 }

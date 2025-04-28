@@ -43,8 +43,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("mapsave.txt");
-        loadEntitiesFromFile("mapsave.txt");
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -405,7 +405,7 @@ public class Game {
                 Tekton dst = map.getTektonById(parts[2]);
                 Player owner = findPlayerById(parts[3]);
                 if (src != null && dst != null && owner != null) {
-                    GombaFonal gf = new GombaFonal(id, src, dst, owner);
+                    GombaFonal gf = new GombaFonal(id, src, dst, owner, GombaFonal.State.ACTIVE);
                     src.addGombaFonal(gf);
                     dst.addGombaFonal(gf);
                     if (owner instanceof Gombasz gombasz) gombasz.addFonal(gf);
