@@ -112,12 +112,14 @@ public class Tekton {
 		test.add(gt);
 	}
 
+
 	public List<GombaTest> getGombaTestek() {
 		return test;
 	}
 
-	public void addSpora(Spora s){
+	public void addSpora(Spora s, Player p){
 		sporak.add(s);
+		checkForGombatest(p);
 	}
 
 	public Spora removeSpora(){
@@ -128,6 +130,16 @@ public class Tekton {
 
 	public void addGombaFonal(GombaFonal f){
 		fonalak.add(f);
+		checkForGombatest(f.getOwner());
+	}
+
+	void checkForGombatest(Player p){
+		if(!(this instanceof KoparTekton)){
+			for (GombaFonal f : fonalak) {
+				if(sporak.size() >= 3 && f.isOwner(p)) addGombaTest(new GombaTest(this, p));
+			}
+
+		}
 	}
 
 	/**

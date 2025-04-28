@@ -422,10 +422,10 @@ public class Game {
 
                 if (tekton != null) {
                     switch (sporaType.toLowerCase()) {
-                        case "osztospora" -> tekton.addSpora(new OsztoSpora());
-                        case "gyorsitospora" -> tekton.addSpora(new GyorsitoSpora());
-                        case "lassitospora" -> tekton.addSpora(new LassitoSpora());
-                        case "benitospora" -> tekton.addSpora(new BenitoSpora());
+                        case "osztospora" -> tekton.addSpora(new OsztoSpora(), players.get(currentPlayerIndex));
+                        case "gyorsitospora" -> tekton.addSpora(new GyorsitoSpora(), players.get(currentPlayerIndex));
+                        case "lassitospora" -> tekton.addSpora(new LassitoSpora(), players.get(currentPlayerIndex));
+                        case "benitospora" -> tekton.addSpora(new BenitoSpora(), players.get(currentPlayerIndex));
                         default -> System.out.println("Unknown Spora type: " + sporaType);
                     }
                 }
