@@ -45,13 +45,12 @@ public class GombaFonal extends Entity{
 	/**
 	 * Eltávolítja a gombafonalat a kapcsolódó tektonokból.
 	 */
-	public void clean(){
+	@Override
+	public void delete(){
 		if(src != null) src.removeGombaFonal(this);
 		if(dst != null) dst.removeGombaFonal(this);
 		Gombasz g = (Gombasz)owner;
 		g.getFonalak().remove(this);
-
-		src.getGombaTestek().get(0).getFonalak().remove(this);
 	}
 
 	public boolean isOwner(Player p){
