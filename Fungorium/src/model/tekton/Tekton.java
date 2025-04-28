@@ -83,8 +83,20 @@ public class Tekton {
 		return test;
 	}
 
-	public List<GombaFonal> getFonalak(){
-		return fonalak;
+	public List<GombaFonal> getFonalak() {
+		return getFonalak(null);
+	}
+
+	/// Visszaadja a tektonon lévő gombafonalakat, ha a tulajdonos null, akkor minden fonalat visszaad
+	/// Ha a tulajdonos nem null, akkor csak azokat a fonalakat adja vissza, amelyek a megadott tulajdonoshoz tartoznak
+	public List<GombaFonal> getFonalak(Player owner) {
+		List<GombaFonal> loc_fonalak = new ArrayList<>();
+		for (GombaFonal fonal : this.fonalak) {
+			if (owner == null || fonal.isOwner(owner)) {
+				loc_fonalak.add(fonal);
+			}
+		}
+		return loc_fonalak;
 	}
 
 	public Queue<Spora> getSporak(){
@@ -228,8 +240,8 @@ public class Tekton {
 		rovarok.remove(r);
 	}
 
-	public List<Tekton> checkConnectivity(){
-		List<GombaFonal> loc_fonalak = this.getFonalak();
+	public List<Tekton> checkConnectivity(Player owner) {
+		List<GombaFonal> loc_fonalak = this.getFonalak(owner);
 		
 		List<Tekton> targets = new ArrayList<>();
 
@@ -238,7 +250,7 @@ public class Tekton {
 				Tekton candidate = fonal.getOtherEnd(this);
 				if(!targets.contains(candidate)){
 					targets.add(candidate);
-					 candidate.getFonalak();
+					candidate.getFonalak(owner);
 				}
 				loc_fonalak.remove(fonal);
             } 

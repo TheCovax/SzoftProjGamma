@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GombaTest extends Entity{
 
     private static final AtomicInteger generatedCounter = new AtomicInteger(0);
-    List<GombaFonal> fonalak;
     Tekton tekton;
     int level;
     int shotCounter;
@@ -26,14 +25,12 @@ public class GombaTest extends Entity{
 
     public GombaTest(Tekton tekton, Player owner) {
         super(owner);
-        fonalak = new ArrayList<>();
         this.tekton = tekton;
         level = 0;
     }
 
     public GombaTest(String id, Tekton tekton, Player owner) {
         super(id, owner);
-        fonalak = new ArrayList<>();
         this.tekton = tekton;
         level = 0;
     }
@@ -103,13 +100,13 @@ public class GombaTest extends Entity{
     }
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
-    void setRecursiveConnectivity() {
+    void setConnectivity() {
 
-        List<Tekton> nodes = tekton.checkConnectivity();
+        List<Tekton> nodes = tekton.checkConnectivity(owner);
         while(!nodes.isEmpty()){
             List<Tekton> curr = new ArrayList<>();
             for(Tekton node : nodes){
-                for(Tekton t:node.checkConnectivity()){
+                for(Tekton t:node.checkConnectivity(owner)){
                     curr.add(t);
                     t.setIsConnected(true);
                 }
@@ -148,10 +145,6 @@ public class GombaTest extends Entity{
         this.level = level;
     }
 
-    public List<GombaFonal> getFonalak() {
-        return fonalak;
-    }
-
 
     public int getShotCounter() {
         return shotCounter;
@@ -164,7 +157,11 @@ public class GombaTest extends Entity{
 
     @Override
     public void update() {
-        // TODO: produce spora
+        if (shotCounter > 0) {
+            produceSpora();
+        }else{
+            clear();
+        }
     }
 
     @Override
