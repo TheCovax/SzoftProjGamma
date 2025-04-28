@@ -1,5 +1,6 @@
 package Fungorium.src.model;
 
+import Fungorium.src.model.player.Gombasz;
 //import java.lang.runtime.TemplateRuntime;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.tekton.Tekton;
@@ -47,6 +48,10 @@ public class GombaFonal extends Entity{
 	public void clean(){
 		if(src != null) src.removeGombaFonal(this);
 		if(dst != null) dst.removeGombaFonal(this);
+		Gombasz g = (Gombasz)owner;
+		g.getFonalak().remove(this);
+
+		src.getGombaTestek().get(0).getFonalak().remove(this);
 	}
 
 	public boolean isOwner(Player p){
