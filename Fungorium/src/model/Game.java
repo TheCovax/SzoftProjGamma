@@ -267,14 +267,9 @@ public class Game {
                     System.out.println("Shoot Spora. Name a target Tekton: ");
                     String target_id = scanner.nextLine();
 
-                    // shootSpora logic
-                    Tekton source = gombaTest.tekton;
                     Tekton target = map.getTektonById(target_id);
-                    if( source.findReachableTektonWithinDistance(1).contains(target)){
-                        gombaTest.shootSpora(target);
-                    }else{
-                        System.out.println("Target is unreachable.");
-                    }
+
+                    gombaTest.shootSpora(target);
 
                 // shootSpora logic
                 }
