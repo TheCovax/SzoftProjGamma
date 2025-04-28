@@ -46,8 +46,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("mapsave.txt");
-        loadEntitiesFromFile("mapsave.txt");
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -231,7 +231,7 @@ public class Game {
                     // If the GombaFonal is found, remove it
                     if (targetFonal != null) {
                         // Clean up the GombaFonal from both Tektons it connects
-                        targetFonal.delete();  // Assumes the clean method disconnects the GombaFonal from the Tektons
+                        targetFonal.cut();  // Assumes the clean method disconnects the GombaFonal from the Tektons
                         System.out.println("Cut Gombafonal: " + targetFonalName);
                     } else {
                         System.out.println("No Gombafonal found with the name: " + targetFonalName);
@@ -433,7 +433,7 @@ public class Game {
                 Tekton dst = map.getTektonById(parts[2]);
                 Player owner = findPlayerById(parts[3]);
                 if (src != null && dst != null && owner != null) {
-                    GombaFonal gf = new GombaFonal(id, src, dst, owner);
+                    GombaFonal gf = new GombaFonal(id, src, dst, owner, GombaFonal.State.ACTIVE);
                     src.addGombaFonal(gf);
                     dst.addGombaFonal(gf);
                     if (owner instanceof Gombasz gombasz) gombasz.addFonal(gf);

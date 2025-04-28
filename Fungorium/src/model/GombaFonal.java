@@ -2,13 +2,11 @@ package Fungorium.src.model;
 
 import Fungorium.src.model.player.Gombasz;
 //import java.lang.runtime.TemplateRuntime;
-import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A GombaFonal osztály egy gombafonal kapcsolatot reprezentál két Tekton között.
@@ -16,12 +14,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Minden gombafonal rendelkezik egy tulajdonossal (owner), amely az adott játékoshoz vagy irányítóhoz kapcsolható.
  */
 public class GombaFonal extends Entity{
-	private static final AtomicInteger generatedCounter = new AtomicInteger(0);
-	Tekton src;
-	Tekton dst;
-	int roundsToDestruction;
-	boolean scheduledForDestruction;
-	double eatParalyzedRovarRate;
+	public enum State { GROWING, ACTIVE, CUT, DESTROYED}
+
+	private State state;
+	private Tekton src;
+	private Tekton dst;
+	private int growthTimer;
+	private int destructionTimer;
+
+	private double eatParalyzedRovarRate;
 
 	/**
 	 * Konstruktor a GombaFonal létrehozásához.
@@ -31,16 +32,34 @@ public class GombaFonal extends Entity{
 	 */
 	public GombaFonal(Tekton s, Tekton d, Player o){
         super(o);
-        src = s;
-		dst = d;
-		eatParalyzedRovarRate = 0.5;
+        this.src = s;
+		this.dst = d;
+		this.eatParalyzedRovarRate = 0.5;
+		this.growthTimer = 1;
+		this.state = State.GROWING;
 	}
 
 	public GombaFonal(String id, Tekton s, Tekton d, Player o){
 		super(id, o);
-		src = s;
-		dst = d;
-		eatParalyzedRovarRate = 0.5;
+		this.src = s;
+		this.dst = d;
+		this.state = State.GROWING;
+		this.growthTimer = 1;
+		this.eatParalyzedRovarRate = 0.5;
+	}
+
+	public GombaFonal(String id, Tekton s, Tekton d, Player o, State initialState){
+		super(id, o);
+		this.src = s;
+		this.dst = d;
+		this.state = initialState;
+		this.growthTimer = 1;
+		this.eatParalyzedRovarRate = 0.5;
+	}
+
+	// State management methods
+	public State getState() {
+		return state;
 	}
 
 	/**
@@ -75,16 +94,16 @@ public class GombaFonal extends Entity{
 
 	/**
 	 * Beíllitja, hogy mennyi ido mulva semmisuljon meg a gombafonal és jelzi, hogy meg fog semmisulni
-	 * @param time a beallitando ido
 	 * @return sikerult-e a beallitas
 	 */
-	public boolean scheduleDestruction(int time){
-		
-		if(scheduledForDestruction) return false;
+	public boolean cut(){
+		if (state == State.ACTIVE){
+			state = State.CUT;
+			destructionTimer = 2;
+			return true;
+		}
 
-		roundsToDestruction = time;
-		scheduledForDestruction = true;
-		return true;
+		return false;
 	}
 
 	/**
@@ -161,18 +180,34 @@ public class GombaFonal extends Entity{
 	 */
 	@Override
 	public void update(){
+		if (state == State.DESTROYED) return;
+
 		eatParalyzedRovar();
 
-		if (scheduledForDestruction){
-			roundsToDestruction--;
-			if (roundsToDestruction<=0){
-				this.delete();
-			}
+		switch (state) {
+			case GROWING:
+				if (--growthTimer <= 0) {
+					state = State.ACTIVE;
+				}
+				break;
+			case CUT:
+				if (--destructionTimer <= 0) {
+					state = State.DESTROYED;
+					delete();
+				}
+				break;
+			case ACTIVE:
+				// No automatic transitions
+				break;
 		}
 	}
 
-	public int getRoundsToDestruction() {
-        return roundsToDestruction;
+	public boolean isActive(){
+		return state == State.ACTIVE;
+	}
+
+	public int getDestructionTimer() {
+        return destructionTimer;
     }
 
 	@Override

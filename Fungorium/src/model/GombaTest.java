@@ -10,11 +10,8 @@ import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GombaTest extends Entity{
-
-    private static final AtomicInteger generatedCounter = new AtomicInteger(0);
     //List<GombaFonal> fonalak;
     Tekton tekton;
     int level;
