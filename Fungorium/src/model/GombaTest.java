@@ -8,7 +8,6 @@ import Fungorium.src.model.spora.LassitoSpora;
 import Fungorium.src.model.spora.OsztoSpora;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.Tekton;
-import Fungorium.src.utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +17,9 @@ public class GombaTest extends Entity{
     int level;
     int shotCounter;
 
+    int SHOOTSPORA_COST = 2;
+    int GROWFONAL_COST = 1;
+    int UPGRADE_COST = 4;
 
 
     public GombaTest(Tekton tekton, Player owner) {
@@ -32,8 +34,11 @@ public class GombaTest extends Entity{
         level = 0;
     }
 
+    public int getAvailableSporaCount() {
+        return tekton.getSporak().size();
+    }
+
     public void produceSpora() {
-        Logger.methodCall("g.produceSpora()");
 
         // 1. Spóra típus véletlenszerű kiválasztása
         int r = (int) (Math.random() * 4);
@@ -60,12 +65,8 @@ public class GombaTest extends Entity{
 
         // 2. Spóra hozzáadása a megfelelő Tektonhoz
         if (tekton != null) {
-            //Logger.methodCall("tekton.addSpora(spora)");
             tekton.addSpora(spora, owner);
-            //Logger.methodReturn("tekton.addSpora(spora)");
-        } else {
-            //Logger.log("Nincs tekton hozzárendelve ehhez a gombatesthez.");
-        }
+        } 
     }
 
     @Override
@@ -79,9 +80,18 @@ public class GombaTest extends Entity{
      */
     public void upgradeTest() {
         //TODO: azert ezt majd finomitsuk xd
+
         if(getLevel() < 4) {
-            setLevel(getLevel() + 1);
-            tekton.removeSpora();
+            if(getAvailableSporaCount() > UPGRADE_COST){
+                setLevel(getLevel() + 1);
+                for (int i = 0; i < UPGRADE_COST; i++) {
+                    tekton.removeSpora();
+                }
+                System.out.println("Gombatest upgraded to level " + getLevel() + "!");
+            }else{
+                System.out.println("Not enough spora to upgrade!");
+            }
+            
         }
         else {
             System.out.println("Maximum level reached!");
@@ -89,13 +99,13 @@ public class GombaTest extends Entity{
     }
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
-    void setRecursiveConnectivity() {
+    void setConnectivity() {
 
-        List<Tekton> nodes = tekton.checkConnectivity();
+        List<Tekton> nodes = tekton.checkConnectivity(owner);
         while(!nodes.isEmpty()){
             List<Tekton> curr = new ArrayList<>();
             for(Tekton node : nodes){
-                for(Tekton t:node.checkConnectivity()){
+                for(Tekton t:node.checkConnectivity(owner)){
                     curr.add(t);
                     t.setIsConnected(true);
                 }
@@ -135,6 +145,8 @@ public class GombaTest extends Entity{
     }
 
 
+
+
     public int getShotCounter() {
         return shotCounter;
     }
@@ -146,7 +158,11 @@ public class GombaTest extends Entity{
 
     @Override
     public void update() {
-        // TODO: produce spora
+        if (shotCounter > 0) {
+            produceSpora();
+        }else{
+            delete();
+        }
     }
 
     @Override

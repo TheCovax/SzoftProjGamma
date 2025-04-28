@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Minden gombafonal rendelkezik egy tulajdonossal (owner), amely az adott játékoshoz vagy irányítóhoz kapcsolható.
  */
 public class GombaFonal extends Entity{
-	public enum State { GROWING, ACTIVE, CUT }
+	public enum State { GROWING, ACTIVE, CUT, DESTROYED}
 
 	private State state;
 	private Tekton src;
@@ -62,6 +62,16 @@ public class GombaFonal extends Entity{
 		return state;
 	}
 
+	/**
+	 * Eltávolítja a gombafonalat a kapcsolódó tektonokból.
+	 */
+	public void delete(){
+		if(src != null) src.removeGombaFonal(this);
+		if(dst != null) dst.removeGombaFonal(this);
+		Gombasz g = (Gombasz)owner;
+		g.getFonalak().remove(this);
+	}
+
 	public boolean isOwner(Player p){
 		return owner.equals(p);
 	}
@@ -89,7 +99,7 @@ public class GombaFonal extends Entity{
 	public boolean cut(){
 		if (state == State.ACTIVE){
 			state = State.CUT;
-			destructionTimer = 3;
+			destructionTimer = 2;
 			return true;
 		}
 
@@ -170,6 +180,8 @@ public class GombaFonal extends Entity{
 	 */
 	@Override
 	public void update(){
+		if (state == State.DESTROYED) return;
+
 		eatParalyzedRovar();
 
 		switch (state) {
@@ -180,7 +192,8 @@ public class GombaFonal extends Entity{
 				break;
 			case CUT:
 				if (--destructionTimer <= 0) {
-					state = State.ACTIVE;
+					state = State.DESTROYED;
+					delete();
 				}
 				break;
 			case ACTIVE:
@@ -189,12 +202,8 @@ public class GombaFonal extends Entity{
 		}
 	}
 
-	@Override
-	public void delete() {
-		if(src != null) src.removeGombaFonal(this);
-		if(dst != null) dst.removeGombaFonal(this);
-		((Gombasz) owner).removeFonal(this);
-
+	public boolean isActive(){
+		return state == State.ACTIVE;
 	}
 
 	public int getDestructionTimer() {
