@@ -79,23 +79,40 @@ public class Game {
     }
 
     public void start() {
-        String input = "";
+        while (true) {
+            System.out.println("\n--- Round " + (roundCounter + 1) + " ---"); // Not increasing yet
 
-        while (!input.equals("0")) {
-            populateCollections();
-            showMainMenu();
-            input = scanner.nextLine();
+            Collections.shuffle(players);
 
-            switch (input) {
-                case "1" -> inspectEntity();
-                case "2" -> selectEntity();
-                case "3" -> nextPlayer();
-                case "4" -> listAllEntities();
-                case "0" -> System.out.println("Exiting...");
-                default -> System.out.println("Unknown Command");
+            for (Player player : players) {
+                System.out.println("\nIt's " + player.getName() + "'s turn:");
+                currentPlayerIndex = players.indexOf(player);
+
+                String input = "";
+                while (!input.equals("0")) {
+                    populateCollections();
+                    showMainMenu();
+                    input = scanner.nextLine();
+
+                    switch (input) {
+                        case "1" -> inspectEntity();
+                        case "2" -> selectEntity();
+                        case "3" -> listAllEntities();
+                        case "0" -> System.out.println("Ending turn...");
+                        default -> System.out.println("Unknown Command");
+                    }
+                }
+
+                if (checkGameEnd()) {
+                    return;
+                }
             }
+
+            roundCounter++;  // Increase after all players played in round
         }
     }
+
+
 
     private void listAllEntities() {
         for (Tekton t: map.getTektonok()){
@@ -328,51 +345,37 @@ public class Game {
         this.entities = tmpEntities;
     }
 
-    private void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-
-        if (currentPlayerIndex == 0) {
-            roundCounter++;
-            System.out.println("Round " + roundCounter + " started.");
-        }
-
-        System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
-
-        checkGameEnd();
-    }
-
 
     private Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
-    private void checkGameEnd() {
+    private boolean checkGameEnd() {
         boolean gombaszWin = false;
         boolean rovaraszWin = false;
 
         for (Player p : players) {
             if (p instanceof Gombasz gombasz) {
                 if (gombasz.getGombak().size() >= WINNING_GOMBATEST_COUNT) {
-                    gombaszWin = true;
                     System.out.println("Game Over! Gombász " + gombasz.getName() + " has developed " + gombasz.getGombak().size() + " GombaTests!");
+                    gombaszWin = true;
                 }
             } else if (p instanceof Rovarasz rovarasz) {
                 if (rovarasz.getScore() >= WINNING_SPORA_SCORE) {
-                    rovaraszWin = true;
                     System.out.println("Game Over! Rovarász " + rovarasz.getName() + " collected " + rovarasz.getScore() + " points!");
+                    rovaraszWin = true;
                 }
             }
         }
 
-        if (gombaszWin || rovaraszWin) {
-            System.exit(0);
-        }
-
         if (roundCounter >= MAX_ROUNDS) {
             System.out.println("Game Over! Maximum rounds (" + MAX_ROUNDS + ") reached.");
-            System.exit(0);
+            return true;
         }
+
+        return gombaszWin || rovaraszWin;
     }
+
 
 
     private Player findPlayerById(String id) {
