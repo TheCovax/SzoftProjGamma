@@ -1,5 +1,6 @@
 package Fungorium.src.model;
 import Fungorium.src.model.player.Player;
+import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
 import Fungorium.src.utility.Logger;
@@ -11,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  *  A Rovar képes mozogni a tektonok között, spórákat fogyasztani és gombafonalakt vágni.
  */
 public class Rovar extends Entity{
-    private static final AtomicInteger generatedCounter = new AtomicInteger(0);
     public static final int DEFAULT_SPEED = 2;
 
     private Tekton tekton;
@@ -19,6 +19,7 @@ public class Rovar extends Entity{
     private int speed;
     private int duration;
     private int collectedNutrition;
+    private int remainingActions;
 
     // Constructor with given ID
     public Rovar(String id, Tekton startTekton, Player owner){
@@ -28,6 +29,7 @@ public class Rovar extends Entity{
         this.speed = DEFAULT_SPEED;
         this.duration = 0;
         this.collectedNutrition = 0;
+        this.remainingActions = speed;
     }
 
     // Constructor for dynamically generated Rovar with generated ID
@@ -38,6 +40,7 @@ public class Rovar extends Entity{
         this.speed = DEFAULT_SPEED;
         this.duration = 0;
         this.collectedNutrition = 0;
+        this.remainingActions = speed;
     }
 
     /**
@@ -46,40 +49,32 @@ public class Rovar extends Entity{
      * @return Igaz, ha a mozgás sikeres, egyébként hamis.
      */
     public boolean move(Tekton dstTekton){
-        Logger.methodCall("r.move(dstTekton)");
 
-        // 1. Check paralyzed
-        if (isParalyzed()){
-            Logger.log("Rovar is paralyzed, cannot move.");
-            Logger.methodReturn("r.move(dstTekton): false");
+        // Check paralyzed
+        if (isParalyzed())
             return false;
-        }
 
-        // 2. Attempt to get reachable tektons
-        List<Tekton> reachableTektons = tekton.findReachableTektonWithinDistance(speed);
-
-        // 3. Check if destination is reachable
-        if (!reachableTektons.contains(dstTekton)){
-            Logger.log("Destination tekton is not reachable.");
-            Logger.methodReturn("r.move(dstTekton): false");
+        // Check if dstTekton is null
+        if (dstTekton == null)
             return false;
-        }
 
-        // 4. Execute move
-        Logger.methodCall("tekton.removeRovar(r)");
+        // Check still remaining actions
+        if (remainingActions <= 0)
+            return false;
+
+        // Attempt to get reachable tektons
+        List<Tekton> reachableTektons = tekton.getNeighbours();
+
+        // Check if destination is reachable
+        if (!reachableTektons.contains(dstTekton))
+            return false;
+
+        // Execute move
         tekton.removeRovar(this);
-        Logger.methodReturn("tekton.removeRovar(r)");
-
-        Logger.methodCall("tekton.addRovar(r)");
         dstTekton.addRovar(this);
-        Logger.methodReturn("tekton.addRovar(r)");
-
-        Logger.methodCall("r.setTekton(dstTekton)");
         this.setTekton(dstTekton);
-        Logger.methodReturn("r.setTekton(dstTekton)");
+        remainingActions--;
 
-
-        Logger.methodReturn("r.move(dstTekton): true");
         return true;
     }
 
@@ -89,26 +84,21 @@ public class Rovar extends Entity{
      * @return Igaz, ha a spóra elfogyasztása sikeres volt, egyébként hamis.
      */
     public boolean eatSpora(Spora sp){
-        Logger.methodCall("r.eatSpora()");
 
-        // 1. Check if rovar is paralyzed
-        if (isParalyzed()){
-            Logger.log("Rovar is paralyzed, cannot move.");
-            Logger.methodReturn("r.eatSpora(): false");
+        // Check if rovar is paralyzed
+        if (isParalyzed())
             return false;
-        }
 
-        // 2. Apply spore effect on this rovar
+        // Check still remaining actions
+        if (remainingActions <= 0)
+            return false;
+
+        // Execute eating Spora
         sp.applyEffect(this);
-
-        // 3. Add spore nutrition to collectedNutrition (optional placeholder)
-        Logger.log("Collecting nutrition from spora.");
         collectedNutrition += sp.getNutrition();
-
-        // 4. remove spora from tekton
         tekton.removeSpora();
+        remainingActions--;
 
-        Logger.methodReturn("r.eatSpora(): true");
         return true;
     }
 
@@ -118,83 +108,35 @@ public class Rovar extends Entity{
      * @return Igaz, ha az átvágás sikeres, egyébként hamis.
      */
     public boolean cutGombaFonal(GombaFonal gf){
-        Logger.methodCall("r.cutGombaFonal(gf)");
 
         if (isParalyzed()){
-            Logger.log("Rovar is paralyzed, cannot move.");
-            Logger.methodReturn("r.cutGombaFonal(gf): false");
             return false;
         }
 
+        // Check still remaining actions
+        if (remainingActions <= 0)
+            return false;
+
         // If tekton does not have this gf (Maybe not needed)
         if(!tekton.hasGombafonal(gf)){
-            Logger.log("Gombafonal not found on current tekton.");
-            Logger.methodReturn("r.cutGombaFonal(gf): false");
             return false;
         }
 
         // Execute cutting gombafonal
-        Logger.methodCall("gf.clean()");
-        gf.clean();
-        Logger.methodReturn("gf.clean()");
-
-        Logger.methodReturn("r.cutGombaFonal(gf): true");
-        return true;
-    }
-
-    public Tekton getTekton() {
-        return tekton;
-    }
-
-    public void setTekton(Tekton tekton) {
-        this.tekton = tekton;
-    }
-
-
-    /**
-     * Megdja hogy a rovar le van-e benitva
-     * @return A rovar le van-e benitva
-     */
-    public boolean isParalyzed() {
-        Logger.methodCall("r.isParalyzed()");
-        Logger.methodReturn("r.isParalyzed()");
-        return isParalyzed;
-    }
-
-    public void setParalyzed(boolean paralyzed) {
-        isParalyzed = paralyzed;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        Logger.methodCall("r.setSpeed(int)");
-        Logger.methodReturn("r.setSpeed(int)");
-        this.speed = speed;
-    }
-
-    public int getDuration() {
-        return duration;
+        // successful holds if the gombafonal is successfully scheduled for destruction
+        if (!gf.scheduleDestruction(2)){
+            return false;
+        }else {
+            remainingActions--;
+            return true;
+        }
     }
 
     /**
-     * 
-     * @param duration a beallitando idotartam
+     * Egy uj rovart hoz letre, ugyan arra a tektonra
      */
-    public void setDuration(int duration) {
-        Logger.methodCall("r.setDuration(effectDuration)");
-        Logger.methodReturn("r.setDuration(effectDuration)");
-        this.duration = duration;
-    }
-
-    public int getCollectedNutrition() {
-        return collectedNutrition;
-    }
-
-    public void setCollectedNutrition(int collectedNutrition) {
-        this.collectedNutrition = collectedNutrition;
+    public void split(){
+        tekton.addRovar(new Rovar(tekton, owner));
     }
 
     @Override
@@ -203,23 +145,26 @@ public class Rovar extends Entity{
     }
 
     /**
-     * Frissitit a rovar allapotat
+     * Frissitit a rovar allapotat minden kor utan
      * Ha van letelt a duration visszaallitja a rovart alap allapotba
      */
     @Override
     public void update(){
-        if(duration == 0){
-            isParalyzed = false;
-            speed = DEFAULT_SPEED;
+        if(duration > 0){
+            duration--;
+            if (duration <= 0){
+                isParalyzed = false;
+                speed = DEFAULT_SPEED;
+            }
         }
-        if(duration > 0) duration--;
+
+        remainingActions = speed;
     }
 
-    /**
-     * Egy uj rovart hoz letre, ugyan arra a tektonra
-     */
-    public void split(){
-        tekton.addRovar(new Rovar(tekton, owner));
+    @Override
+    public void delete() {
+        tekton.removeRovar(this);
+        ((Rovarasz) owner).removeRovar(this);
     }
 
     @Override
@@ -232,5 +177,45 @@ public class Rovar extends Entity{
                 ", IsParalyzed=" + isParalyzed +
                 ", CollectedNutrition=" + collectedNutrition +
                 '}';
+    }
+
+    public Tekton getTekton() {
+        return tekton;
+    }
+
+    public void setTekton(Tekton tekton) {
+        this.tekton = tekton;
+    }
+
+    public boolean isParalyzed() {
+        return isParalyzed;
+    }
+
+    public void setParalyzed(boolean paralyzed) {
+        isParalyzed = paralyzed;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public int getCollectedNutrition() {
+        return collectedNutrition;
+    }
+
+    public void setCollectedNutrition(int collectedNutrition) {
+        this.collectedNutrition = collectedNutrition;
     }
 }
