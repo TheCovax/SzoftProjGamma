@@ -17,35 +17,48 @@ public class Spora {
     public static final int DEFAULT_EFFECT_DURATION = 2;
 
     /**
-     * A spóra alapértelmezett tápanyag tartama.
+     * A spora alapertelmezett tapanyag tartama.
      */
     public static final int DEFAULT_NUTRITION = 1;
 
     private int effectDuration;
     private int nutrition;
 
+    /**
+     * Spora beallito konstruktor.
+     */
     public Spora(){
         this.effectDuration = DEFAULT_EFFECT_DURATION;
         this.nutrition = DEFAULT_NUTRITION;
     }
 
     /**
-     * Alkalmazza a spóra effektet egy adott rovarra.
-     * @param r Az a rovar, amelyre a effeltet alkalmazzuk.
+     * Alkalmazza a spora effektet egy adott rovarra.
+     * @param r Az a rovar, amelyre az effektet alkalmazzuk.
      */
     public void applyEffect(Rovar r){
         Logger.methodCall("Spora.applyEffect(r)");
         Logger.methodReturn("Spora.applyEffect(r)");
     };
 
+    /**
+     * Visszaadja, hogy hany pontot er a spora.
+     */
     public int getNutrition() {
         return nutrition;
     }
 
+    /**
+     * Beallitja, hogy hany pontot er a spora.
+     * @param nutrition a spora pontszama.
+     */
     public void setNutrition(int nutrition) {
         this.nutrition = nutrition;
     }
 
+    /**
+     * Visszaadja a spora hatasanak idejet.
+     */
     public int getEffectDuration() {
         return effectDuration;
     }
