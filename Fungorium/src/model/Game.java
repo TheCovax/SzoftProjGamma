@@ -5,7 +5,6 @@ import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.*;
 import Fungorium.src.model.tekton.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -44,8 +43,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("./SzoftProjGamma/mapsave.txt");
-        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
+        map.loadMap("mapsave.txt");
+        loadEntitiesFromFile("mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();

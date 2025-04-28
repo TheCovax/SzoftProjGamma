@@ -116,7 +116,7 @@ public class Tekton {
 		return test;
 	}
 
-	public void addSpora(Spora s){
+	public void addSpora(Spora s, Player currentPlayer){
 		sporak.add(s);
 	}
 

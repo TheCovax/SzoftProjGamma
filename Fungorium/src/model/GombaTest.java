@@ -4,6 +4,7 @@ import Fungorium.src.model.player.Player;
 import Fungorium.src.model.spora.BenitoSpora;
 import Fungorium.src.model.spora.GyorsitoSpora;
 import Fungorium.src.model.spora.LassitoSpora;
+import Fungorium.src.model.spora.OsztoSpora;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.Tekton;
 import Fungorium.src.utility.Logger;
@@ -39,40 +40,32 @@ public class GombaTest extends Entity{
         Logger.methodCall("g.produceSpora()");
 
         // 1. Spóra típus véletlenszerű kiválasztása
-        int r = (int) (Math.random() * 3); // 0, 1 vagy 2
+        int r = (int) (Math.random() * 4);
 
         Spora spora;
         switch (r) {
             case 0 -> {
-                //Logger.log("Gyorsító spóra létrehozása");
                 spora = new GyorsitoSpora();
             }
             case 1 -> {
-                //Logger.log("Lassító spóra létrehozása");
                 spora = new LassitoSpora();
             }
             case 2 -> {
-                //Logger.log("Bénító spóra létrehozása");
                 spora = new BenitoSpora();
+            }
+            case 3 -> {
+                spora = new OsztoSpora();
             }
             default -> {
                 System.out.println("error");
-                //Logger.log("Nem sikerült spóra típust választani");
-                //Logger.methodReturn("g.produceSpora()");
                 return;
             }
         }
 
         // 2. Spóra hozzáadása a megfelelő Tektonhoz
         if (tekton != null) {
-            //Logger.methodCall("tekton.addSpora(spora)");
             tekton.addSpora(spora);
-            //Logger.methodReturn("tekton.addSpora(spora)");
-        } else {
-            //Logger.log("Nincs tekton hozzárendelve ehhez a gombatesthez.");
         }
-
-        //Logger.methodReturn("g.produceSpora()");
     }
 
 
@@ -109,7 +102,6 @@ public class GombaTest extends Entity{
             }
             nodes.addAll(curr);
         }
-
     }
 
 
