@@ -112,7 +112,14 @@ public class GombaTest extends Entity{
      * Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
      */
     public void shootSpora(Tekton dst){
-        dst.addSpora(tekton.removeSpora(), owner);
+
+        if( tekton.findReachableTektonWithinDistance(1).contains(dst)){
+            dst.addSpora(tekton.removeSpora(), owner);
+            shotCounter--;
+            tekton.removeSpora();
+        }else{
+            System.out.println("Target is unreachable.");
+        }
     }
 
     public void setTekton(Tekton t){

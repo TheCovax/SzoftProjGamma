@@ -1,5 +1,6 @@
 package Fungorium.src.model;
 
+import Fungorium.src.model.player.Gombasz;
 //import java.lang.runtime.TemplateRuntime;
 import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
