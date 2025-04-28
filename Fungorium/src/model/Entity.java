@@ -44,11 +44,12 @@ public abstract class Entity {
         return newId;
     }
 
+    /*
     private static void registerId(String id) {
         if (!usedIds.add(id)) {
             throw new IllegalArgumentException("ID already exists: " + id);
         }
-    }
+    }*/
 
     protected abstract String getPrefix();
 
@@ -56,4 +57,6 @@ public abstract class Entity {
      * Called every round to update the entity.
      */
     public abstract void update();
+
+    public abstract void delete();
 }

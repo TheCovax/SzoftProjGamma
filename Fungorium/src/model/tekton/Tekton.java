@@ -17,6 +17,7 @@ public class Tekton {
 
 	Queue<Spora> sporak;
 	List<GombaFonal> fonalak;
+
 	List<Tekton> neighbours;
 	List<GombaTest> test;
 	List<Rovar> rovarok;
@@ -276,7 +277,6 @@ public class Tekton {
 	 * @return Egy lista a jelenlegi tektonból elérhető tektonokról.
 	 */
 	public List<Tekton> findReachableTektonWithinDistance(int speed) {
-		Logger.methodCall("tekton.findReachableTektonWithinDistance(speed)");
 
 		List<Tekton> reachable = new ArrayList<>();
 		Queue<Tekton> queue = new LinkedList<>();
@@ -304,7 +304,6 @@ public class Tekton {
 			depth++;
 		}
 
-		Logger.methodReturn("tekton.findReachableTektonWithinDistance(speed)");
 		return reachable;
 	}
 
@@ -377,6 +376,10 @@ public class Tekton {
 
 		sb.append(" }");
 		return sb.toString();
+	}
+
+	public List<Tekton> getNeighbours() {
+		return neighbours;
 	}
 
 	private static String registerExplicitId(String id) {
