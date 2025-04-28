@@ -79,24 +79,30 @@ public class GombaTest extends Entity{
      * Egy szintel fejleszti a gombatestet
      */
     public void upgradeTest() {
-        //TODO: azert ezt majd finomitsuk xd
+        if (tekton == null) {
+            System.out.println("No Tekton assigned!");
+            return;
+        }
 
-        if(getLevel() < 4) {
-            if(getAvailableSporaCount() > UPGRADE_COST){
-                setLevel(getLevel() + 1);
-                for (int i = 0; i < UPGRADE_COST; i++) {
-                    tekton.removeSpora();
-                }
-                System.out.println("Gombatest upgraded to level " + getLevel() + "!");
-            }else{
-                System.out.println("Not enough spora to upgrade!");
-            }
-            
+        if (tekton.getSporak().size() < 4) {
+            System.out.println("Not enough spora to upgrade! (Need at least 4 sporak)");
+            return;
         }
-        else {
+
+        if (level >= 4) {
             System.out.println("Maximum level reached!");
+            return;
         }
+
+        setLevel(level + 1);
+        tekton.removeSpora(); // Eltávolítunk 4 spórát összesen
+        tekton.removeSpora();
+        tekton.removeSpora();
+        tekton.removeSpora();
+
+        System.out.println("Successfully upgraded GombaTest to level " + level + "!");
     }
+
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
     void setConnectivity() {
@@ -118,15 +124,27 @@ public class GombaTest extends Entity{
     /**
      * Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
      */
-    public void shootSpora(Tekton dst){
-
-        if( tekton.findReachableTektonWithinDistance(1).contains(dst)){
-            dst.addSpora(tekton.removeSpora(), owner);
-            shotCounter--;
-            tekton.removeSpora();
-        }else{
-            System.out.println("Target is unreachable.");
+    public void shootSpora(Tekton dst) {
+        if (tekton == null || dst == null) {
+            System.out.println("Invalid source or target Tekton.");
+            return;
         }
+
+        if (tekton.getSporak().size() < 2) {
+            System.out.println("Not enough spora to shoot! (Need at least 2 sporak)");
+            return;
+        }
+
+        if (!tekton.findReachableTektonWithinDistance(1).contains(dst)) {
+            System.out.println("Target Tekton is unreachable.");
+            return;
+        }
+
+        // Van elég spóra és elérhető a cél -> végrehajtás
+        dst.addSpora(tekton.removeSpora(), owner);
+        shotCounter--;
+        tekton.removeSpora(); // A második spóra is eltávolítva
+        System.out.println("Successfully shot spora to Tekton: " + dst.getID());
     }
 
     public void setTekton(Tekton t){
