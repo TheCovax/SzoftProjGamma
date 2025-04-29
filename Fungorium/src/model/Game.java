@@ -120,12 +120,14 @@ public class Game {
         }
     }
 
+    
 
 
     void fastForwardRounds(){
         System.out.println("How many rounds do you want to skip:");
         int time = Integer.parseInt(scanner.nextLine());
-        //for(int i = 0; i < time; i++) nextPlayer();
+        //for(int i = 0; i < time * 4; i++) nextPlayer();
+        roundCounter += time;
     }
 
     void setTestingMode(){
