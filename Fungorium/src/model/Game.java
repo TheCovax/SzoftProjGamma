@@ -50,8 +50,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("../mapsave.txt");
-        loadEntitiesFromFile("../mapsave.txt");
+        map.loadMap("SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("SzoftProjGamma/mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
