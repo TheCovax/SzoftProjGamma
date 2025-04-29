@@ -7,32 +7,29 @@ T5 Hosztilis
 
 #Neighbours
 T1 T2 T3 T4
-T2 T3
+T2 T3 T5
 T3 T1 T2
 T4 T1 T5
 T5 T4
 
 #Gombatestek
-G0 T1 GB1
-G1 T2 GB1
-G2 T4 GB2
-G3 T5 GB2
+G1 T1 GB1
+G2 T2 GB1
+G3 T4 GB2
 
 #Gombafonalak
-F0 T1 T2 GB1
-F1 T2 T3 GB1
-F2 T1 T3 GB1
-F3 T1 T4 GB2
-F4 T4 T5 GB2
+F1 T1 T2 GB1
+F2 T2 T3 GB1
+F3 T1 T3 GB1
+F4 T1 T4 GB2
+F5 T4 T5 GB2
 
 #Rovarok
-R0 T1 RS3
+R1 T1 RS3
 
 #Sporak
 OsztoSpora T5
 LassitoSpora T1
-GyorsitoSpora T2
-GyorsitoSpora T2
 GyorsitoSpora T2
 GyorsitoSpora T2
 GyorsitoSpora T2
