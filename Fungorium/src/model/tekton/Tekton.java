@@ -5,7 +5,6 @@ import Fungorium.src.model.GombaTest;
 import Fungorium.src.model.Rovar;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.spora.Spora;
-import Fungorium.src.utility.Logger;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -127,7 +126,13 @@ public class Tekton {
 	}
 
 
+	public double getSplitRate() {
+		return splitRate;
+	}
 
+	public void setSplitRate(double splitRate) {
+		this.splitRate = splitRate;
+	}
 
 	public List<GombaTest> getGombaTestek() {
 		return test;

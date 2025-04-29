@@ -93,7 +93,7 @@ public class Game {
                 currentPlayerIndex = players.indexOf(player);
 
                 String input = "";
-                while (!input.equals("3")) {
+                while (currentPlayerIndex == players.indexOf(player)) {
                     populateCollections();
                     showMainMenu();
                     input = scanner.nextLine();
@@ -101,7 +101,7 @@ public class Game {
                     switch (input) {
                         case "1" -> inspectEntity();
                         case "2" -> selectEntity();
-                        //case "3" -> nextPlayer();
+                        case "3" -> nextPlayer();
                         case "4" -> listAllEntities();
                         case "5" -> setTestingMode();
                         case "6" -> {if(testing) fastForwardRounds();
@@ -122,10 +122,17 @@ public class Game {
 
 
 
+    private int nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        //System.out.println("Next player: " + players.get(currentPlayerIndex).getName());
+        return currentPlayerIndex;
+    }
+
+
     void fastForwardRounds(){
         System.out.println("How many rounds do you want to skip:");
         int time = Integer.parseInt(scanner.nextLine());
-        //for(int i = 0; i < time; i++) nextPlayer();
+        for(int i = 0; i < time; i++) nextPlayer();
     }
 
     void setTestingMode(){
@@ -202,6 +209,40 @@ public class Game {
 
         System.out.println("Entity with this ID ("+ name + ") could not be found");
     }
+
+    private void selectTekton(Tekton tekton) {
+        String input = scanner.nextLine();
+
+        while (!input.equals("0")) {
+            System.out.println("\n0) Exit");
+            System.out.println("1) Grow Fonal");
+            System.out.println("2) Split");
+            System.out.print("Choose option: ");
+        
+            switch (input) {
+                case "1" -> {
+                    System.out.println("Grow Gombafonal. Name a target Tekton: ");
+                    String target_id = scanner.nextLine();
+                    tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
+                }
+
+                case "2" -> {
+                    double tmp = tekton.getSplitRate();
+                    tekton.setSplitRate(1);
+                    tekton.split();
+                    tekton.setSplitRate(tmp);
+                    
+                }
+                case "0" -> {
+                }
+                default -> System.out.println("Invalid Option"); 
+            }
+        }
+
+    }
+
+            
+
 
     private void selectRovar(Rovar rovar) {
         String input = "";
