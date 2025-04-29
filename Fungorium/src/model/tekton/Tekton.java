@@ -201,6 +201,7 @@ public class Tekton {
 		//A jelenlegi tektonrol torli a fonalakat es a gombatestet;
 
 		for (int i = 0; i < fonalak.size(); i++) {
+			System.out.println(fonalak.get(i));
 			fonalak.get(i).delete();
 		}
 		if(gombatest != null)

@@ -3,6 +3,8 @@ import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
+
+import javax.print.DocFlavor;
 import java.util.List;
 
 /**
@@ -63,20 +65,23 @@ public class Rovar extends Entity{
 
         // Check if the move is valid
         // --------------------------
-        if (isParalyzed())
+        if (!canAct()){
             return false;
+        }
 
-        if (dstTekton == null)
+        if (dstTekton == null){
+            System.out.println("Move rovar unsuccessful: destination desTekton is null");
             return false;
+        }
 
-        if (remainingActions <= 0)
-            return false;
 
         // Attempt to get reachable tektons
         List<Tekton> reachableTektons = tekton.getNeighbours();
         // Check if destination is reachable
-        if (!reachableTektons.contains(dstTekton))
+        if (!reachableTektons.contains(dstTekton)){
+            System.out.println("Move Rovar unsuccessful: destination Tekton unreachable");
             return false;
+    }
 
 
         // Move valid, execute move
@@ -86,6 +91,7 @@ public class Rovar extends Entity{
         this.setTekton(dstTekton);
         remainingActions--;
 
+        System.out.println("Successfuly moved " + ID + " to " + dstTekton.getID());
         return true;
     }
 
@@ -99,11 +105,9 @@ public class Rovar extends Entity{
 
         // Check is eating spora action is valid
         // -------------------------------------
-        if (isParalyzed())
+        if (!canAct()){
             return false;
-
-        if (remainingActions <= 0)
-            return false;
+        }
 
         // Action valid, execute eating spora
         // Execute eating Spora
@@ -125,16 +129,13 @@ public class Rovar extends Entity{
 
         // Check if action is valid
         // ------------------------
-        if (isParalyzed()){
+        if (!canAct()){
             return false;
         }
 
         if(!tekton.hasGombafonal(gf)){
             return false;
         }
-
-        if (remainingActions <= 0)
-            return false;
 
         // Execute cutting gombafonal
         // --------------------------
@@ -240,6 +241,20 @@ public class Rovar extends Entity{
 
     public int getRemainingActions() {
         return remainingActions;
+    }
+
+    private boolean canAct(){
+        if (isParalyzed()){
+            System.out.println("Action failed:" + ID + "is paralyzed");
+            return false;
+        }
+
+        if (remainingActions <= 0){
+            System.out.println("Action failed: no remaining action for " + ID);
+            return false;
+        }
+
+        return true;
     }
 
 }

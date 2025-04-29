@@ -50,8 +50,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("../mapsave.txt");
-        loadEntitiesFromFile("../mapsave.txt");
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -305,20 +305,8 @@ public class Game {
                     String targetTektonName = scanner.nextLine();
                     Tekton targetTekton = map.getTektonById(targetTektonName);
 
-                    if (targetTekton == null) {
-                        System.out.println("No Tekton found with the name: " + targetTektonName);
-                        return;
-                    }
+                    rovar.move(targetTekton);
 
-                    // Find reachable Tektons based on the Rovar's speed
-                    List<Tekton> reachable = rovar.getTekton().findReachableTektonWithinDistance(rovar.getSpeed());
-
-                    if (reachable.contains(targetTekton)) {
-                        rovar.move(targetTekton);
-                        System.out.println("Rovar successfully moved to: " + targetTektonName);
-                    } else {
-                        System.out.println("Target Tekton is out of reach.");
-                    }
                 }
 
                 case "3" -> {
