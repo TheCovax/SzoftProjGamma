@@ -71,6 +71,7 @@ public class GombaFonal extends Entity{
 		if(src != null) src.removeGombaFonal(this);
 		if(dst != null) dst.removeGombaFonal(this);
 		Gombasz g = (Gombasz)owner;
+		System.out.println(g.getName() + "--------------------hey I am deleted!!!!!!!!!!!!!!!!!!!!!!!!!");
 		g.getFonalak().remove(this);
 	}
 
@@ -187,7 +188,7 @@ public class GombaFonal extends Entity{
 				break;
 			case CUT:
 				if (--destructionTimer <= 0) {
-					delete();
+					this.delete();
 				}
 				break;
 			case ACTIVE:

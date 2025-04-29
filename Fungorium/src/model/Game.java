@@ -143,7 +143,9 @@ public class Game {
         System.out.print("How many rounds do you want to skip:");
         int time = Integer.parseInt(scanner.nextLine());
         for(int i = 0; i < time * 4; i++) nextPlayer();
-        roundCounter += time;
+        for (int i = 0; i < time; i++) {
+            roundEnd();
+        }
     }
 
     void setTestingMode(){
@@ -338,7 +340,7 @@ public class Game {
                         }
                         if (targetFonal != null) break; // Exit once the GombaFonal is found
                     }
-
+                    /*
                     // If the GombaFonal is found, remove it
                     if (targetFonal != null) {
                         // Clean up the GombaFonal from both Tektons it connects
@@ -346,7 +348,8 @@ public class Game {
                         System.out.println("Cut Gombafonal: " + targetFonalName);
                     } else {
                         System.out.println("No Gombafonal found with the name: " + targetFonalName);
-                    }
+                    }*/
+                    rovar.cutGombaFonal(targetFonal);
                 }
 
 

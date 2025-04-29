@@ -116,6 +116,7 @@ public class Rovar extends Entity{
         tekton.removeSpora();
         remainingActions--;
 
+        System.out.println(ID+ " successfully ate Spora");
         return true;
     }
 
@@ -134,15 +135,18 @@ public class Rovar extends Entity{
         }
 
         if(!tekton.hasGombafonal(gf)){
+            System.out.println("Cutting " + gf.getID() + " failed, it does not exist on the tekton");
             return false;
         }
 
         // Execute cutting gombafonal
         // --------------------------
         if (!gf.cut()){ // Schedule gombafonal for cutting
+            System.out.println("Cutting " + gf.getID() + " failed, its already under Cutting State");
             return false;
         }else {
             remainingActions--;
+            System.out.println("Cutting " + gf.getID() + " successful, it will be destroyed soon");
             return true;
         }
     }
@@ -156,7 +160,7 @@ public class Rovar extends Entity{
         tekton.addRovar(r2);
         ((Rovarasz) owner).addRovar(r2);
 
-        System.out.println("New Rovar: " + r2.getID() + "!");
+        System.out.println("New born Rovar: " + r2.getID() + "!");
     }
 
     /**
