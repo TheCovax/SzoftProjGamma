@@ -93,7 +93,7 @@ public class Game {
                 currentPlayerIndex = players.indexOf(player);
 
                 String input = "";
-                while (!input.equals("0")) {
+                while (!input.equals("3")) {
                     populateCollections();
                     showMainMenu();
                     input = scanner.nextLine();
@@ -101,9 +101,11 @@ public class Game {
                     switch (input) {
                         case "1" -> inspectEntity();
                         case "2" -> selectEntity();
-                        case "3" -> listAllEntities();
+                        //case "3" -> nextPlayer();
                         case "4" -> listAllEntities();
                         case "5" -> setTestingMode();
+                        case "6" -> {if(testing) fastForwardRounds();
+                                    else System.out.println("Unknown Command");}
                         case "0" -> System.exit(0);
                         default -> System.out.println("Unknown Command");
                     }
@@ -116,6 +118,14 @@ public class Game {
 
             roundCounter++;  // Increase after all players played in round
         }
+    }
+
+
+
+    void fastForwardRounds(){
+        System.out.println("How many rounds do you want to skip:");
+        int time = Integer.parseInt(scanner.nextLine());
+        //for(int i = 0; i < time; i++) nextPlayer();
     }
 
     void setTestingMode(){
@@ -141,6 +151,7 @@ public class Game {
         System.out.println("3) Next Player");
         System.out.println("4) List all Entities");
         System.out.println("5) Set testing mode (currently: " + testing + ")");
+        if(testing) System.out.println("6) Skip Rounds");
         System.out.print("Choose option: ");
     }
 
