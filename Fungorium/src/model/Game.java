@@ -200,7 +200,7 @@ public class Game {
 
         // Rovar kiválasztása
         for (Rovar r : rovarok) {
-            if (r.getID().equals(name)) {
+            if (r.getID().equals(name) && r.getOwner() == players.get(currentPlayerIndex)) {
                 selectRovar(r);
                 return;
             }
@@ -208,7 +208,7 @@ public class Game {
 
         // GombaTest kiválasztása
         for (GombaTest g : gombaTestek) {
-            if (g.getID().equals(name)) {
+            if (g.getID().equals(name) && g.getOwner() == players.get(currentPlayerIndex)) {
                 selectGombaTest(g);
                 return;
             }
@@ -248,7 +248,6 @@ public class Game {
                     tekton.setSplitRate(1);
                     map.addTekton(tekton.split());
                     tekton.setSplitRate(tmp);
-                    
                 }
                 case "0" -> {
                 }
