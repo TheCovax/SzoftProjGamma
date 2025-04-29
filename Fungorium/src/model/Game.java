@@ -24,6 +24,8 @@ public class Game {
     private Scanner scanner;
     public Map map = new Map();
 
+    boolean testing = false;
+
     public static void main(String[] args) throws IOException {
         Game game = new Game();
         game.initializeGame();
@@ -46,8 +48,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("./SzoftProjGamma/mapsave.txt");
-        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
+        map.loadMap("mapsave.txt");
+        loadEntitiesFromFile("mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -91,10 +93,15 @@ public class Game {
                 case "2" -> selectEntity();
                 case "3" -> nextPlayer();
                 case "4" -> listAllEntities();
+                case "5" -> setTestState();
                 case "0" -> System.out.println("Exiting...");
                 default -> System.out.println("Unknown Command");
             }
         }
+    }
+
+    void setTestState(){
+        testing = !testing;
     }
 
     private void listAllEntities() {
@@ -114,6 +121,7 @@ public class Game {
         System.out.println("2) Select Entity");
         System.out.println("3) Next Player");
         System.out.println("4) List all Entities");
+        System.out.println("5) Set testing mode (currently: " + testing + ")");
         System.out.print("Choose option: ");
     }
 
@@ -260,8 +268,11 @@ public class Game {
 
             switch (input) {
                 case "1" -> {
-                    System.out.println("Grow Gombafonal");
-                    // growFonal logic
+                    System.out.println("Grow Gombafonal. Name a target Tekton: ");
+                    String target_id = scanner.nextLine();
+
+                    Tekton target = map.getTektonById(target_id);
+                    gombaTest.getTekton().growFonal(target, getCurrentPlayer(), testing);
 
                 }
 

@@ -31,11 +31,15 @@ public class GombaFonal extends Entity{
 	 * @param o A gombafonal tulajdonosának neve.
 	 */
 	public GombaFonal(Tekton s, Tekton d, Player o){
+		this(s, d, o, 1);
+	}
+
+	public GombaFonal(Tekton s, Tekton d, Player o, int newGrowTime){
         super(o);
         this.src = s;
 		this.dst = d;
 		this.eatParalyzedRovarRate = 0.5;
-		this.growthTimer = 1;
+		this.growthTimer = newGrowTime;
 		this.state = State.GROWING;
 	}
 
