@@ -75,7 +75,7 @@ public class Tekton {
 			rovarok = new ArrayList<>();
 			splitRate = splitR;
 
-			id = "T" + idCounter.incrementAndGet();
+			id = generateAutoId();
 		}
 
 	public GombaTest getGombatest() {
@@ -199,11 +199,19 @@ public class Tekton {
 		}
 
 		//A jelenlegi tektonrol torli a fonalakat es a gombatestet;
-		fonalak.clear();
-		gombatest = null;
+
+		for (int i = 0; i < fonalak.size(); i++) {
+			fonalak.get(i).delete();
+		}
+		if(gombatest != null)
+		{
+			gombatest.delete();
+			gombatest = null;
+		}
 
 		//Hozzaadja a jelenlegi tekton szomszedjaihoz az ujjjonnan letrehozottat
 		neighbours.add(newTekton);
+		
 
 		return newTekton;
 	}
