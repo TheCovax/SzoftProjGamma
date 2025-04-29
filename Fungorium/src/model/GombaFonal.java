@@ -30,16 +30,13 @@ public class GombaFonal extends Entity{
 	 * @param d A cél Tekton.
 	 * @param o A gombafonal tulajdonosának neve.
 	 */
-	public GombaFonal(Tekton s, Tekton d, Player o){
-		this(s, d, o, 1);
-	}
 
-	public GombaFonal(Tekton s, Tekton d, Player o, int newGrowTime){
+	public GombaFonal(Tekton s, Tekton d, Player o){
         super(o);
         this.src = s;
 		this.dst = d;
 		this.eatParalyzedRovarRate = 0.5;
-		this.growthTimer = newGrowTime;
+		this.growthTimer = 1;
 		this.state = State.GROWING;
 	}
 

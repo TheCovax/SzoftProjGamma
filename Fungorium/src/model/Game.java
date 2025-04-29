@@ -291,7 +291,7 @@ public class Game {
                     String target_id = scanner.nextLine();
 
                     Tekton target = map.getTektonById(target_id);
-                    gombaTest.getTekton().growFonal(target, getCurrentPlayer(), testing);
+                    gombaTest.getTekton().growFonal(target, getCurrentPlayer());
 
                 }
 
