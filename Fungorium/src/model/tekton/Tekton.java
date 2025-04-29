@@ -173,7 +173,8 @@ public class Tekton {
 		newNeighbors.add(this);
 
 		//Csokkenti a split rate-t, hogy legkozelebb kisebb esellyel torjon el
-		splitRate -= 0.1;
+		if(splitRate >0.1) splitRate -= 0.1;
+		
 
 
 		//Letrehoz egy uj tektont, a csokkentett splitRate-el és az elobb letrehozott uj szomszedokkal

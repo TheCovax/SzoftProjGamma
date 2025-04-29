@@ -117,12 +117,20 @@ public class Game {
                     return;
                 }
             }
-
-            roundCounter++;  // Increase after all players played in round
+            //round end
+            roundEnd();
+            
         }
     }
 
     
+
+
+    private void roundEnd() {
+        roundCounter++;  // Increase after all players played in round
+        entities.forEach(action -> action.update()); // Call update on all entities
+        map.getTektonok().forEach(action -> action.update()); // Call update on all tektons
+    }
 
 
     private int nextPlayer() {
