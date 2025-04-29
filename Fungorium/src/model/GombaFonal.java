@@ -180,8 +180,6 @@ public class GombaFonal extends Entity{
 	 */
 	@Override
 	public void update(){
-		if (state == State.DESTROYED) delete();
-
 		eatParalyzedRovar();
 
 		switch (state) {
@@ -199,6 +197,12 @@ public class GombaFonal extends Entity{
 			case ACTIVE:
 				// No automatic transitions
 				break;
+			case DESTROYED:
+				delete();
+				break;
+			default:
+				throw new IllegalStateException("Unexpected value: " + state);
+
 		}
 	}
 

@@ -222,7 +222,7 @@ public class Game {
             }
         }
 
-        System.out.println("Entity with this ID ("+ name + ") could not be found");
+        System.out.println("Entity with this ID ("+ name + ") could not be found for this player");
     }
 
     private void selectTekton() {
