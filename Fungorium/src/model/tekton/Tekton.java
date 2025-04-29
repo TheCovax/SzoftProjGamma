@@ -18,7 +18,7 @@ public class Tekton {
 	List<GombaFonal> fonalak;
 
 	List<Tekton> neighbours;
-	List<GombaTest> test;
+	private GombaTest gombatest;
 	List<Rovar> rovarok;
 	double splitRate;
 	boolean isConnected;
@@ -30,7 +30,7 @@ public class Tekton {
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
 		neighbours = new ArrayList<>();
-		test = new ArrayList<>();
+		gombatest = null;
 		rovarok = new ArrayList<>();
 		splitRate = 0.5;
 		id = generateAutoId();
@@ -43,7 +43,7 @@ public class Tekton {
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
 		neighbours = new ArrayList<>();
-		test = new ArrayList<>();
+		gombatest = null;
 		rovarok = new ArrayList<>();
 		splitRate = 0.5;
 		this.id = id;
@@ -57,8 +57,7 @@ public class Tekton {
 		sporak = new LinkedList<>();
 		fonalak = new ArrayList<>();
 		neighbours = new ArrayList<>();
-		test = new ArrayList<>();
-		test.add(g);
+		gombatest = g;
 		rovarok = new ArrayList<>();
 		splitRate = splitR;
 
@@ -72,16 +71,17 @@ public class Tekton {
 			sporak = new LinkedList<>();
 			fonalak = new ArrayList<>();
 			neighbours = neighboursList;
-			test = new ArrayList<>();
+			gombatest = null;
 			rovarok = new ArrayList<>();
 			splitRate = splitR;
 
 			id = "T" + idCounter.incrementAndGet();
 		}
 
-	public List<GombaTest> getTestek(){
-		return test;
+	public GombaTest getGombatest() {
+		return gombatest;
 	}
+
 
 	public List<GombaFonal> getFonalak() {
 		return getFonalak(null);
@@ -122,7 +122,7 @@ public class Tekton {
 	}
 
 	public void addGombaTest(GombaTest gt) {
-		test.add(gt);
+		this.gombatest = gt;
 	}
 
 
@@ -132,10 +132,6 @@ public class Tekton {
 
 	public void setSplitRate(double splitRate) {
 		this.splitRate = splitRate;
-	}
-
-	public List<GombaTest> getGombaTestek() {
-		return test;
 	}
 
 	public void addSpora(Spora s, Player p){
@@ -199,8 +195,7 @@ public class Tekton {
 
 		//A jelenlegi tektonrol torli a fonalakat es a gombatestet;
 		fonalak.clear();
-		test.clear();
-
+		gombatest = null;
 
 		//Hozzaadja a jelenlegi tekton szomszedjaihoz az ujjjonnan letrehozottat
 		neighbours.add(newTekton);
@@ -320,8 +315,8 @@ public class Tekton {
 		if(canSplit()) split();
 	}
 
-	public void removeGombatest(GombaTest t){
-		test.remove(test.indexOf(t));
+	public void removeGombatest(GombaTest t) {
+		if (gombatest == t) gombatest = null;
 	}
 
 	public List<Rovar> getRovarok(){
@@ -350,15 +345,13 @@ public class Tekton {
 		sb.append(", IsConnected=").append(isConnected);
 		sb.append(", SplitRate=").append(splitRate);
 
-		// list GombaTestek
+		// GombaTest
 		sb.append(", GombaTestek=[");
-		for (int i = 0; i < test.size(); i++) {
-			sb.append(test.get(i).getID());
-			if (i < test.size() - 1) {
-				sb.append(", ");
-			}
+		if (gombatest != null) {
+			sb.append(gombatest.getID());
 		}
 		sb.append("]");
+
 
 		// list Rovarok
 		sb.append(", Rovarok=[");
