@@ -75,7 +75,7 @@ public class Tekton {
 			rovarok = new ArrayList<>();
 			splitRate = splitR;
 
-			id = "T" + idCounter.incrementAndGet();
+			id = generateAutoId();
 		}
 
 	public GombaTest getGombatest() {
