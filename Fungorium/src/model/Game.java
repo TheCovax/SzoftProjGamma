@@ -267,6 +267,7 @@ public class Game {
                     String target_id = scanner.nextLine();
                     GombaFonal ujFonal = tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
                     if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
+                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
                 }
 
                 case "2" -> {
