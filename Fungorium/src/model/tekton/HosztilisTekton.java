@@ -50,6 +50,6 @@ public class HosztilisTekton extends Tekton {
 
 	//Megoli a gombatestet
 	void kill(){
-		test.clear();
+		//test.clear();
 	}
 }

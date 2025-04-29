@@ -17,6 +17,7 @@ public abstract class Entity {
     public Entity(String id, Player owner){
         this.ID = id;
         this.owner = owner;
+        registerId(id);
     }
 
     public Entity(Player owner){
@@ -41,15 +42,16 @@ public abstract class Entity {
             newId = getPrefix() + counter.incrementAndGet();
         } while (!usedIds.add(newId));
 
+        usedIds.forEach(System.out::println);
         return newId;
     }
 
-    /*
+
     private static void registerId(String id) {
         if (!usedIds.add(id)) {
             throw new IllegalArgumentException("ID already exists: " + id);
         }
-    }*/
+    }
 
     protected abstract String getPrefix();
 
