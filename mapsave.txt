@@ -14,23 +14,27 @@ TE TD
 
 #Gombatestek
 G0 TA GB1
-G1 TC GB1
+G1 TB GB1
 G2 TD GB2
-G3 TB GB2
+G3 TE GB2
 
 #Gombafonalak
 F0 TA TB GB1
 F1 TB TC GB1
 F2 TA TC GB1
-F3 TB TC GB2
+F3 TA TD GB2
 F4 TD TE GB2
 
 #Rovarok
 R0 TA RS3
-R1 TA RS3
-R2 TB RS4
-R3 TB RS4
 
 #Sporak
 OsztoSpora TE
 LassitoSpora TA
+GyorsitoSpora TB
+GyorsitoSpora TB
+GyorsitoSpora TB
+GyorsitoSpora TB
+GyorsitoSpora TB
+GyorsitoSpora TB
+GyorsitoSpora TB

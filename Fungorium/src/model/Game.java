@@ -64,16 +64,16 @@ public class Game {
         Rovarasz p3 = new Rovarasz("RS3");
         Rovarasz p4 = new Rovarasz("RS4");
 
-        System.out.println("First player's name (Team 1, Gombasz): ");
+        System.out.print("\n\nFirst player's name (Team 1, Gombasz): ");
         p1.setName(scanner.nextLine());
 
-        System.out.println("Second player's name (Team 2, Gombasz): ");
+        System.out.print("Second player's name (Team 2, Gombasz): ");
         p2.setName(scanner.nextLine());
 
-        System.out.println("Third player's name (Team 1, Rovarasz): ");
+        System.out.print("Third player's name (Team 1, Rovarasz): ");
         p3.setName(scanner.nextLine());
 
-        System.out.println("Fourth player's name (Team 2, Rovarasz): ");
+        System.out.print("Fourth player's name (Team 2, Rovarasz): ");
         p4.setName(scanner.nextLine());
 
         players.add(p1);
@@ -131,7 +131,7 @@ public class Game {
 
 
     void fastForwardRounds(){
-        System.out.println("How many rounds do you want to skip:");
+        System.out.print("How many rounds do you want to skip:");
         int time = Integer.parseInt(scanner.nextLine());
         //for(int i = 0; i < time * 4; i++) nextPlayer();
         roundCounter += time;
