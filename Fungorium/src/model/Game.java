@@ -24,7 +24,7 @@ public class Game {
     private Scanner scanner;
     public Map map = new Map();
 
-    boolean testing = false;
+    boolean testing;
 
     public static void main(String[] args) throws IOException {
         Game game = new Game();
@@ -43,6 +43,8 @@ public class Game {
         gombaFonalak = new ArrayList<>();
         entities = new ArrayList<>();
         scanner = new Scanner(System.in);
+
+        testing = false;
 
         // Initialize players
         initPlayers();
@@ -86,16 +88,6 @@ public class Game {
 
             Collections.shuffle(players);
 
-<<<<<<< HEAD
-            switch (input) {
-                case "1" -> inspectEntity();
-                case "2" -> selectEntity();
-                case "3" -> nextPlayer();
-                case "4" -> listAllEntities();
-                case "5" -> setTestState();
-                case "0" -> System.out.println("Exiting...");
-                default -> System.out.println("Unknown Command");
-=======
             for (Player player : players) {
                 System.out.println("\nIt's " + player.getName() + "'s turn:");
                 currentPlayerIndex = players.indexOf(player);
@@ -110,7 +102,9 @@ public class Game {
                         case "1" -> inspectEntity();
                         case "2" -> selectEntity();
                         case "3" -> listAllEntities();
-                        case "0" -> System.out.println("Ending turn...");
+                        case "4" -> listAllEntities();
+                        case "5" -> setTestingMode();
+                        case "0" -> System.exit(0);
                         default -> System.out.println("Unknown Command");
                     }
                 }
@@ -118,20 +112,15 @@ public class Game {
                 if (checkGameEnd()) {
                     return;
                 }
->>>>>>> cdac87016d9c399ed5c5574b67f8cdf05476d626
             }
 
             roundCounter++;  // Increase after all players played in round
         }
     }
 
-<<<<<<< HEAD
-    void setTestState(){
+    void setTestingMode(){
         testing = !testing;
     }
-=======
-
->>>>>>> cdac87016d9c399ed5c5574b67f8cdf05476d626
 
     private void listAllEntities() {
         populateCollections();
