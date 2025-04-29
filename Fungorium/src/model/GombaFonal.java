@@ -1,7 +1,6 @@
 package Fungorium.src.model;
 
 import Fungorium.src.model.player.Gombasz;
-//import java.lang.runtime.TemplateRuntime;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
@@ -184,7 +183,7 @@ public class GombaFonal extends Entity{
 	 */
 	@Override
 	public void update(){
-		if (state == State.DESTROYED) return;
+		if (state == State.DESTROYED) delete();
 
 		eatParalyzedRovar();
 
