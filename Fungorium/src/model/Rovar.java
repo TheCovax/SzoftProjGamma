@@ -133,6 +133,8 @@ public class Rovar extends Entity{
         Rovar r2 = new Rovar(tekton,owner);
         tekton.addRovar(r2);
         ((Rovarasz) owner).addRovar(r2);
+
+        System.out.println("New Rovar: " + r2.getID() + "!");
     }
 
     @Override

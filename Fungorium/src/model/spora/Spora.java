@@ -1,7 +1,6 @@
 package Fungorium.src.model.spora;
 
 import Fungorium.src.model.Rovar;
-import Fungorium.src.utility.Logger;
 
 /**
  * A gombatestek által kilőtt egység.
@@ -37,8 +36,10 @@ public class Spora {
      * @param r Az a rovar, amelyre az effektet alkalmazzuk.
      */
     public void applyEffect(Rovar r){
-        Logger.methodCall("Spora.applyEffect(r)");
-        Logger.methodReturn("Spora.applyEffect(r)");
+        //Logger.methodCall("Spora.applyEffect(r)");
+        
+
+        //Logger.methodReturn("Spora.applyEffect(r)");
     };
 
     /**
