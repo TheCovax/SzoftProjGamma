@@ -142,9 +142,28 @@ public class GombaTest extends Entity{
             return;
         }
 
-        if (!tekton.findReachableTektonWithinDistance(1).contains(dst)) {
-            System.out.println("Target Tekton is unreachable.");
-            return;
+        if (level < 2) {
+
+            if(!tekton.getNeighbours().contains(dst)) {
+                System.out.println("Target Tekton is unreachable.");
+                return;
+            }
+        }else{
+            List<Tekton> szomszedok = tekton.getNeighbours();
+            List<Tekton> elerheto = new ArrayList<>();
+            for (Tekton t : szomszedok) {
+                List<Tekton> loc_szomszedok = t.getNeighbours();
+                for (Tekton loc_t : loc_szomszedok) {
+                    if (!elerheto.contains(loc_t)) {
+                        elerheto.add(t);
+                    }
+                }
+                
+            }
+            if(!elerheto.contains(dst)) {
+                System.out.println("Target Tekton is unreachable.");
+                return;
+            }
         }
 
         // Van elég spóra és elérhető a cél -> végrehajtás
