@@ -11,7 +11,10 @@ import java.util.*;
 
 public class Game {
 
-    private static final int WINNING_SCORE = 10;
+    private int roundCounter = 0;
+    private static final int MAX_ROUNDS = 15;
+    private static final int WINNING_GOMBATEST_COUNT = 10;
+    private static final int WINNING_SPORA_SCORE = 30;
     private List<Player> players;
     private List<GombaTest> gombaTestek;
     private List<Rovar> rovarok;
@@ -76,23 +79,40 @@ public class Game {
     }
 
     public void start() {
-        String input = "";
+        while (true) {
+            System.out.println("\n--- Round " + (roundCounter + 1) + " ---"); // Not increasing yet
 
-        while (!input.equals("0")) {
-            populateCollections();
-            showMainMenu();
-            input = scanner.nextLine();
+            Collections.shuffle(players);
 
-            switch (input) {
-                case "1" -> inspectEntity();
-                case "2" -> selectEntity();
-                case "3" -> nextPlayer();
-                case "4" -> listAllEntities();
-                case "0" -> System.out.println("Exiting...");
-                default -> System.out.println("Unknown Command");
+            for (Player player : players) {
+                System.out.println("\nIt's " + player.getName() + "'s turn:");
+                currentPlayerIndex = players.indexOf(player);
+
+                String input = "";
+                while (!input.equals("0")) {
+                    populateCollections();
+                    showMainMenu();
+                    input = scanner.nextLine();
+
+                    switch (input) {
+                        case "1" -> inspectEntity();
+                        case "2" -> selectEntity();
+                        case "3" -> listAllEntities();
+                        case "0" -> System.out.println("Ending turn...");
+                        default -> System.out.println("Unknown Command");
+                    }
+                }
+
+                if (checkGameEnd()) {
+                    return;
+                }
             }
+
+            roundCounter++;  // Increase after all players played in round
         }
     }
+
+
 
     private void listAllEntities() {
         populateCollections();
@@ -326,32 +346,38 @@ public class Game {
         this.entities = tmpEntities;
     }
 
-    private void nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        System.out.println("Next Player: " + players.get(currentPlayerIndex).getName());
-
-        checkGameEnd();
-    }
 
     private Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
-    private void checkGameEnd() {
-        // 1. Pontszám elérés
+    private boolean checkGameEnd() {
+        boolean gombaszWin = false;
+        boolean rovaraszWin = false;
+
         for (Player p : players) {
-            if (p.getScore() >= WINNING_SCORE) {
-                System.out.println("Game Over! " + p.getName() + " reached " + WINNING_SCORE + " points!");
-                System.exit(0);
+            if (p instanceof Gombasz gombasz) {
+                if (gombasz.getGombak().size() >= WINNING_GOMBATEST_COUNT) {
+                    System.out.println("Game Over! Gombász " + gombasz.getName() + " has developed " + gombasz.getGombak().size() + " GombaTests!");
+                    gombaszWin = true;
+                }
+            } else if (p instanceof Rovarasz rovarasz) {
+                if (rovarasz.getScore() >= WINNING_SPORA_SCORE) {
+                    System.out.println("Game Over! Rovarász " + rovarasz.getName() + " collected " + rovarasz.getScore() + " points!");
+                    rovaraszWin = true;
+                }
             }
         }
 
-        // 2. GombaTestek elfogytak
-        if (gombaTestek.isEmpty()) {
-            System.out.println("Game Over! Someone ran out of GombaTest!");
-            System.exit(0);
+        if (roundCounter >= MAX_ROUNDS) {
+            System.out.println("Game Over! Maximum rounds (" + MAX_ROUNDS + ") reached.");
+            return true;
         }
+
+        return gombaszWin || rovaraszWin;
     }
+
+
 
     private Player findPlayerById(String id) {
         for (Player p : players) {
