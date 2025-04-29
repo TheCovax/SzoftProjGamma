@@ -106,6 +106,8 @@ public class Game {
                         case "5" -> setTestingMode();
                         case "6" -> {if(testing) fastForwardRounds();
                                     else System.out.println("Unknown Command");}
+                        case "7" -> {if(testing) selectTekton();
+                                    else System.out.println("Unknown Command");}
                         case "0" -> System.exit(0);
                         default -> System.out.println("Unknown Command");
                     }
@@ -160,7 +162,10 @@ public class Game {
         System.out.println("3) Next Player");
         System.out.println("4) List all Entities");
         System.out.println("5) Set testing mode (currently: " + testing + ")");
-        if(testing) System.out.println("6) Skip Rounds");
+        if(testing) {
+            System.out.println("6) Skip Rounds");
+            System.out.println("7) Select tekton");
+        }
         System.out.print("Choose option: ");
     }
 
@@ -212,8 +217,16 @@ public class Game {
         System.out.println("Entity with this ID ("+ name + ") could not be found");
     }
 
-    private void selectTekton(Tekton tekton) {
-        String input = scanner.nextLine();
+    private void selectTekton() {
+        
+
+
+        System.out.print("Name a tekton to select: ");
+        String name = scanner.nextLine();
+
+        Tekton tekton = map.getTektonById(name);
+
+        String input = " ";
 
         while (!input.equals("0")) {
             System.out.println("\n0) Exit");
@@ -221,6 +234,8 @@ public class Game {
             System.out.println("2) Split");
             System.out.print("Choose option: ");
         
+            input = scanner.nextLine();
+
             switch (input) {
                 case "1" -> {
                     System.out.println("Grow Gombafonal. Name a target Tekton: ");
