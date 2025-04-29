@@ -203,7 +203,14 @@ public class GombaTest extends Entity{
     @Override
     public void update() {
         if (shotCounter > 0) {
-            produceSpora();
+            for (int i = 0; i < 3; i++) {
+                produceSpora();
+                produceSpora();
+            }
+            if (level > 3){
+                produceSpora();
+            }
+            
         }else{
             delete();
         }
