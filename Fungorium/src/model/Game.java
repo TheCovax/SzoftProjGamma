@@ -86,7 +86,7 @@ public class Game {
         while (true) {
             System.out.println("\n--- Round " + (roundCounter + 1) + " ---"); // Not increasing yet
 
-            Collections.shuffle(players);
+            //Collections.shuffle(players);
 
             for (Player player : players) {
                 System.out.println("\nIt's " + player.getName() + "'s turn:");
@@ -229,7 +229,7 @@ public class Game {
                 case "2" -> {
                     double tmp = tekton.getSplitRate();
                     tekton.setSplitRate(1);
-                    tekton.split();
+                    map.addTekton(tekton.split());
                     tekton.setSplitRate(tmp);
                     
                 }
@@ -245,6 +245,8 @@ public class Game {
 
 
     private void selectRovar(Rovar rovar) {
+        System.out.println("___________________________");
+        System.out.println(rovar.getID() + " selected");
         String input = "";
 
         while (!input.equals("0")) {
