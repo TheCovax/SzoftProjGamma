@@ -103,11 +103,10 @@ public class Game {
                         case "2" -> selectEntity();
                         case "3" -> nextPlayer();
                         case "4" -> listAllEntities();
-                        case "5" -> setTestingMode();
-                        case "6" -> {if(testing) fastForwardRounds();
+                        case "6" -> setTestingMode();
+                        case "7" -> {if(testing) fastForwardRounds();
                                     else System.out.println("Unknown Command");}
-                        case "7" -> {if(testing) selectTekton();
-                                    else System.out.println("Unknown Command");}
+                        case "5" -> selectTekton();
                         case "0" -> System.exit(0);
                         default -> System.out.println("Unknown Command");
                     }
@@ -135,7 +134,7 @@ public class Game {
 
     private int nextPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        //System.out.println("Next player: " + players.get(currentPlayerIndex).getName());
+        System.out.println("Next player: " + players.get(currentPlayerIndex).getName());
         return currentPlayerIndex;
     }
 
@@ -143,7 +142,7 @@ public class Game {
     void fastForwardRounds(){
         System.out.print("How many rounds do you want to skip:");
         int time = Integer.parseInt(scanner.nextLine());
-        //for(int i = 0; i < time * 4; i++) nextPlayer();
+        for(int i = 0; i < time * 4; i++) nextPlayer();
         roundCounter += time;
     }
 
@@ -169,10 +168,11 @@ public class Game {
         System.out.println("2) Select Entity");
         System.out.println("3) Next Player");
         System.out.println("4) List all Entities");
-        System.out.println("5) Set testing mode (currently: " + testing + ")");
+        System.out.println("5) Select tekton");
+        System.out.println("6) Set testing mode (currently: " + testing + ")");
         if(testing) {
-            System.out.println("6) Skip Rounds");
-            System.out.println("7) Select tekton");
+            System.out.println("7) Skip Rounds");
+
         }
         System.out.print("Choose option: ");
     }
@@ -239,7 +239,7 @@ public class Game {
         while (!input.equals("0")) {
             System.out.println("\n0) Exit");
             System.out.println("1) Grow Fonal");
-            System.out.println("2) Split");
+            if(testing)System.out.println("2) Split");
             System.out.print("Choose option: ");
         
             input = scanner.nextLine();
@@ -248,14 +248,17 @@ public class Game {
                 case "1" -> {
                     System.out.println("Grow Gombafonal. Name a target Tekton: ");
                     String target_id = scanner.nextLine();
-                    tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
+                    GombaFonal ujFonal = tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
+                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
                 }
 
                 case "2" -> {
+                    if(testing){
                     double tmp = tekton.getSplitRate();
                     tekton.setSplitRate(1);
                     map.addTekton(tekton.split());
                     tekton.setSplitRate(tmp);
+                    }
                 }
                 case "0" -> {
                 }
