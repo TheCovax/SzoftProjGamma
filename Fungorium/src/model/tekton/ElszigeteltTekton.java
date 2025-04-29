@@ -28,7 +28,7 @@ public class ElszigeteltTekton extends Tekton{
 		 * @param owner tulajdonos jatekos
 		 */
 		@Override
-		public void growFonal(Tekton dst, Player owner){
+		public GombaFonal growFonal(Tekton dst, Player owner){
 			
 			if(this.sporak.size() >= 2 && (!(dst instanceof ElszigeteltTekton) || dst.fonalak.isEmpty()) && fonalak.isEmpty()){
 
@@ -40,7 +40,11 @@ public class ElszigeteltTekton extends Tekton{
 
 			fonalak.add(ujFonal);
 			dst.addGombaFonal(ujFonal);
-
+			return ujFonal;
+			}
+			else{
+				System.out.println("This fonal could not be grown");
+				return null;
 			}
 		} 
 }

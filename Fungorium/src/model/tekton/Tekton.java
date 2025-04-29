@@ -103,7 +103,7 @@ public class Tekton {
 		return sporak;
 	}
 
-	public void growFonal(Tekton dst, Player owner){
+	public GombaFonal growFonal(Tekton dst, Player owner){
 		//Ellenorzi, hogy a jelenlegi tektonon van-e legalább 2 spora 
 		//és rafer-e a celtektonra az uj fonal (ha ElszigeteletTekton, uresnek kell lennie)
 		if(this.sporak.size() >= 2 && (!(dst instanceof ElszigeteltTekton) || dst.fonalak.isEmpty())){
@@ -116,8 +116,13 @@ public class Tekton {
 
 			fonalak.add(ujFonal);
 			dst.addGombaFonal(ujFonal);
+
+			return ujFonal;
 		}
-		else System.out.println("This fonal could not be grown");
+		else{
+			System.out.println("This fonal could not be grown");
+			return null;
+		} 
 		
 	}
 
