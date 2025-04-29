@@ -5,20 +5,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
+/**
+ * Represents the map of the game, holding all Tekton instances and their neighbor relationships.
+ * Tektons are loaded from a text file following a predefined format.
+ */
 public class Map {
     private ArrayList<Tekton> tektonok;
 
     public Map(){
         tektonok = new ArrayList<>();
-    }
-
-    public void addTekton(Tekton t){
-        tektonok.add(t);
-    }
-
-    public void removeTekton(Tekton t){
-        tektonok.remove(t);
     }
 
     /**
@@ -35,8 +32,8 @@ public class Map {
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             if (line.isEmpty()) continue;
-            // Select mode
 
+            // Identify mode based on section header
             if (line.startsWith("#")){
                 if (line.toLowerCase().contains("tektons")) {
                     mode = "tekton";
@@ -45,8 +42,9 @@ public class Map {
                 } else {
                     mode = ""; // other sections we ignore for now
                 }
-                // mode behaviours
-            } else if (mode.equals("tekton")){
+            }
+            // Load Tektons
+            else if (mode.equals("tekton")){
                 String[] parts = line.split("\\s+");
                 if (parts.length >= 2){
                     String id = parts[0];
@@ -55,7 +53,9 @@ public class Map {
                     Tekton tekton = createTektonByType(id, type);
                     addTekton(tekton);
                 }
-            } else if (mode.equals("neighbour")){
+            }
+            // Load Neighbours
+            else if (mode.equals("neighbour")){
                 String[] parts = line. split("\\s+");
                 if (parts.length >= 2) {
                     // TODO: Get Tekton by ID and add neighbours
@@ -74,6 +74,14 @@ public class Map {
     }
 
 
+    /**
+     * Creates a Tekton instance based on the specified type and ID.
+     *
+     * @param id   The ID of the Tekton.
+     * @param type The type of Tekton (Stabil, Kopar, etc.).
+     * @return A Tekton subclass matching the type.
+     * @throws IllegalArgumentException If the type is unknown.
+     */
     private Tekton createTektonByType(String id, String type){
         switch (type.toLowerCase()){
             case "elszigetelt":
@@ -85,7 +93,7 @@ public class Map {
             case "stabil":
                 return new StabilTekton(id);
             case "termekeny":
-                return new KoparTekton(id);
+                return new TermekenyTekton(id);
             default:
                 throw new IllegalArgumentException("Unknown Tekton type" + type);
         }
@@ -102,10 +110,15 @@ public class Map {
                 return t;
             }
         }
-        return null; // Not found
+
+        throw new NoSuchElementException("No Tekton found with ID: " + id);
     }
 
     public ArrayList<Tekton> getTektonok(){
         return tektonok;
+    }
+
+    public void addTekton(Tekton t){
+        tektonok.add(t);
     }
 }

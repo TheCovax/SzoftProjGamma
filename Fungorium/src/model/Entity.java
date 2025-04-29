@@ -8,10 +8,20 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Abstract base class for all game entities (e.g., Rovar, GombaTest, GombaFonal).
+ *
+ * Each entity has a unique ID, an owner (Player)
+ * including automatic ID generation if none is provided.
+ */
 public abstract class Entity {
     protected String ID;
     protected Player owner;
+
+    /** Global counters for automatically generating unique IDs by class type. */
     private static final HashMap<Class<?>, AtomicInteger> idCounters = new HashMap<>();
+
+    /** Global set of all used IDs to ensure uniqueness across all entities. */
     private static final Set<String> usedIds = new HashSet<>();
 
     public Entity(String id, Player owner){
@@ -33,6 +43,13 @@ public abstract class Entity {
         return owner;
     }
 
+    /**
+     * Generates a new unique ID automatically for this entity class.
+     *
+     * The generated ID consists of a class-specific prefix and a running number.
+     *
+     * @return The newly generated ID.
+     */
     private String generateAutoId() {
         Class<?> clazz = this.getClass();
         AtomicInteger counter = idCounters.computeIfAbsent(clazz, k -> new AtomicInteger(0));
@@ -42,23 +59,39 @@ public abstract class Entity {
             newId = getPrefix() + counter.incrementAndGet();
         } while (!usedIds.add(newId));
 
-        usedIds.forEach(System.out::println);
         return newId;
     }
 
-
+    /**
+     * Registers a manually assigned ID and ensures it is globally unique.
+     *
+     * @param id The ID to register.
+     * @throws IllegalArgumentException if the ID already exists.
+     */
     private static void registerId(String id) {
         if (!usedIds.add(id)) {
             throw new IllegalArgumentException("ID already exists: " + id);
         }
     }
 
+    /**
+     * Returns the class-specific prefix used for generating automatic IDs.
+     *
+     * @return The prefix string (e.g., "R" for Rovar, "G" for GombaTest).
+     */
     protected abstract String getPrefix();
 
     /**
-     * Called every round to update the entity.
+     * Called every game round to update the internal state of the entity.
+     *
+     * Implemented by subclasses to define specific behaviors like growing, moving, etc.
      */
     public abstract void update();
 
+    /**
+     * Called to remove the entity from the game completely.
+     *
+     * This includes detaching from owner, Tekton, or other structures.
+     */
     public abstract void delete();
 }

@@ -9,7 +9,7 @@ import Fungorium.src.model.Rovar;
  * A rovarok tápanyagként fogyaszthatják, de az elfogyasztott spóra különböző hatásokat válthat ki rájuk.
  */
 
-public class Spora {
+public abstract class Spora {
     /**
      * Alapértelmezett hatásidőtartam (körökben mérve).
      */
@@ -35,12 +35,7 @@ public class Spora {
      * Alkalmazza a spora effektet egy adott rovarra.
      * @param r Az a rovar, amelyre az effektet alkalmazzuk.
      */
-    public void applyEffect(Rovar r){
-        //Logger.methodCall("Spora.applyEffect(r)");
-        
-
-        //Logger.methodReturn("Spora.applyEffect(r)");
-    };
+    public abstract void applyEffect(Rovar r);
 
     /**
      * Visszaadja, hogy hany pontot er a spora.

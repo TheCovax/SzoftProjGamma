@@ -13,7 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * Minden gombafonal rendelkezik egy tulajdonossal (owner), amely az adott játékoshoz vagy irányítóhoz kapcsolható.
  */
 public class GombaFonal extends Entity{
-	public enum State { GROWING, ACTIVE, CUT, DESTROYED}
+	public enum State { GROWING, ACTIVE, CUT}
+	public static final int GROW_TIME = 1;
 
 	private State state;
 	private Tekton src;
@@ -35,7 +36,7 @@ public class GombaFonal extends Entity{
         this.src = s;
 		this.dst = d;
 		this.eatParalyzedRovarRate = 0.5;
-		this.growthTimer = 1;
+		this.growthTimer = GROW_TIME;
 		this.state = State.GROWING;
 	}
 
@@ -44,7 +45,7 @@ public class GombaFonal extends Entity{
 		this.src = s;
 		this.dst = d;
 		this.state = State.GROWING;
-		this.growthTimer = 1;
+		this.growthTimer = GROW_TIME;
 		this.eatParalyzedRovarRate = 0.5;
 	}
 
@@ -53,7 +54,7 @@ public class GombaFonal extends Entity{
 		this.src = s;
 		this.dst = d;
 		this.state = initialState;
-		this.growthTimer = 1;
+		this.growthTimer = GROW_TIME;
 		this.eatParalyzedRovarRate = 0.5;
 	}
 
@@ -65,6 +66,7 @@ public class GombaFonal extends Entity{
 	/**
 	 * Eltávolítja a gombafonalat a kapcsolódó tektonokból.
 	 */
+	@Override
 	public void delete(){
 		if(src != null) src.removeGombaFonal(this);
 		if(dst != null) dst.removeGombaFonal(this);
@@ -128,13 +130,8 @@ public class GombaFonal extends Entity{
 
 		//Minden benult rovaron vegigmegy
 		for (Rovar rovar : r) {
-			//A tektonon levo rovarok listaja
-			List<Rovar> rovarok = rovar.getTekton().getRovarok();
-			//Eltavolitas a rovarok listajabol
-			rovarok.remove(rovarok.indexOf(rovar));
+			rovar.delete();
 		}
-
-
 	}
 
 	/**Megadja az adott tektonon levo lebenintott rovarrokat,
@@ -190,15 +187,11 @@ public class GombaFonal extends Entity{
 				break;
 			case CUT:
 				if (--destructionTimer <= 0) {
-					state = State.DESTROYED;
 					delete();
 				}
 				break;
 			case ACTIVE:
 				// No automatic transitions
-				break;
-			case DESTROYED:
-				delete();
 				break;
 			default:
 				throw new IllegalStateException("Unexpected value: " + state);

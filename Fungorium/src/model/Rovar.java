@@ -10,6 +10,7 @@ import java.util.List;
  * A Rovar can move between Tektons, consume spora, and cut Gombafonal.
  */
 public class Rovar extends Entity{
+
     public static final int DEFAULT_SPEED = 4;
 
     private Tekton tekton;
@@ -20,11 +21,15 @@ public class Rovar extends Entity{
     private int remainingActions;
 
     /**
-     * Constructs a Rovar with a specific ID, Tekton, and owner.
+     * Constructs a Rovar with a specified ID, starting Tekton, and owner.
+     *
+     * @param id          The unique ID of the Rovar.
+     * @param tekton The starting Tekton where the Rovar is placed.
+     * @param owner       The player who owns this Rovar.
      */
-    public Rovar(String id, Tekton startTekton, Player owner){
+    public Rovar(String id, Tekton tekton, Player owner){
         super(id, owner);
-        this.tekton = startTekton;
+        this.tekton = tekton;
         this.isParalyzed = false;
         this.speed = DEFAULT_SPEED;
         this.duration = 0;
@@ -33,7 +38,10 @@ public class Rovar extends Entity{
     }
 
     /**
-     * Constructs a Rovar with a generated ID and given Tekton and owner.
+     * Constructs a Rovar with a generated ID, starting Tekton, and owner.
+     *
+     * @param tekton The starting Tekton where the Rovar is placed.
+     * @param owner  The player who owns this Rovar.
      */
     public Rovar(Tekton tekton, Player owner) {
         super(owner);
@@ -46,32 +54,33 @@ public class Rovar extends Entity{
     }
 
     /**
-     * Megpróbálja a rovart a megadott cél tektonra mozgatni.
-     * @param dstTekton A cél tekton.
-     * @return Igaz, ha a mozgás sikeres, egyébként hamis.
+     * Attempts to move the Rovar to a neighboring Tekton.
+     *
+     * @param dstTekton The destination Tekton.
+     * @return true if the move was successful; false otherwise.
      */
     public boolean move(Tekton dstTekton){
 
-        // Check paralyzed
+        // Check if the move is valid
+        // --------------------------
         if (isParalyzed())
             return false;
 
-        // Check if dstTekton is null
         if (dstTekton == null)
             return false;
 
-        // Check still remaining actions
         if (remainingActions <= 0)
             return false;
 
         // Attempt to get reachable tektons
         List<Tekton> reachableTektons = tekton.getNeighbours();
-
         // Check if destination is reachable
         if (!reachableTektons.contains(dstTekton))
             return false;
 
-        // Execute move
+
+        // Move valid, execute move
+        // ------------------------
         tekton.removeRovar(this);
         dstTekton.addRovar(this);
         this.setTekton(dstTekton);
@@ -81,16 +90,22 @@ public class Rovar extends Entity{
     }
 
     /**
-     * Elfogyasztja a megadott spórát és alkalmazza annak effektjeit.
-     * @param sp A fogyasztandó spóra.
-     * @return Igaz, ha a spóra elfogyasztása sikeres volt, egyébként hamis.
+     * Consumes a Spora and applies its effect.
+     *
+     * @param sp The Spora to be consumed.
+     * @return true if the Spora was successfully consumed; false otherwise.
      */
     public boolean eatSpora(Spora sp){
 
-        // Check if rovar is paralyzed
+        // Check is eating spora action is valid
+        // -------------------------------------
         if (isParalyzed())
             return false;
 
+        if (remainingActions <= 0)
+            return false;
+
+        // Action valid, execute eating spora
         // Execute eating Spora
         sp.applyEffect(this);
         collectedNutrition += sp.getNutrition();
@@ -101,24 +116,29 @@ public class Rovar extends Entity{
     }
 
     /**
-     * Elvágja a megadott gombafonalat.
-     * @param gf Az átvágandó gombafonal.
-     * @return Igaz, ha az átvágás sikeres, egyébként hamis.
+     * Attempts to cut a GombaFonal on the current Tekton.
+     *
+     * @param gf The GombaFonal to cut.
+     * @return true if the GombaFonal was successfully cut; false otherwise.
      */
     public boolean cutGombaFonal(GombaFonal gf){
 
+        // Check if action is valid
+        // ------------------------
         if (isParalyzed()){
             return false;
         }
 
-        // If tekton does not have this gf (Maybe not needed)
         if(!tekton.hasGombafonal(gf)){
             return false;
         }
 
+        if (remainingActions <= 0)
+            return false;
+
         // Execute cutting gombafonal
-        // successful holds if the gombafonal is successfully scheduled for destruction
-        if (!gf.cut()){
+        // --------------------------
+        if (!gf.cut()){ // Schedule gombafonal for cutting
             return false;
         }else {
             remainingActions--;
@@ -127,7 +147,8 @@ public class Rovar extends Entity{
     }
 
     /**
-     * Egy uj rovart hoz letre, ugyan arra a tektonra
+     * Splits the Rovar to create a new Rovar on the same Tekton.
+     * The new Rovar is added to the current Tekton and owner.
      */
     public void split(){
         Rovar r2 = new Rovar(tekton,owner);
@@ -137,14 +158,9 @@ public class Rovar extends Entity{
         System.out.println("New Rovar: " + r2.getID() + "!");
     }
 
-    @Override
-    protected String getPrefix() {
-        return "R";
-    }
-
     /**
-     * Frissitit a rovar allapotat minden kor utan
-     * Ha van letelt a duration visszaallitja a rovart alap allapotba
+     * Updates the Rovar state at the end of each round.
+     * Resets paralysis if duration expired, and restores remaining actions.
      */
     @Override
     public void update(){
@@ -157,6 +173,11 @@ public class Rovar extends Entity{
         }
 
         remainingActions = speed;
+    }
+
+    @Override
+    protected String getPrefix() {
+        return "R";
     }
 
     @Override
