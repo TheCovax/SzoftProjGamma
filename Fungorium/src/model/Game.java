@@ -50,8 +50,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("mapsave.txt");
-        loadEntitiesFromFile("mapsave.txt");
+        map.loadMap("../mapsave.txt");
+        loadEntitiesFromFile("../mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -186,7 +186,7 @@ public class Game {
         System.out.println("3) Next Player");
         System.out.println("4) List all Entities");
         System.out.println("5) Select tekton");
-        System.out.println("6) Set testing mode (currently: " + testing + ")");
+        System.out.println("6) Toggle testing mode (currently: " + testing + ")");
         if(testing) {
             System.out.println("7) Skip Rounds");
 
@@ -366,9 +366,9 @@ public class Game {
 
         while (!input.equals("0")) {
             System.out.println("\n0) Exit");
-            System.out.println("1) Grow Fonal (1 spora)");
-            System.out.println("2) Shoot Spora (2 spora)");
-            System.out.println("3) Upgrade GombaTest (4 spora)");
+            //System.out.println("1) Grow Fonal (1 spora)");
+            System.out.println("1) Shoot Spora (2 spora)");
+            System.out.println("2) Upgrade GombaTest (4 spora)");
             System.out.print("Choose option: ");
 
             input = scanner.nextLine();
@@ -379,7 +379,10 @@ public class Game {
                     String target_id = scanner.nextLine();
 
                     Tekton target = map.getTektonById(target_id);
-                    gombaTest.getTekton().growFonal(target, getCurrentPlayer());
+                    Tekton tekton = gombaTest.getTekton();
+                    GombaFonal ujFonal = tekton.growFonal(target, getCurrentPlayer());
+                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
+                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
 
                 }
 

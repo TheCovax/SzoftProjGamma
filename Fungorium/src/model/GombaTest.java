@@ -10,7 +10,6 @@ import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a GombaTest placed on a Tekton,
@@ -37,7 +36,7 @@ public class GombaTest extends Entity{
     public GombaTest(Tekton tekton, Player owner) {
         super(owner);
         this.tekton = tekton;
-        this.level = 0;
+        this.level = 1;
         this.shotCounter = 8;
     }
 
@@ -51,7 +50,7 @@ public class GombaTest extends Entity{
     public GombaTest(String id, Tekton tekton, Player owner) {
         super(id, owner);
         this.tekton = tekton;
-        this.level = 0;
+        this.level = 1;
         this.shotCounter = 8;
     }
 

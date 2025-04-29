@@ -1,7 +1,7 @@
 #Tektons
 T1 Stabil
 T2 Stabil
-T3 Kopar
+T3 Stabil
 T4 Termekeny
 T5 Hosztilis
 
