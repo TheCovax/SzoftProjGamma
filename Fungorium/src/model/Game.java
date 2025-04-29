@@ -128,7 +128,7 @@ public class Game {
     private void roundEnd() {
         roundCounter++;  // Increase after all players played in round
         entities.forEach(action -> action.update()); // Call update on all entities
-        map.getTektonok().forEach(action -> action.update()); // Call update on all tektons
+        map.getTektonok().forEach(action -> action.update(testing)); // Call update on all tektons
     }
 
 
@@ -151,14 +151,29 @@ public class Game {
     }
 
     private void listAllEntities() {
-        populateCollections();
-        for (Tekton t: map.getTektonok()){
-            System.out.println(t.getID());
-        }
 
-        for (Entity e: entities){
-            System.out.println(e.getID());
+        populateCollections();
+
+        System.out.println("\n");
+        List<Tekton> tmp_tektonok = map.getTektonok();
+        String tektonIds = tmp_tektonok.stream()
+                           .map(Tekton::getID)
+                           .reduce((id1, id2) -> id1 + " " + id2)
+                           .orElse("");
+        System.out.println("Tekton IDs: " + tektonIds);
+
+        java.util.Map<String, List<Entity>> groupedEntities = new HashMap<>();
+        for (Entity e : entities) {
+            groupedEntities.computeIfAbsent(e.getClass().getSimpleName(), k -> new ArrayList<>()).add(e);
         }
+        groupedEntities.forEach((type, entityList) -> {
+            String entityIds = entityList.stream()
+                         .map(Entity::getID)
+                         .reduce((id1, id2) -> id1 + " " + id2)
+                         .orElse("");
+            System.out.println(type + " IDs: " + entityIds);
+        });
+
     }
 
     private void showMainMenu() {
@@ -315,7 +330,7 @@ public class Game {
 
                     if (reachable.contains(targetTekton)) {
                         rovar.move(targetTekton);
-                        System.out.println("Rovar successfully moved to: " + targetTektonName);
+                        
                     } else {
                         System.out.println("Target Tekton is out of reach.");
                     }

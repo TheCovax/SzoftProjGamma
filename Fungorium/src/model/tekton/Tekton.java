@@ -45,7 +45,7 @@ public class Tekton {
 		neighbours = new ArrayList<>();
 		gombatest = null;
 		rovarok = new ArrayList<>();
-		splitRate = 0.5;
+		splitRate = 0;
 		this.id = id;
 		registerExplicitId(id);
 	}
@@ -324,7 +324,13 @@ public class Tekton {
 		return reachable;
 	}
 
-	public void update(){
+
+	public void update() {
+		update(false);
+	}
+
+	public void update(boolean testing) {
+		if(testing) return;
 		if(canSplit()) split();
 	}
 
