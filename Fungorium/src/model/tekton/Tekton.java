@@ -3,6 +3,7 @@ package Fungorium.src.model.tekton;
 import Fungorium.src.model.GombaFonal;
 import Fungorium.src.model.GombaTest;
 import Fungorium.src.model.Rovar;
+import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.spora.Spora;
 import java.util.*;
@@ -159,12 +160,16 @@ public class Tekton {
 		checkForGombatest(f.getOwner());
 	}
 
-	void checkForGombatest(Player p){
+	public void checkForGombatest(Player p){
+
 		if(!(this instanceof KoparTekton)){
 			for (GombaFonal f : fonalak) {
-				if(sporak.size() >= 3 && f.isOwner(p)) addGombaTest(new GombaTest(this, p));
+				if(sporak.size() >= 3 && f.isOwner(p)){
+					GombaTest newTest = new GombaTest(this, p);
+					addGombaTest(newTest);
+					((Gombasz) p).getGombak().add(newTest);
+				} 
 			}
-
 		}
 	}
 

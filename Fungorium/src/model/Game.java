@@ -388,6 +388,7 @@ public class Game {
                     }
 
                     gombaTest.shootSpora(target);
+                    target.update();
                 }
 
 
