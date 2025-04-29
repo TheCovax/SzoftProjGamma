@@ -3,7 +3,6 @@ import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.*;
-import Fungorium.src.utility.Logger;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
  * A Rovar can move between Tektons, consume spora, and cut Gombafonal.
  */
 public class Rovar extends Entity{
-    public static final int DEFAULT_SPEED = 2;
+    public static final int DEFAULT_SPEED = 4;
 
     private Tekton tekton;
     private boolean isParalyzed;
@@ -92,10 +91,6 @@ public class Rovar extends Entity{
         if (isParalyzed())
             return false;
 
-        // Check still remaining actions
-        if (remainingActions <= 0)
-            return false;
-
         // Execute eating Spora
         sp.applyEffect(this);
         collectedNutrition += sp.getNutrition();
@@ -115,10 +110,6 @@ public class Rovar extends Entity{
         if (isParalyzed()){
             return false;
         }
-
-        // Check still remaining actions
-        if (remainingActions <= 0)
-            return false;
 
         // If tekton does not have this gf (Maybe not needed)
         if(!tekton.hasGombafonal(gf)){
