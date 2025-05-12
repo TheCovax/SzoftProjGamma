@@ -46,7 +46,7 @@ public class Tekton {
 		neighbours = new ArrayList<>();
 		gombatest = null;
 		rovarok = new ArrayList<>();
-		splitRate = 0.5;
+		splitRate = 0;
 		this.id = id;
 		registerExplicitId(id);
 	}
@@ -62,7 +62,7 @@ public class Tekton {
 		rovarok = new ArrayList<>();
 		splitRate = splitR;
 
-		id = "T" + idCounter.incrementAndGet();
+		id = generateAutoId();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class Tekton {
 			rovarok = new ArrayList<>();
 			splitRate = splitR;
 
-			id = "T" + idCounter.incrementAndGet();
+			id = generateAutoId();
 		}
 
 	public GombaTest getGombatest() {
@@ -160,11 +160,14 @@ public class Tekton {
 
 		if(!(this instanceof KoparTekton)){
 			for (GombaFonal f : fonalak) {
-				if(sporak.size() >= 3 && f.isOwner(p) && gombatest == null){
-					GombaTest newTest = new GombaTest(this, p);
-					addGombaTest(newTest);
-					((Gombasz) p).getGombak().add(newTest);
-				} 
+				if(this.gombatest == null){
+					if(sporak.size() >= 3 && f.isOwner(p)){
+						GombaTest g = new GombaTest(this, p);
+						addGombaTest(new GombaTest(this, p));
+						((Gombasz) p).addGombaTest(g);
+						return;
+					}
+				}
 			}
 		}
 	}
@@ -204,11 +207,20 @@ public class Tekton {
 		}
 
 		//A jelenlegi tektonrol torli a fonalakat es a gombatestet;
-		fonalak.clear();
-		gombatest = null;
+
+		for (int i = 0; i < fonalak.size(); i++) {
+			System.out.println(fonalak.get(i));
+			fonalak.get(i).delete();
+		}
+		if(gombatest != null)
+		{
+			gombatest.delete();
+			gombatest = null;
+		}
 
 		//Hozzaadja a jelenlegi tekton szomszedjaihoz az ujjjonnan letrehozottat
 		neighbours.add(newTekton);
+		
 
 		return newTekton;
 	}
@@ -321,7 +333,13 @@ public class Tekton {
 		return reachable;
 	}
 
-	public void update(){
+
+	public void update() {
+		update(false);
+	}
+
+	public void update(boolean testing) {
+		if(testing) return;
 		if(canSplit()) split();
 	}
 

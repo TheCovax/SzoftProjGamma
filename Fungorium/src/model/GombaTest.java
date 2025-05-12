@@ -10,60 +10,64 @@ import Fungorium.src.model.spora.Spora;
 import Fungorium.src.model.tekton.Tekton;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Represents a GombaTest placed on a Tekton,
+ * owned by a player. It can produce and shoot Sporas,
+ * and grow in level using collected Sporas.
+ */
 public class GombaTest extends Entity{
 
-    private static final AtomicInteger generatedCounter = new AtomicInteger(0);
-    //List<GombaFonal> fonalak;
-    Tekton tekton;
-    int level;
-    int shotCounter;
+    private Tekton tekton;
+    private int level;
+    private int shotCounter;
 
-    int SHOOTSPORA_COST = 2;
-    int GROWFONAL_COST = 1;
-    int UPGRADE_COST = 4;
+    // Spora costs for actions
+    private static final int SHOOTSPORA_COST = 2;
+    private static final int UPGRADE_COST = 4;
 
 
+    /**
+     * Constructs a new GombaTest with a generated ID.
+     *
+     * @param tekton The Tekton where it is located.
+     * @param owner  The owner player.
+     */
     public GombaTest(Tekton tekton, Player owner) {
         super(owner);
         this.tekton = tekton;
-        level = 0;
+        this.level = 1;
+        this.shotCounter = 8;
     }
 
+    /**
+     * Constructs a new GombaTest with a specific ID.
+     *
+     * @param id     The unique ID of the GombaTest.
+     * @param tekton The Tekton where it is located.
+     * @param owner  The owner player.
+     */
     public GombaTest(String id, Tekton tekton, Player owner) {
         super(id, owner);
         this.tekton = tekton;
-        level = 0;
+        this.level = 1;
+        this.shotCounter = 8;
     }
 
-    public int getAvailableSporaCount() {
-        return tekton.getSporak().size();
-    }
-
-    public Tekton getTekton(){
-        return tekton;
-    }
-
+    /**
+     * Produces a new random Spora and places it on the Tekton.
+     */
     public void produceSpora() {
 
         // 1. Spóra típus véletlenszerű kiválasztása
         int r = (int) (Math.random() * 4);
-
         Spora spora;
+
         switch (r) {
-            case 0 -> {
-                spora = new GyorsitoSpora();
-            }
-            case 1 -> {
-                spora = new LassitoSpora();
-            }
-            case 2 -> {
-                spora = new BenitoSpora();
-            }
-            case 3 -> {
-                spora = new OsztoSpora();
-            }
+            case 0 -> spora = new GyorsitoSpora();
+            case 1 -> spora = new LassitoSpora();
+            case 2 -> spora = new BenitoSpora();
+            case 3 -> spora = new OsztoSpora();
             default -> {
                 System.out.println("error");
                 return;
@@ -76,12 +80,6 @@ public class GombaTest extends Entity{
         } 
     }
 
-    @Override
-    public void delete() {
-        tekton.removeGombatest(this);
-        ((Gombasz) owner).removeGombaTest(this);
-    }
-
     /**
      * Egy szintel fejleszti a gombatestet
      */
@@ -91,7 +89,7 @@ public class GombaTest extends Entity{
             return;
         }
 
-        if (tekton.getSporak().size() < 4) {
+        if (tekton.getSporak().size() < UPGRADE_COST) {
             System.out.println("Not enough spora to upgrade! (Need at least 4 sporak)");
             return;
         }
@@ -109,7 +107,6 @@ public class GombaTest extends Entity{
 
         System.out.println("Successfully upgraded GombaTest to level " + level + "!");
     }
-
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
     void setConnectivity() {
@@ -137,7 +134,7 @@ public class GombaTest extends Entity{
             return;
         }
 
-        if (tekton.getSporak().size() < 2) {
+        if (tekton.getSporak().size() < SHOOTSPORA_COST) {
             System.out.println("Not enough spora to shoot! (Need at least 2 sporak)");
             return;
         }
@@ -173,26 +170,10 @@ public class GombaTest extends Entity{
         System.out.println("Successfully shot spora to Tekton: " + dst.getID());
     }
 
-    public void setTekton(Tekton t){
-        tekton = t;
-    }
-
-    public int getLevel() {
-        return this.level;
-    }
-
-    /**
-     * Beallitja a gombatest szintjet
-     */
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-
-
-
-    public int getShotCounter() {
-        return shotCounter;
+    @Override
+    public void delete() {
+        tekton.removeGombatest(this);
+        ((Gombasz) owner).removeGombaTest(this);
     }
 
     @Override
@@ -225,6 +206,36 @@ public class GombaTest extends Entity{
                 ", Level=" + level +
                 ", ShotCounter=" + shotCounter +
                 '}';
+    }
+
+    /**
+     * @return The number of Sporas available on the Tekton.
+     */
+    public int getAvailableSporaCount() {
+        return tekton.getSporak().size();
+    }
+
+    public Tekton getTekton(){
+        return tekton;
+    }
+
+    public void setTekton(Tekton t){
+        tekton = t;
+    }
+
+    public int getLevel() {
+        return this.level;
+    }
+
+    /**
+     * Beallitja a gombatest szintjet
+     */
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getShotCounter() {
+        return shotCounter;
     }
 
 }

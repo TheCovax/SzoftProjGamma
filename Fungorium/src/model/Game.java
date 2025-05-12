@@ -50,8 +50,8 @@ public class Game {
         initPlayers();
 
         // Load Game map from file
-        map.loadMap("mapsave.txt");
-        loadEntitiesFromFile("mapsave.txt");
+        map.loadMap("../mapsave.txt");
+        loadEntitiesFromFile("../mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -128,7 +128,7 @@ public class Game {
     private void roundEnd() {
         roundCounter++;  // Increase after all players played in round
         entities.forEach(action -> action.update()); // Call update on all entities
-        map.getTektonok().forEach(action -> action.update()); // Call update on all tektons
+        map.getTektonok().forEach(action -> action.update(testing)); // Call update on all tektons
     }
 
 
@@ -143,7 +143,9 @@ public class Game {
         System.out.print("How many rounds do you want to skip:");
         int time = Integer.parseInt(scanner.nextLine());
         for(int i = 0; i < time * 4; i++) nextPlayer();
-        roundCounter += time;
+        for (int i = 0; i < time; i++) {
+            roundEnd();
+        }
     }
 
     void setTestingMode(){
@@ -151,14 +153,29 @@ public class Game {
     }
 
     private void listAllEntities() {
-        populateCollections();
-        for (Tekton t: map.getTektonok()){
-            System.out.println(t.getID());
-        }
 
-        for (Entity e: entities){
-            System.out.println(e.getID());
+        populateCollections();
+
+        System.out.println("\n");
+        List<Tekton> tmp_tektonok = map.getTektonok();
+        String tektonIds = tmp_tektonok.stream()
+                           .map(Tekton::getID)
+                           .reduce((id1, id2) -> id1 + " " + id2)
+                           .orElse("");
+        System.out.println("Tekton IDs: " + tektonIds);
+
+        java.util.Map<String, List<Entity>> groupedEntities = new HashMap<>();
+        for (Entity e : entities) {
+            groupedEntities.computeIfAbsent(e.getClass().getSimpleName(), k -> new ArrayList<>()).add(e);
         }
+        groupedEntities.forEach((type, entityList) -> {
+            String entityIds = entityList.stream()
+                         .map(Entity::getID)
+                         .reduce((id1, id2) -> id1 + " " + id2)
+                         .orElse("");
+            System.out.println(type + " IDs: " + entityIds);
+        });
+
     }
 
     private void showMainMenu() {
@@ -169,7 +186,7 @@ public class Game {
         System.out.println("3) Next Player");
         System.out.println("4) List all Entities");
         System.out.println("5) Select tekton");
-        System.out.println("6) Set testing mode (currently: " + testing + ")");
+        System.out.println("6) Toggle testing mode (currently: " + testing + ")");
         if(testing) {
             System.out.println("7) Skip Rounds");
 
@@ -222,7 +239,7 @@ public class Game {
             }
         }
 
-        System.out.println("Entity with this ID ("+ name + ") could not be found");
+        System.out.println("Entity with this ID ("+ name + ") could not be found for this player");
     }
 
     private void selectTekton() {
@@ -250,6 +267,7 @@ public class Game {
                     String target_id = scanner.nextLine();
                     GombaFonal ujFonal = tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
                     if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
+                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
                 }
 
                 case "2" -> {
@@ -305,20 +323,8 @@ public class Game {
                     String targetTektonName = scanner.nextLine();
                     Tekton targetTekton = map.getTektonById(targetTektonName);
 
-                    if (targetTekton == null) {
-                        System.out.println("No Tekton found with the name: " + targetTektonName);
-                        return;
-                    }
+                    rovar.move(targetTekton);
 
-                    // Find reachable Tektons based on the Rovar's speed
-                    List<Tekton> reachable = rovar.getTekton().findReachableTektonWithinDistance(rovar.getSpeed());
-
-                    if (reachable.contains(targetTekton)) {
-                        rovar.move(targetTekton);
-                        System.out.println("Rovar successfully moved to: " + targetTektonName);
-                    } else {
-                        System.out.println("Target Tekton is out of reach.");
-                    }
                 }
 
                 case "3" -> {
@@ -335,7 +341,7 @@ public class Game {
                         }
                         if (targetFonal != null) break; // Exit once the GombaFonal is found
                     }
-
+                    /*
                     // If the GombaFonal is found, remove it
                     if (targetFonal != null) {
                         // Clean up the GombaFonal from both Tektons it connects
@@ -343,7 +349,8 @@ public class Game {
                         System.out.println("Cut Gombafonal: " + targetFonalName);
                     } else {
                         System.out.println("No Gombafonal found with the name: " + targetFonalName);
-                    }
+                    }*/
+                    rovar.cutGombaFonal(targetFonal);
                 }
 
 
@@ -359,9 +366,9 @@ public class Game {
 
         while (!input.equals("0")) {
             System.out.println("\n0) Exit");
-            System.out.println("1) Grow Fonal (1 spora)");
-            System.out.println("2) Shoot Spora (2 spora)");
-            System.out.println("3) Upgrade GombaTest (4 spora)");
+            //System.out.println("1) Grow Fonal (1 spora)");
+            System.out.println("1) Shoot Spora (2 spora)");
+            System.out.println("2) Upgrade GombaTest (4 spora)");
             System.out.print("Choose option: ");
 
             input = scanner.nextLine();
@@ -372,7 +379,10 @@ public class Game {
                     String target_id = scanner.nextLine();
 
                     Tekton target = map.getTektonById(target_id);
-                    gombaTest.getTekton().growFonal(target, getCurrentPlayer());
+                    Tekton tekton = gombaTest.getTekton();
+                    GombaFonal ujFonal = tekton.growFonal(target, getCurrentPlayer());
+                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
+                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
 
                 }
 
