@@ -19,7 +19,7 @@ public class Tekton {
 	List<GombaFonal> fonalak;
 
 	List<Tekton> neighbours;
-	private GombaTest gombatest;
+	protected GombaTest gombatest;
 	List<Rovar> rovarok;
 	double splitRate;
 	boolean isConnected;
@@ -128,7 +128,7 @@ public class Tekton {
 	}
 
 	public void addGombaTest(GombaTest gt) {
-		this.gombatest = gt;
+		gombatest = gt;
 	}
 
 
@@ -160,7 +160,7 @@ public class Tekton {
 
 		if(!(this instanceof KoparTekton)){
 			for (GombaFonal f : fonalak) {
-				if(sporak.size() >= 3 && f.isOwner(p)){
+				if(sporak.size() >= 3 && f.isOwner(p) && gombatest == null){
 					GombaTest newTest = new GombaTest(this, p);
 					addGombaTest(newTest);
 					((Gombasz) p).getGombak().add(newTest);

@@ -13,7 +13,7 @@ T4 T1 T5
 T5 T4
 
 #Gombatestek
-G0 T1 GB1
+
 G1 T2 GB1
 G2 T4 GB2
 G3 T5 GB2
