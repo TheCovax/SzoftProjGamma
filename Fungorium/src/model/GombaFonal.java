@@ -73,6 +73,7 @@ public class GombaFonal extends Entity{
 		Gombasz g = (Gombasz)owner;
 		System.out.println(g.getName() + "--------------------hey I am deleted!!!!!!!!!!!!!!!!!!!!!!!!!");
 		g.getFonalak().remove(this);
+		notifyObservers();
 	}
 
 	public boolean isOwner(Player p){
@@ -105,7 +106,6 @@ public class GombaFonal extends Entity{
 			destructionTimer = 2;
 			return true;
 		}
-
 		return false;
 	}
 
@@ -120,6 +120,7 @@ public class GombaFonal extends Entity{
 		rovar = paralysedRovar(dst);
 		if(rovar != null) killRovar(rovar);
 		}
+		notifyObservers();
 	}
 
 	
@@ -133,6 +134,7 @@ public class GombaFonal extends Entity{
 		for (Rovar rovar : r) {
 			rovar.delete();
 		}
+		notifyObservers();
 	}
 
 	/**Megadja az adott tektonon levo lebenintott rovarrokat,

@@ -1,4 +1,5 @@
 package Fungorium.src.model;
+import Fungorium.src.model.observer.Observable;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.Spora;
@@ -92,6 +93,7 @@ public class Rovar extends Entity{
         remainingActions--;
 
         System.out.println("Successfuly moved " + ID + " to " + dstTekton.getID());
+        notifyObservers();
         return true;
     }
 
@@ -117,6 +119,7 @@ public class Rovar extends Entity{
         remainingActions--;
 
         System.out.println(ID+ " successfully ate Spora");
+        notifyObservers();
         return true;
     }
 
@@ -147,6 +150,7 @@ public class Rovar extends Entity{
         }else {
             remainingActions--;
             System.out.println("Cutting " + gf.getID() + " successful, it will be destroyed soon");
+            notifyObservers();
             return true;
         }
     }
@@ -161,6 +165,7 @@ public class Rovar extends Entity{
         ((Rovarasz) owner).addRovar(r2);
 
         System.out.println("New born Rovar: " + r2.getID() + "!");
+        notifyObservers();
     }
 
     /**

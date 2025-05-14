@@ -1,9 +1,13 @@
 package Fungorium.src.model;
 
+import Fungorium.src.model.observer.Observable;
 import Fungorium.src.model.player.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Observer;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Each entity has a unique ID, an owner (Player)
  * including automatic ID generation if none is provided.
  */
-public abstract class Entity {
+public abstract class Entity implements Observable {
     protected String ID;
     protected Player owner;
 
@@ -23,6 +27,26 @@ public abstract class Entity {
 
     /** Global set of all used IDs to ensure uniqueness across all entities. */
     private static final Set<String> usedIds = new HashSet<>();
+
+
+    protected List<Observer> observers = new ArrayList();
+
+    @Override
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers(){
+        for (Observer o : observers) {
+            //o.update();
+        }
+    }
 
     public Entity(String id, Player owner){
         this.ID = id;
