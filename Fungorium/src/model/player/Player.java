@@ -56,7 +56,7 @@ public class Player {
      * Visszaadja a player pontszamat.
      * @param score Az a pontszam, amire beallitjuk a player pontszamat.
      */
-    void setScore(int score) {
+    public void setScore(int score) {
         this.score = score;
     }
 

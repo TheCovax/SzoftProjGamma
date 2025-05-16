@@ -76,7 +76,7 @@ public class Rovar extends Entity{
 
 
         // Attempt to get reachable tektons
-        List<Tekton> reachableTektons = tekton.getNeighbours();
+        List<Tekton> reachableTektons = tekton.findReachableTektonWithinDistance(1);
         // Check if destination is reachable
         if (!reachableTektons.contains(dstTekton)){
             System.out.println("Move Rovar unsuccessful: destination Tekton unreachable");

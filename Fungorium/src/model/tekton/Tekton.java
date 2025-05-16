@@ -407,6 +407,16 @@ public class Tekton {
 		return sb.toString();
 	}
 
+	public GombaFonal findFonalBetween(Tekton t){
+		for (int i = 0; i < fonalak.size(); i++) {
+			GombaFonal fonal = fonalak.get(i);
+			if (fonal.getOtherEnd(this).equals(t));
+			return fonal;
+		}
+
+		return null;
+	}
+
 	public List<Tekton> getNeighbours() {
 		return neighbours;
 	}

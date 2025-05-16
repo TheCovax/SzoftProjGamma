@@ -3,38 +3,87 @@ T1 Stabil
 T2 Stabil
 T3 Stabil
 T4 Termekeny
-T5 Hosztilis
+T5 Stabil
+T6 Stabil
+T7 Termekeny
+T8 Stabil
+T9 Stabil
+T10 Termekeny
+T11 Stabil
+T12 Hosztilis
+T13 Hosztilis
+T14 Termekeny
+T15 Kopar
+T16 Kopar
+T17 Stabil
+T18 Hosztilis
+T19 Termekeny
+T20 Kopar
+T21 Hosztilis
+T22 Hosztilis
+T23 Kopar
+T24 Hosztilis
+T25 Hosztilis
+
 
 #Neighbours
-T1 T2 T3 T4
-T2 T1 T3 T5
-T3 T1 T2
-T4 T1 T5
-T5 T2 T4
+T1 T2 T3 T4 T5 T18 T19
+T2 T1 T6 T7 T8
+T3 T1 T9 T10 T11
+T4 T1 T12 T13 T14
+T5 T1 T15 T16 T17
+T6 T2
+T7 T2
+T8 T2
+T9 T3
+T10 T3
+T11 T3
+T12 T4
+T13 T4
+T14 T4
+T15 T5
+T16 T5
+T17 T5
+T18 T1 T20 T21 T22
+T19 T1 T23 T24 T25
+T20 T18
+T21 T18
+T22 T18
+T23 T19
+T24 T19
+T25 T19
 
 #Gombatestek
-G1 T1 GB1
-G2 T2 GB1
-G3 T4 GB2
+G1 T3 GB1
+G2 T5 GB2
 
 #Gombafonalak
-F1 T1 T2 GB1
-F2 T2 T3 GB1
-F3 T1 T3 GB1
-F4 T1 T4 GB2
-F5 T4 T5 GB2
+F1 T3 T1 GB1
+F2 T1 T4 GB1
+F3 T5 T1 GB2
+F4 T1 T2 GB2
+F5 T2 T7 GB2
+F6 T4 T13 GB1
 
 #Rovarok
-R1 T1 RS3
+R1 T7 RS3
+R2 T13 RS4
 
 #Sporak
-OsztoSpora T5
-LassitoSpora T1
-GyorsitoSpora T2
-GyorsitoSpora T2
-GyorsitoSpora T2
-GyorsitoSpora T2
-GyorsitoSpora T2
+OsztoSpora T3
 LassitoSpora T3
-LassitoSpora T3
-LassitoSpora T3
+GyorsitoSpora T3
+GyorsitoSpora T3
+GyorsitoSpora T3
+GyorsitoSpora T3
+LassitoSpora T5
+LassitoSpora T5
+LassitoSpora T5
+GyorsitoSpora T5
+GyorsitoSpora T5
+GyorsitoSpora T5
+GyorsitoSpora T2
+GyorsitoSpora T2
+GyorsitoSpora T4
+GyorsitoSpora T4
+OsztoSpora T1

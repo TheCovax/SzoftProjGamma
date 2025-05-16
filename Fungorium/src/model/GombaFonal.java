@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Minden gombafonal rendelkezik egy tulajdonossal (owner), amely az adott játékoshoz vagy irányítóhoz kapcsolható.
  */
 public class GombaFonal extends Entity{
+
 	public enum State { GROWING, ACTIVE, CUT}
 	public static final int GROW_TIME = 1;
 
@@ -216,5 +217,13 @@ public class GombaFonal extends Entity{
 				", SrcTekton=" + (src != null ? src.getID() : "None") +
 				", DstTekton=" + (dst != null ? dst.getID() : "None") +
 				'}';
+	}
+
+	public Tekton getDst() {
+		return dst;
+	}
+
+	public Tekton getSrc() {
+		return src;
 	}
 }
