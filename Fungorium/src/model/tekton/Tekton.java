@@ -117,6 +117,7 @@ public class Tekton {
 
 			fonalak.add(ujFonal);
 			dst.addGombaFonal(ujFonal);
+			((Gombasz) owner).addFonal(ujFonal);
 
 			return ujFonal;
 		}
@@ -318,11 +319,13 @@ public class Tekton {
 				Tekton current = queue.poll();
 
 				for (GombaFonal gf : current.getFonalak()){
-					Tekton connectedTekton = gf.getOtherEnd(current);
-					if(!visited.contains(connectedTekton)){
-						reachable.add(connectedTekton);
-						queue.add(connectedTekton);
-						visited.add(connectedTekton);
+					if (gf.getState() == GombaFonal.State.ACTIVE){
+						Tekton connectedTekton = gf.getOtherEnd(current);
+						if(!visited.contains(connectedTekton)){
+							reachable.add(connectedTekton);
+							queue.add(connectedTekton);
+							visited.add(connectedTekton);
+						}
 					}
 				}
 			}

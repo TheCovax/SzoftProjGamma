@@ -39,6 +39,8 @@ public class GombaFonal extends Entity{
 		this.eatParalyzedRovarRate = 0.5;
 		this.growthTimer = GROW_TIME;
 		this.state = State.GROWING;
+		System.out.println(ID + " Gombafonal created ======================");
+
 	}
 
 	public GombaFonal(String id, Tekton s, Tekton d, Player o){
@@ -73,6 +75,7 @@ public class GombaFonal extends Entity{
 		if(dst != null) dst.removeGombaFonal(this);
 		Gombasz g = (Gombasz)owner;
 		System.out.println(g.getName() + "--------------------hey I am deleted!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 		g.getFonalak().remove(this);
 	}
 
@@ -180,9 +183,13 @@ public class GombaFonal extends Entity{
 	@Override
 	public void update(){
 		eatParalyzedRovar();
-
+		if (ID.equals("F7")){
+			System.out.println("===============Grow timer:" + growthTimer);
+			System.out.println("===============State:" + state);
+		}
 		switch (state) {
 			case GROWING:
+				System.out.println("Growing Timer===================================================================" + growthTimer);
 				if (--growthTimer <= 0) {
 					state = State.ACTIVE;
 				}

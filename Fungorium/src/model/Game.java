@@ -125,6 +125,8 @@ public class Game extends Observable {
         roundCounter++;  // Increase after all players played in round
         System.out.println("DEBUG: --- Round " + roundCounter + " Ended ---"); // Keep for debug
 
+        populateCollections();
+
         // Update all entities using the consolidated list
         // Make sure allEntities is comprehensive and up-to-date
         for (Entity entity : entities) {
@@ -136,14 +138,12 @@ public class Game extends Observable {
             tekton.update(testingMode);
         }
 
-        populateCollections();
-
         notifyStateChange("ROUND_ENDED");
         checkGameEnd();
     }
 
     // NEW: Helper to auto-select the first entity for the current player
-    private void autoSelectFirstEntityForCurrentPlayer() {
+    public void autoSelectFirstEntityForCurrentPlayer() {
         Player currentPlayer = getCurrentPlayer();
         Entity firstEntity = null;
 
@@ -371,9 +371,24 @@ public class Game extends Observable {
     }
 
     public boolean playerAction_growFonal(Tekton src, Tekton dst){
-        src.growFonal(dst, getCurrentPlayer());
+        boolean growable = false;
 
-        return true;
+        if (src.getGombatest() != null && src.getGombatest().getOwner() == getCurrentPlayer()){
+            growable = true;
+        }
+
+        for (int i = 0; i < src.getFonalak().size(); i++) {
+            if (src.getFonalak().get(i).getOwner() == getCurrentPlayer())
+                growable = true;
+        }
+
+        if (growable){
+            src.growFonal(dst, getCurrentPlayer());
+            notifyStateChange("FONAL_GROWNED");
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -435,6 +450,7 @@ public class Game extends Observable {
         this.selectedTekton = tekton;
         this.selectedEntity = null; // Clear entity selection if tekton is selected, or handle as needed
         System.out.println("DEBUG: Tekton selected: " + (tekton != null ? tekton.getID() : "None"));
+        notifyStateChange("TEKTON_CHANGED");
     }
 
     public void setSelectedEntity(Entity entity) {
