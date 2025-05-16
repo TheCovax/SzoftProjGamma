@@ -5,9 +5,13 @@ import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.*;
 import Fungorium.src.model.tekton.*;
+import Fungorium.src.model.views.GameView;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import javax.swing.SwingUtilities;
 
 public class Game {
 
@@ -27,9 +31,11 @@ public class Game {
     boolean testing;
 
     public static void main(String[] args) throws IOException {
+        SwingUtilities.invokeLater(GameView::new);
         Game game = new Game();
         game.initializeGame();
         game.start();
+        
     }
 
 
