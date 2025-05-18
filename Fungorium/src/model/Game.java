@@ -364,6 +364,28 @@ public class Game extends Observable {
 
     // Player actions
     // --------------------------------------
+
+
+    
+
+    public boolean playerAction_nextEntity() {
+        if (selectedEntity != null) {
+            int currentIndex = entities.indexOf(selectedEntity);
+            if (currentIndex >= 0) {
+                if(currentIndex < entities.size() - 1){
+                    setSelectedEntity(entities.get(currentIndex + 1));
+                return true;
+                }else{
+                    setSelectedEntity(entities.get(0));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
     /**
      * Example action: Current player's selected Rovar attempts to eat a spora.
      *
