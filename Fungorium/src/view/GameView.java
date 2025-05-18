@@ -139,7 +139,7 @@ public class GameView extends JFrame implements Observer {
                     }
                     gameModel.setSelectedTekton(initialFocus); // This will notify and MapView should center
                 }
-                updateActionPanelInstruction("MAP NAV: P,O,K,L,etc. to move focus. T for entity control. G to Grow Fonal.");
+                updateActionPanelInstruction("MAP NAV: 1, 2, 3, 4, 5, 6 to move focus. T for entity control. G to Grow Fonal.");
             } else if (currentInteractionMode == InteractionMode.MAP_NAVIGATION) {
                 currentInteractionMode = InteractionMode.NORMAL;
                 gameModel.autoSelectFirstEntityForCurrentPlayer(); // Re-select active entity
@@ -159,7 +159,7 @@ public class GameView extends JFrame implements Observer {
                                 this.actionInitiator = rovar;
                                 this.currentPendingAction = PendingAction.ROVAR_MOVE;
                                 this.currentInteractionMode = InteractionMode.AWAITING_TARGET_TEKTON;
-                                updateActionPanelInstruction("MOVE (" + rovar.getID() + "): P,O,K,L,etc. for target. (ESC)");
+                                updateActionPanelInstruction("MOVE (" + rovar.getID() + "): 1, 2, 3, 4, 5, 6 for target. (ESC)");
                                 break;
                             case KeyEvent.VK_E: // Eat Spora
                                 boolean eatSuccess = gameModel.playerAction_selectedRovarEatSpora();
@@ -169,7 +169,7 @@ public class GameView extends JFrame implements Observer {
                                 this.actionInitiator = rovar;
                                 this.currentPendingAction = PendingAction.ROVAR_CUT_FONAL;
                                 this.currentInteractionMode = InteractionMode.AWAITING_TARGET_TEKTON;
-                                updateActionPanelInstruction("CUT FONAL (" + rovar.getID() + "): P,O,K,L,etc. for target fonal's other Tekton. (ESC)");
+                                updateActionPanelInstruction("CUT FONAL (" + rovar.getID() + "): 1, 2, 3, 4, 5, 6 for target fonal's other Tekton. (ESC)");
                                 break;
                         }
                     } else if (keyCode == KeyEvent.VK_M || keyCode == KeyEvent.VK_E || keyCode == KeyEvent.VK_C) {
@@ -182,7 +182,7 @@ public class GameView extends JFrame implements Observer {
                                 this.actionInitiator = gTest;
                                 this.currentPendingAction = PendingAction.GOMBASZ_SHOOT_SPORA;
                                 this.currentInteractionMode = InteractionMode.AWAITING_TARGET_TEKTON;
-                                updateActionPanelInstruction("SHOOT (" + gTest.getID() + "): P,O,K,L,etc. for target. (ESC)");
+                                updateActionPanelInstruction("SHOOT (" + gTest.getID() + "): 1, 2, 3, 4, 5, 6 for target. (ESC)");
                                 break;
                             case KeyEvent.VK_U: // Upgrade GombaTest
                                 boolean upgradeSuccess = gameModel.playerAction_selectedGombaTestUpgrade();
@@ -223,7 +223,7 @@ public class GameView extends JFrame implements Observer {
                         this.sourceTektonForAction = selectedTektonByModel; // The focused tekton is the source
                         this.currentPendingAction = PendingAction.GOMBASZ_GROW_FONAL;
                         this.currentInteractionMode = InteractionMode.AWAITING_TARGET_TEKTON; // Now expect neighbor key for destination
-                        updateActionPanelInstruction("GROW FONAL (from " + sourceTektonForAction.getID() + "): P,O,K,L,etc. for target neighbor. (ESC)");
+                        updateActionPanelInstruction("GROW FONAL (from " + sourceTektonForAction.getID() + "): 1, 2, 3, 4, 5, 6 for target neighbor. (ESC)");
                     } else {
                         updateActionPanelInstruction("GOMBASZ: No Tekton focused on map to grow fonal from.");
                     }
