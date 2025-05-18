@@ -5,42 +5,38 @@ import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.spora.*;
 import Fungorium.src.model.tekton.*;
-import Fungorium.src.model.views.GameView;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import javax.swing.SwingUtilities;
+public class Game extends Observable {
+    private Scanner scanner;
 
-public class Game {
-
-    private int roundCounter = 0;
+    // Game constants
+    private int roundCounter;
     private static final int MAX_ROUNDS = 15;
     private static final int WINNING_GOMBATEST_COUNT = 10;
     private static final int WINNING_SPORA_SCORE = 30;
+
+    // Map which holds all tektons
+    public Map map;
+
     private List<Player> players;
+    private int currentPlayerIndex = 0;
+
+    // List of all entities
     private List<GombaTest> gombaTestek;
     private List<Rovar> rovarok;
     private List<GombaFonal> gombaFonalak;
     private List<Entity> entities;
-    private int currentPlayerIndex = 0;
-    private Scanner scanner;
-    public Map map = new Map();
 
-    boolean testing;
+    private boolean testingMode;
 
-    public static void main(String[] args) throws IOException {
-        SwingUtilities.invokeLater(GameView::new);
-        Game game = new Game();
-        game.initializeGame();
-        game.start();
-        
-    }
+    private Tekton selectedTekton;
+    private Entity selectedEntity;
 
-
-    private void initializeGame() throws IOException {
-
+    // Constructor
+    public Game() {
         // Initialize variables
         map = new Map();
         players = new ArrayList<>();
@@ -49,38 +45,58 @@ public class Game {
         gombaFonalak = new ArrayList<>();
         entities = new ArrayList<>();
         scanner = new Scanner(System.in);
+        testingMode = false;
+    }
 
-        testing = false;
+    public void startGame() {
+        if (players.isEmpty()) {
+            System.err.println("Cannot start game: No players initialized.");
+            return;
+        }
 
-        // Initialize players
-        initPlayers();
 
+        roundCounter = 1; // First round is 1
+        currentPlayerIndex = 0; // Start with the first player
+        autoSelectFirstEntityForCurrentPlayer(); // Auto-select for starting player
+
+        System.out.println("DEBUG: Game Started! Round: " + roundCounter + " Player: " + getCurrentPlayer().getName());
+        notifyStateChange("GAME_STARTED_PLAYER_" + getCurrentPlayer().getID());
+    }
+
+    /**
+     * Initializes the game state: players, map, entities.
+     * Called once at the start.
+     *
+     * @throws IOException if file loading fails.
+     */
+    public void initializeGame() throws IOException {
+        System.out.println("DEBUG: Initializing Game");
+
+        initPlayers(); // Initialize players
         // Load Game map from file
-        map.loadMap("../mapsave.txt");
-        loadEntitiesFromFile("../mapsave.txt");
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
     }
 
-    public void initPlayers(){
+    /**
+     * Initializes a default set of players.
+     * Names are hardcoded; could be made dynamic later.
+     */
+    public void initPlayers() {
         // Create Players
+        // TODO. set player nam on GUI
         Gombasz p1 = new Gombasz("GB1");
+        p1.setName("Gombasz Alpha"); // REFINED: Set placeholder names directly
         Gombasz p2 = new Gombasz("GB2");
+        p2.setName("Gombasz Beta");
         Rovarasz p3 = new Rovarasz("RS3");
+        p3.setName("Rovarasz Gamma");
         Rovarasz p4 = new Rovarasz("RS4");
+        p4.setName("Rovarasz Delta");
 
-        System.out.print("\n\nFirst player's name (Team 1, Gombasz): ");
-        p1.setName(scanner.nextLine());
-
-        System.out.print("Second player's name (Team 2, Gombasz): ");
-        p2.setName(scanner.nextLine());
-
-        System.out.print("Third player's name (Team 1, Rovarasz): ");
-        p3.setName(scanner.nextLine());
-
-        System.out.print("Fourth player's name (Team 2, Rovarasz): ");
-        p4.setName(scanner.nextLine());
 
         players.add(p1);
         players.add(p2);
@@ -88,380 +104,69 @@ public class Game {
         players.add(p4);
     }
 
-    public void start() {
-        while (true) {
-            System.out.println("\n--- Round " + (roundCounter + 1) + " ---"); // Not increasing yet
-
-            //Collections.shuffle(players);
-
-            for (Player player : players) {
-                System.out.println("\nIt's " + player.getName() + "'s turn:");
-                currentPlayerIndex = players.indexOf(player);
-
-                String input = "";
-                while (currentPlayerIndex == players.indexOf(player)) {
-                    populateCollections();
-                    showMainMenu();
-                    input = scanner.nextLine();
-
-                    switch (input) {
-                        case "1" -> inspectEntity();
-                        case "2" -> selectEntity();
-                        case "3" -> nextPlayer();
-                        case "4" -> listAllEntities();
-                        case "6" -> setTestingMode();
-                        case "7" -> {if(testing) fastForwardRounds();
-                                    else System.out.println("Unknown Command");}
-                        case "5" -> selectTekton();
-                        case "0" -> System.exit(0);
-                        default -> System.out.println("Unknown Command");
-                    }
-                }
-
-                if (checkGameEnd()) {
-                    return;
-                }
-            }
-            //round end
-            roundEnd();
-            
-        }
-    }
-
-    
-
-
-    private void roundEnd() {
-        roundCounter++;  // Increase after all players played in round
-        entities.forEach(action -> action.update()); // Call update on all entities
-        map.getTektonok().forEach(action -> action.update(testing)); // Call update on all tektons
-    }
-
-
-    private int nextPlayer() {
+    /**
+     * Advances to the next player's turn and notifies observers.
+     */
+    public int nextPlayerTurn() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        System.out.println("Next player: " + players.get(currentPlayerIndex).getName());
+
+        if (currentPlayerIndex == 0)
+            endRound();
+
+        System.out.println("DEBUG: Advancing to next player: " + getCurrentPlayer().getName());
+
+        autoSelectFirstEntityForCurrentPlayer();
+        notifyStateChange("PLAYER_CHANGED");
         return currentPlayerIndex;
     }
 
 
-    void fastForwardRounds(){
-        System.out.print("How many rounds do you want to skip:");
-        int time = Integer.parseInt(scanner.nextLine());
-        for(int i = 0; i < time * 4; i++) nextPlayer();
-        for (int i = 0; i < time; i++) {
-            roundEnd();
-        }
-    }
-
-    void setTestingMode(){
-        testing = !testing;
-    }
-
-    private void listAllEntities() {
+    private void endRound() {
+        roundCounter++;  // Increase after all players played in round
+        System.out.println("DEBUG: --- Round " + roundCounter + " Ended ---"); // Keep for debug
 
         populateCollections();
 
-        System.out.println("\n");
-        List<Tekton> tmp_tektonok = map.getTektonok();
-        String tektonIds = tmp_tektonok.stream()
-                           .map(Tekton::getID)
-                           .reduce((id1, id2) -> id1 + " " + id2)
-                           .orElse("");
-        System.out.println("Tekton IDs: " + tektonIds);
-
-        java.util.Map<String, List<Entity>> groupedEntities = new HashMap<>();
-        for (Entity e : entities) {
-            groupedEntities.computeIfAbsent(e.getClass().getSimpleName(), k -> new ArrayList<>()).add(e);
+        // Update all entities using the consolidated list
+        // Make sure allEntities is comprehensive and up-to-date
+        for (Entity entity : entities) {
+            entity.update(); // Call each entity's own update logic
         }
-        groupedEntities.forEach((type, entityList) -> {
-            String entityIds = entityList.stream()
-                         .map(Entity::getID)
-                         .reduce((id1, id2) -> id1 + " " + id2)
-                         .orElse("");
-            System.out.println(type + " IDs: " + entityIds);
-        });
 
+        // Update all tektons (e.g., for splitting)
+        for (Tekton tekton : map.getTektonok()) {
+            tekton.update(testingMode);
+        }
+
+        notifyStateChange("ROUND_ENDED");
+        checkGameEnd();
     }
 
-    private void showMainMenu() {
-        System.out.println("-----------------");
-        System.out.println("0) Exit");
-        System.out.println("1) Inspect Entity");
-        System.out.println("2) Select Entity");
-        System.out.println("3) Next Player");
-        System.out.println("4) List all Entities");
-        System.out.println("5) Select tekton");
-        System.out.println("6) Toggle testing mode (currently: " + testing + ")");
-        if(testing) {
-            System.out.println("7) Skip Rounds");
+    // NEW: Helper to auto-select the first entity for the current player
+    public void autoSelectFirstEntityForCurrentPlayer() {
+        Player currentPlayer = getCurrentPlayer();
+        Entity firstEntity = null;
 
-        }
-        System.out.print("Choose option: ");
-    }
-
-
-    private void inspectEntity() {
-        System.out.print("Name an entity ID to inspect: ");
-        String id = scanner.nextLine();
-
-        // 1. Search ID in tektonok
-        for (Tekton t : map.getTektonok()) {
-            if (t.getID().equals(id)) {
-                System.out.println(t);
-                return;  // return if ID found in tektonok
+        if (currentPlayer instanceof Rovarasz rovarasz) {
+            if (!rovarasz.getRovarok().isEmpty()) {
+                firstEntity = rovarasz.getRovarok().get(0);
+            }
+        } else if (currentPlayer instanceof Gombasz gombasz) {
+            if (!gombasz.getGombak().isEmpty()) {
+                firstEntity = gombasz.getGombak().get(0);
             }
         }
 
-        // 2. Search ID in entities
-        for (Entity e : entities) {
-            if (e.getID().equals(id)) {
-                System.out.println(e);
-                return;
-            }
+        if (firstEntity != null) {
+            setSelectedEntity(firstEntity); // This will also set selectedTekton and notify
+        } else {
+            setSelectedEntity(null); // No selectable entity, clear selection and notify
+            System.out.println("DEBUG: No selectable entity found for player " + currentPlayer.getName());
         }
-
-        // 3. ID not found
-        System.out.println("Entity with this ID ("+ id + ") could not be found");
-    }
-
-    private void selectEntity() {
-        System.out.print("Name an entity to select: ");
-        String name = scanner.nextLine();
-
-        // Rovar kiválasztása
-        for (Rovar r : rovarok) {
-            if (r.getID().equals(name) && r.getOwner() == players.get(currentPlayerIndex)) {
-                selectRovar(r);
-                return;
-            }
-        }
-
-        // GombaTest kiválasztása
-        for (GombaTest g : gombaTestek) {
-            if (g.getID().equals(name) && g.getOwner() == players.get(currentPlayerIndex)) {
-                selectGombaTest(g);
-                return;
-            }
-        }
-
-        System.out.println("Entity with this ID ("+ name + ") could not be found for this player");
-    }
-
-    private void selectTekton() {
-        
-
-
-        System.out.print("Name a tekton to select: ");
-        String name = scanner.nextLine();
-
-        Tekton tekton = map.getTektonById(name);
-
-        String input = " ";
-
-        while (!input.equals("0")) {
-            System.out.println("\n0) Exit");
-            System.out.println("1) Grow Fonal");
-            if(testing)System.out.println("2) Split");
-            System.out.print("Choose option: ");
-        
-            input = scanner.nextLine();
-
-            switch (input) {
-                case "1" -> {
-                    System.out.println("Grow Gombafonal. Name a target Tekton: ");
-                    String target_id = scanner.nextLine();
-                    GombaFonal ujFonal = tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
-                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
-                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
-                }
-
-                case "2" -> {
-                    if(testing){
-                    double tmp = tekton.getSplitRate();
-                    tekton.setSplitRate(1);
-                    map.addTekton(tekton.split());
-                    tekton.setSplitRate(tmp);
-                    }
-                }
-                case "0" -> {
-                }
-                default -> System.out.println("Invalid Option"); 
-            }
-        }
-
-    }
-
-            
-
-
-    private void selectRovar(Rovar rovar) {
-        System.out.println("___________________________");
-        System.out.println(rovar.getID() + " selected");
-        String input = "";
-
-        while (!input.equals("0")) {
-            System.out.println("\n0) Exit");
-            System.out.println("1) Eat Spora");
-            System.out.println("2) Move Rovar");
-            System.out.println("3) Cut Fonal");
-            System.out.print("Choose option: ");
-
-            input = scanner.nextLine();
-
-            switch (input) {
-                case "1" -> {
-                    if (rovar.getTekton().getSporak().isEmpty()) {
-                        System.out.println("Nincs spora ezen a Tektonon, nem tudsz enni.");
-                    } else {
-                        // A lista első spóráját próbálja megenni
-                        Spora spora = rovar.getTekton().getSporak().peek();
-                        if (rovar.eatSpora(spora)) {
-                            System.out.println("Sikeresen megetted a sporat: " + spora.getClass().getSimpleName());
-                        } else {
-                            System.out.println("Nem sikerult megenni a sporat.");
-                        }
-                    }
-                }
-
-                case "2" -> {
-                    System.out.print("Target Tekton name: ");
-                    String targetTektonName = scanner.nextLine();
-                    Tekton targetTekton = map.getTektonById(targetTektonName);
-
-                    rovar.move(targetTekton);
-
-                }
-
-                case "3" -> {
-                    System.out.print("Target GombaFonal name: ");
-                    String targetFonalName = scanner.nextLine();
-
-                    GombaFonal targetFonal = null;
-                    for (Tekton tekton : map.getTektonok()) { // Use map.getTektonok() to get all Tektons
-                        for (GombaFonal gf : tekton.getFonalak()) {
-                            if (gf.getID().equals(targetFonalName)) {
-                                targetFonal = gf;
-                                break;
-                            }
-                        }
-                        if (targetFonal != null) break; // Exit once the GombaFonal is found
-                    }
-                    /*
-                    // If the GombaFonal is found, remove it
-                    if (targetFonal != null) {
-                        // Clean up the GombaFonal from both Tektons it connects
-                        targetFonal.cut();  // Assumes the clean method disconnects the GombaFonal from the Tektons
-                        System.out.println("Cut Gombafonal: " + targetFonalName);
-                    } else {
-                        System.out.println("No Gombafonal found with the name: " + targetFonalName);
-                    }*/
-                    rovar.cutGombaFonal(targetFonal);
-                }
-
-
-                case "0" -> {
-                }
-                default -> System.out.println("Invalid Option");
-            }
-        }
-    }
-
-    private void selectGombaTest(GombaTest gombaTest) {
-        String input = "";
-
-        while (!input.equals("0")) {
-            System.out.println("\n0) Exit");
-            //System.out.println("1) Grow Fonal (1 spora)");
-            System.out.println("1) Shoot Spora (2 spora)");
-            System.out.println("2) Upgrade GombaTest (4 spora)");
-            System.out.print("Choose option: ");
-
-            input = scanner.nextLine();
-
-            switch (input) {
-                case "1" -> {
-                    System.out.println("Grow Gombafonal. Name a target Tekton: ");
-                    String target_id = scanner.nextLine();
-
-                    Tekton target = map.getTektonById(target_id);
-                    Tekton tekton = gombaTest.getTekton();
-                    GombaFonal ujFonal = tekton.growFonal(target, getCurrentPlayer());
-                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
-                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
-
-                }
-
-                case "2" -> {
-                    System.out.println("Shoot Spora. Name a target Tekton: ");
-                    String target_id = scanner.nextLine();
-
-                    Tekton target = map.getTektonById(target_id);
-
-                    if (target == null) {
-                        System.out.println("Invalid target Tekton ID.");
-                        return;
-                    }
-
-                    gombaTest.shootSpora(target);
-                    target.update();
-                }
-
-
-                case "3" -> {
-                    System.out.println("Upgrade GombaTest");
-                    // upgrade logic
-                    gombaTest.upgradeTest();
-                }
-
-                // upgrade logic
-                case "0" -> {
-                }
-                default -> System.out.println("Invalid Option");
-            }
-        }
-    }
-
-
-    private void populateCollections(){
-        List<GombaFonal> tmpFonalak = new ArrayList<>();
-        List<GombaTest> tmpTestek = new ArrayList<>();
-        List<Rovar> tmpRovarok = new ArrayList<>();
-        List<Entity> tmpEntities = new ArrayList<>();
-
-        for (Player p : players) {
-            if (p instanceof Gombasz gombasz) {
-                for (GombaFonal f : gombasz.getFonalak()) {
-                    tmpFonalak.add(f);
-                }
-                for (GombaTest g : gombasz.getGombak()) {
-                    tmpTestek.add(g);
-                }
-                
-            }
-            if (p instanceof Rovarasz rovarasz) {
-                for (Rovar r : rovarasz.getRovarok()) {
-                    tmpRovarok.add(r);
-                }
-            }
-        }
-
-        tmpEntities.addAll(tmpFonalak);
-        tmpEntities.addAll(tmpTestek);
-        tmpEntities.addAll(tmpRovarok);
-
-        this.gombaFonalak = tmpFonalak;
-        this.gombaTestek = tmpTestek;
-        this.rovarok = tmpRovarok;
-        this.entities = tmpEntities;
-    }
-
-
-    private Player getCurrentPlayer() {
-        return players.get(currentPlayerIndex);
     }
 
     private boolean checkGameEnd() {
+        //TODO. who won?
         boolean gombaszWin = false;
         boolean rovaraszWin = false;
 
@@ -479,6 +184,7 @@ public class Game {
             }
         }
 
+        // TODO. notify game view for game end
         if (roundCounter >= MAX_ROUNDS) {
             System.out.println("Game Over! Maximum rounds (" + MAX_ROUNDS + ") reached.");
             return true;
@@ -488,6 +194,38 @@ public class Game {
     }
 
 
+    /**
+     * Gathers all distinct entities from players and map structures
+     * into the list in Game vlass.
+     * Call after setup and potentially after major state changes if entities are created/destroyed.
+     */
+    private void populateCollections() {
+        gombaTestek.clear();
+        rovarok.clear();
+        gombaFonalak.clear();
+        entities.clear();
+
+        // Maybe add contains to make sure not add entities twice to lists.
+        for (Player p : players) {
+            if (p instanceof Gombasz gombasz) {
+                for (GombaFonal f : gombasz.getFonalak()) {
+                    gombaFonalak.add(f);
+                }
+                for (GombaTest g : gombasz.getGombak()) {
+                    gombaTestek.add(g);
+                }
+            }
+            if (p instanceof Rovarasz rovarasz) {
+                for (Rovar r : rovarasz.getRovarok()) {
+                    rovarok.add(r);
+                }
+            }
+        }
+
+        entities.addAll(gombaFonalak);
+        entities.addAll(gombaTestek);
+        entities.addAll(rovarok);
+    }
 
     private Player findPlayerById(String id) {
         for (Player p : players) {
@@ -515,7 +253,7 @@ public class Game {
                     mode = "gombafonal";
                 } else if (line.toLowerCase().contains("sporak")) {
                     mode = "spora";
-                }else {
+                } else {
                     mode = "";
                 }
                 continue;
@@ -570,5 +308,459 @@ public class Game {
 
         fileScanner.close();
     }
+
+
+    // Player actions
+    // --------------------------------------
+    /**
+     * Example action: Current player's selected Rovar attempts to eat a spora.
+     *
+     * @return true if action was successful, false otherwise.
+     */
+    public boolean playerAction_selectedRovarEatSpora() {
+        if (selectedEntity instanceof Rovar rovar && rovar.getOwner() == getCurrentPlayer()) {
+            Tekton currentTekton = rovar.getTekton();
+            if (currentTekton != null && !currentTekton.getSporak().isEmpty()) {
+                Spora sporaToEat = currentTekton.peekSpora();
+                boolean success = rovar.eatSpora(sporaToEat);
+                if (success) {
+                    // Update player score if Rovarasz
+                    if (rovar.getOwner() instanceof Rovarasz rovaraszOwner) {
+                        // add the eaten spora nutrition to player score
+                        rovaraszOwner.setScore(rovaraszOwner.getScore() + sporaToEat.getNutrition());
+                    }
+                }
+
+                populateCollections();
+                notifyStateChange("ROVAR_ATE_SPORA");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Example action: Moves a Rovar to a target Tekton.
+     *
+     * @param rovar        The Rovar to move.
+     * @param targetTekton The destination Tekton.
+     * @return true if move was successful.
+     */
+    public boolean playerAction_moveRovar(Rovar rovar, Tekton targetTekton) {
+        if (rovar != null && targetTekton != null && rovar.getOwner() == getCurrentPlayer()) {
+            // Rovar.move() should contain all logic for validation (reachability, action points)
+            if (rovar.move(targetTekton)) {
+                selectedTekton = rovar.getTekton();
+                notifyStateChange("ROVAR_MOVED");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean playerAction_cutFonal(Rovar rovar, GombaFonal fonal){
+        if (rovar != null && fonal != null && rovar.getOwner() == getCurrentPlayer()) {
+            // Rovar.move() should contain all logic for validation (reachability, action points)
+            if (rovar.cutGombaFonal(fonal)) {
+                notifyStateChange("ROVAR_CUT");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean playerAction_growFonal(Tekton src, Tekton dst){
+        boolean growable = false;
+
+        if (src.getGombatest() != null && src.getGombatest().getOwner() == getCurrentPlayer()){
+            growable = true;
+        }
+
+        for (int i = 0; i < src.getFonalak().size(); i++) {
+            if (src.getFonalak().get(i).getOwner() == getCurrentPlayer())
+                growable = true;
+        }
+
+        if (growable){
+            src.growFonal(dst, getCurrentPlayer());
+            notifyStateChange("FONAL_GROWNED");
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Action: Selected GombaTest shoots a spora to a target Tekton.
+     *
+     * @param target The target Tekton.
+     * @return True if successful, false otherwise.
+     */
+    public boolean playerAction_shootSpora(Tekton target) {
+        if (selectedEntity instanceof GombaTest currentGombaTest &&
+                currentGombaTest.getOwner() == getCurrentPlayer() &&
+                target != null) {
+
+            int targetOldSporaCount = target.getSporak().size();
+            if (currentGombaTest.shootSpora(target)) {
+                notifyStateChange("SPORA_SHOT");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Example action: Current player's selected GombaTest attempts to upgrade.
+     * @return true if successful.
+     */
+    public boolean playerAction_selectedGombaTestUpgrade() {
+        if (selectedEntity instanceof GombaTest gombaTest && gombaTest.getOwner() == getCurrentPlayer()) {
+            // GombaTest.upgradeTest() handles spora consumption and level change.
+
+            // TODO. upgrade logic
+            gombaTest.upgradeTest();
+            notifyStateChange("GOMBATEST_UPGRADED");
+            return true;
+        }
+        return false;
+    }
+
+
+    // --- Getters for View ---
+    // --------------------------------------------
+    public int getRoundCounter() { return roundCounter; }
+    public Player getCurrentPlayer() {return players.get(currentPlayerIndex);}
+    public List<Player> getPlayers() { return Collections.unmodifiableList(players); }
+    public Map getGameMap() { return map; } // Renamed for clarity from just 'map'
+    public List<Tekton> getAllTektons() { return map != null ? Collections.unmodifiableList(map.getTektonok()) : Collections.emptyList(); }
+
+    public List<GombaTest> getAllGombaTestek() { return Collections.unmodifiableList(gombaTestek); }
+    public List<Rovar> getAllRovarok() { return Collections.unmodifiableList(rovarok); }
+    public List<GombaFonal> getAllGombaFonalak() { return Collections.unmodifiableList(gombaFonalak); }
+
+
+    public Tekton getSelectedTekton() { return selectedTekton; }
+    public Entity getSelectedEntity() { return selectedEntity; }
+
+    // --- Setters for UI interaction (Controller calls these) ---
+    public void setSelectedTekton(Tekton tekton) {
+        this.selectedTekton = tekton;
+        this.selectedEntity = null; // Clear entity selection if tekton is selected, or handle as needed
+        System.out.println("DEBUG: Tekton selected: " + (tekton != null ? tekton.getID() : "None"));
+        notifyStateChange("TEKTON_CHANGED");
+    }
+
+    public void setSelectedEntity(Entity entity) {
+        this.selectedEntity = entity;
+        if (entity instanceof Rovar) {
+            this.selectedTekton = ((Rovar) entity).getTekton();
+        } else if (entity instanceof GombaTest) {
+            this.selectedTekton = ((GombaTest) entity).getTekton();
+        } else {
+            this.selectedTekton = null; // Or keep current tekton selection?
+        }
+        System.out.println("DEBUG: Entity selected: " + (entity != null ? entity.getID() : "None"));
+    }
+
+
+    // Observer related stuffs
+    // -----------------------------------------------
+    /**
+     * Sets the changed flag and notifies all observers.
+     * Can pass an argument describing the event.
+     * @param arg Optional argument describing the event.
+     */
+    public void notifyStateChange(Object arg) {
+        setChanged();
+        notifyObservers(arg);
+    }
+    public void notifyStateChange() { // Overload for no specific arg
+        setChanged();
+        notifyObservers();
+    }
+
 }
 
+
+
+
+
+
+//    void fastForwardRounds(){
+//        System.out.print("How many rounds do you want to skip:");
+//        int time = Integer.parseInt(scanner.nextLine());
+//        for(int i = 0; i < time * 4; i++) nextPlayerTurn();
+//        for (int i = 0; i < time; i++) {
+//            endRound();
+//        }
+//    }
+//
+//    void setTestingMode(){
+//        testingMode = !testingMode;
+//    }
+//
+//    private void listAllEntities() {
+//
+//        populateCollections();
+//
+//        System.out.println("\n");
+//        List<Tekton> tmp_tektonok = map.getTektonok();
+//        String tektonIds = tmp_tektonok.stream()
+//                           .map(Tekton::getID)
+//                           .reduce((id1, id2) -> id1 + " " + id2)
+//                           .orElse("");
+//        System.out.println("Tekton IDs: " + tektonIds);
+//
+//        java.util.Map<String, List<Entity>> groupedEntities = new HashMap<>();
+//        for (Entity e : entities) {
+//            groupedEntities.computeIfAbsent(e.getClass().getSimpleName(), k -> new ArrayList<>()).add(e);
+//        }
+//        groupedEntities.forEach((type, entityList) -> {
+//            String entityIds = entityList.stream()
+//                         .map(Entity::getID)
+//                         .reduce((id1, id2) -> id1 + " " + id2)
+//                         .orElse("");
+//            System.out.println(type + " IDs: " + entityIds);
+//        });
+//
+//    }
+//
+//    private void showMainMenu() {
+//        System.out.println("-----------------");
+//        System.out.println("0) Exit");
+//        System.out.println("1) Inspect Entity");
+//        System.out.println("2) Select Entity");
+//        System.out.println("3) Next Player");
+//        System.out.println("4) List all Entities");
+//        System.out.println("5) Select tekton");
+//        System.out.println("6) Toggle testing mode (currently: " + testingMode + ")");
+//        if(testingMode) {
+//            System.out.println("7) Skip Rounds");
+//
+//        }
+//        System.out.print("Choose option: ");
+//    }
+//
+//
+//    private void inspectEntity() {
+//        System.out.print("Name an entity ID to inspect: ");
+//        String id = scanner.nextLine();
+//
+//        // 1. Search ID in tektonok
+//        for (Tekton t : map.getTektonok()) {
+//            if (t.getID().equals(id)) {
+//                System.out.println(t);
+//                return;  // return if ID found in tektonok
+//            }
+//        }
+//
+//        // 2. Search ID in entities
+//        for (Entity e : entities) {
+//            if (e.getID().equals(id)) {
+//                System.out.println(e);
+//                return;
+//            }
+//        }
+//
+//        // 3. ID not found
+//        System.out.println("Entity with this ID ("+ id + ") could not be found");
+//    }
+//
+//    private void selectEntity() {
+//        System.out.print("Name an entity to select: ");
+//        String name = scanner.nextLine();
+//
+//        // Rovar kiválasztása
+//        for (Rovar r : rovarok) {
+//            if (r.getID().equals(name) && r.getOwner() == players.get(currentPlayerIndex)) {
+//                selectRovar(r);
+//                return;
+//            }
+//        }
+//
+//        // GombaTest kiválasztása
+//        for (GombaTest g : gombaTestek) {
+//            if (g.getID().equals(name) && g.getOwner() == players.get(currentPlayerIndex)) {
+//                selectGombaTest(g);
+//                return;
+//            }
+//        }
+//
+//        System.out.println("Entity with this ID ("+ name + ") could not be found for this player");
+//    }
+//
+//    private void selectTekton() {
+//
+//
+//
+//        System.out.print("Name a tekton to select: ");
+//        String name = scanner.nextLine();
+//
+//        Tekton tekton = map.getTektonById(name);
+//
+//        String input = " ";
+//
+//        while (!input.equals("0")) {
+//            System.out.println("\n0) Exit");
+//            System.out.println("1) Grow Fonal");
+//            if(testingMode)System.out.println("2) Split");
+//            System.out.print("Choose option: ");
+//
+//            input = scanner.nextLine();
+//
+//            switch (input) {
+//                case "1" -> {
+//                    System.out.println("Grow Gombafonal. Name a target Tekton: ");
+//                    String target_id = scanner.nextLine();
+//                    GombaFonal ujFonal = tekton.growFonal(map.getTektonById(target_id), getCurrentPlayer());
+//                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
+//                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
+//                }
+//
+//                case "2" -> {
+//                    if(testingMode){
+//                    double tmp = tekton.getSplitRate();
+//                    tekton.setSplitRate(1);
+//                    map.addTekton(tekton.split());
+//                    tekton.setSplitRate(tmp);
+//                    }
+//                }
+//                case "0" -> {
+//                }
+//                default -> System.out.println("Invalid Option");
+//            }
+//        }
+//
+//    }
+//
+//
+//
+//
+//    private void selectRovar(Rovar rovar) {
+//        System.out.println("___________________________");
+//        System.out.println(rovar.getID() + " selected");
+//        String input = "";
+//
+//        while (!input.equals("0")) {
+//            System.out.println("\n0) Exit");
+//            System.out.println("1) Eat Spora");
+//            System.out.println("2) Move Rovar");
+//            System.out.println("3) Cut Fonal");
+//            System.out.print("Choose option: ");
+//
+//            input = scanner.nextLine();
+//
+//            switch (input) {
+//                case "1" -> {
+//                    if (rovar.getTekton().getSporak().isEmpty()) {
+//                        System.out.println("Nincs spora ezen a Tektonon, nem tudsz enni.");
+//                    } else {
+//                        // A lista első spóráját próbálja megenni
+//                        Spora spora = rovar.getTekton().getSporak().peek();
+//                        if (rovar.eatSpora(spora)) {
+//                            System.out.println("Sikeresen megetted a sporat: " + spora.getClass().getSimpleName());
+//                        } else {
+//                            System.out.println("Nem sikerult megenni a sporat.");
+//                        }
+//                    }
+//                }
+//
+//                case "2" -> {
+//                    System.out.print("Target Tekton name: ");
+//                    String targetTektonName = scanner.nextLine();
+//                    Tekton targetTekton = map.getTektonById(targetTektonName);
+//
+//                    rovar.move(targetTekton);
+//
+//                }
+//
+//                case "3" -> {
+//                    System.out.print("Target GombaFonal name: ");
+//                    String targetFonalName = scanner.nextLine();
+//
+//                    GombaFonal targetFonal = null;
+//                    for (Tekton tekton : map.getTektonok()) { // Use map.getTektonok() to get all Tektons
+//                        for (GombaFonal gf : tekton.getFonalak()) {
+//                            if (gf.getID().equals(targetFonalName)) {
+//                                targetFonal = gf;
+//                                break;
+//                            }
+//                        }
+//                        if (targetFonal != null) break; // Exit once the GombaFonal is found
+//                    }
+//                    /*
+//                    // If the GombaFonal is found, remove it
+//                    if (targetFonal != null) {
+//                        // Clean up the GombaFonal from both Tektons it connects
+//                        targetFonal.cut();  // Assumes the clean method disconnects the GombaFonal from the Tektons
+//                        System.out.println("Cut Gombafonal: " + targetFonalName);
+//                    } else {
+//                        System.out.println("No Gombafonal found with the name: " + targetFonalName);
+//                    }*/
+//                    rovar.cutGombaFonal(targetFonal);
+//                }
+//
+//
+//                case "0" -> {
+//                }
+//                default -> System.out.println("Invalid Option");
+//            }
+//        }
+//    }
+//
+//    private void selectGombaTest(GombaTest gombaTest) {
+//        String input = "";
+//
+//        while (!input.equals("0")) {
+//            System.out.println("\n0) Exit");
+//            //System.out.println("1) Grow Fonal (1 spora)");
+//            System.out.println("1) Shoot Spora (2 spora)");
+//            System.out.println("2) Upgrade GombaTest (4 spora)");
+//            System.out.print("Choose option: ");
+//
+//            input = scanner.nextLine();
+//
+//            switch (input) {
+//                case "1" -> {
+//                    System.out.println("Grow Gombafonal. Name a target Tekton: ");
+//                    String target_id = scanner.nextLine();
+//
+//                    Tekton target = map.getTektonById(target_id);
+//                    Tekton tekton = gombaTest.getTekton();
+//                    GombaFonal ujFonal = tekton.growFonal(target, getCurrentPlayer());
+//                    if(ujFonal != null) ((Gombasz) players.get(currentPlayerIndex)).getFonalak().add(ujFonal);
+//                    System.out.println("Grow new fonal successful, new Fonal ID: " + ujFonal.getID());
+//
+//                }
+//
+//                case "2" -> {
+//                    System.out.println("Shoot Spora. Name a target Tekton: ");
+//                    String target_id = scanner.nextLine();
+//
+//                    Tekton target = map.getTektonById(target_id);
+//
+//                    if (target == null) {
+//                        System.out.println("Invalid target Tekton ID.");
+//                        return;
+//                    }
+//
+//                    gombaTest.shootSpora(target);
+//                }
+//
+//
+//                case "3" -> {
+//                    System.out.println("Upgrade GombaTest");
+//                    // upgrade logic
+//                    gombaTest.upgradeTest();
+//                }
+//
+//                // upgrade logic
+//                case "0" -> {
+//                }
+//                default -> System.out.println("Invalid Option");
+//            }
+//        }
+//    }

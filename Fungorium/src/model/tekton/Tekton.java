@@ -138,6 +138,7 @@ public class Tekton implements Observable {
 
 			fonalak.add(ujFonal);
 			dst.addGombaFonal(ujFonal);
+			((Gombasz) owner).addFonal(ujFonal);
 
 			notifyObservers();
 			return ujFonal;
@@ -352,11 +353,13 @@ public class Tekton implements Observable {
 				Tekton current = queue.poll();
 
 				for (GombaFonal gf : current.getFonalak()){
-					Tekton connectedTekton = gf.getOtherEnd(current);
-					if(!visited.contains(connectedTekton)){
-						reachable.add(connectedTekton);
-						queue.add(connectedTekton);
-						visited.add(connectedTekton);
+					if (gf.getState() == GombaFonal.State.ACTIVE){
+						Tekton connectedTekton = gf.getOtherEnd(current);
+						if(!visited.contains(connectedTekton)){
+							reachable.add(connectedTekton);
+							queue.add(connectedTekton);
+							visited.add(connectedTekton);
+						}
 					}
 				}
 			}
@@ -439,6 +442,16 @@ public class Tekton implements Observable {
 
 		sb.append(" }");
 		return sb.toString();
+	}
+
+	public GombaFonal findFonalBetween(Tekton t){
+		for (int i = 0; i < fonalak.size(); i++) {
+			GombaFonal fonal = fonalak.get(i);
+			if (fonal.getOtherEnd(this).equals(t));
+			return fonal;
+		}
+
+		return null;
 	}
 
 	public List<Tekton> getNeighbours() {

@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Minden gombafonal rendelkezik egy tulajdonossal (owner), amely az adott játékoshoz vagy irányítóhoz kapcsolható.
  */
 public class GombaFonal extends Entity{
+
 	public enum State { GROWING, ACTIVE, CUT}
 	public static final int GROW_TIME = 1;
 
@@ -38,6 +39,8 @@ public class GombaFonal extends Entity{
 		this.eatParalyzedRovarRate = 0.5;
 		this.growthTimer = GROW_TIME;
 		this.state = State.GROWING;
+		System.out.println(ID + " Gombafonal created ======================");
+
 	}
 
 	public GombaFonal(String id, Tekton s, Tekton d, Player o){
@@ -72,6 +75,7 @@ public class GombaFonal extends Entity{
 		if(dst != null) dst.removeGombaFonal(this);
 		Gombasz g = (Gombasz)owner;
 		System.out.println(g.getName() + "--------------------hey I am deleted!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 		g.getFonalak().remove(this);
 		notifyObservers();
 	}
@@ -181,9 +185,13 @@ public class GombaFonal extends Entity{
 	@Override
 	public void update(){
 		eatParalyzedRovar();
-
+		if (ID.equals("F7")){
+			System.out.println("===============Grow timer:" + growthTimer);
+			System.out.println("===============State:" + state);
+		}
 		switch (state) {
 			case GROWING:
+				System.out.println("Growing Timer===================================================================" + growthTimer);
 				if (--growthTimer <= 0) {
 					state = State.ACTIVE;
 				}
@@ -218,5 +226,13 @@ public class GombaFonal extends Entity{
 				", SrcTekton=" + (src != null ? src.getID() : "None") +
 				", DstTekton=" + (dst != null ? dst.getID() : "None") +
 				'}';
+	}
+
+	public Tekton getDst() {
+		return dst;
+	}
+
+	public Tekton getSrc() {
+		return src;
 	}
 }

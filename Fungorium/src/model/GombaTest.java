@@ -129,23 +129,25 @@ public class GombaTest extends Entity{
 
     /**
      * Eltavolit egy sporat a jelenlegi tektonrol es athelyezi a celtektonra
+     *
+     * @return
      */
-    public void shootSpora(Tekton dst) {
+    public boolean shootSpora(Tekton dst) {
         if (tekton == null || dst == null) {
             System.out.println("Invalid source or target Tekton.");
-            return;
+            return false;
         }
 
         if (tekton.getSporak().size() < SHOOTSPORA_COST) {
             System.out.println("Not enough spora to shoot! (Need at least 2 sporak)");
-            return;
+            return false;
         }
 
         if (level < 2) {
 
             if(!tekton.getNeighbours().contains(dst)) {
                 System.out.println("Target Tekton is unreachable.");
-                return;
+                return false;
             }
         }else{
             List<Tekton> szomszedok = tekton.getNeighbours();
@@ -161,7 +163,7 @@ public class GombaTest extends Entity{
             }
             if(!elerheto.contains(dst)) {
                 System.out.println("Target Tekton is unreachable.");
-                return;
+                return false;
             }
         }
 
@@ -170,6 +172,7 @@ public class GombaTest extends Entity{
         shotCounter--;
         tekton.removeSpora(); // A második spóra is eltávolítva
         System.out.println("Successfully shot spora to Tekton: " + dst.getID());
+        return true;
     }
 
     @Override
