@@ -196,6 +196,21 @@ public class GameView extends JFrame implements Observer {
                     // or if you want it here too, ensure selectedTektonByModel is the intended source.
                 }
 
+                if (keyCode == KeyEvent.VK_R) {
+                    if (currentPlayer != null) {
+                        gameModel.selectNextControllableEntityForCurrentPlayer();
+                        // The model's setSelectedEntity will notify, triggering updateView
+                        // which will refresh EntityPanel and MapView highlight.
+                        // No specific instruction needed unless cycling fails.
+                        if (gameModel.getSelectedEntity() != null) {
+                            updateActionPanelInstruction("Selected: " + gameModel.getSelectedEntity().getID());
+                        } else {
+                            updateActionPanelInstruction("No controllable entity to select for " + currentPlayer.getName());
+                        }
+                    }
+                    break; // Consume the 'R' key press
+                }
+
                 if (keyCode == KeyEvent.VK_N) { // Next Player
                     resetInteractionModeAndNotify("");
                     gameModel.nextPlayerTurn();

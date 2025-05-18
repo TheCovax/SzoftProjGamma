@@ -74,8 +74,8 @@ public class Game extends Observable {
 
         initPlayers(); // Initialize players
         // Load Game map from file
-        map.loadMap("mapsave.txt");
-        loadEntitiesFromFile("mapsave.txt");
+        map.loadMap("./SzoftProjGamma/mapsave.txt");
+        loadEntitiesFromFile("./SzoftProjGamma/mapsave.txt");
 
         // Synchronize entities from Player class
         populateCollections();
@@ -140,6 +140,58 @@ public class Game extends Observable {
 
         notifyStateChange("ROUND_ENDED");
         checkGameEnd();
+    }
+
+    /**
+     * Selects the next controllable entity for the current player.
+     * If a Rovar is selected, it cycles through the current player's Rovars.
+     * If a GombaTest is selected, it cycles through the current player's GombaTests.
+     * If no entity or a different type of entity is selected, it selects the first
+     * controllable entity of the current player's type.
+     */
+    public void selectNextControllableEntityForCurrentPlayer() {
+
+        Player currentPlayer = getCurrentPlayer();
+        Entity currentSelected = getSelectedEntity(); // Get what's currently selected in the model
+        Entity nextEntityToSelect = null;
+
+        if (currentPlayer instanceof Rovarasz rovarasz) {
+            List<Rovar> playerRovars = rovarasz.getRovarok(); // Assumes Rovarasz has getRovarok()
+            if (playerRovars == null || playerRovars.isEmpty()) {
+                setSelectedEntity(null); // No rovars to select
+                return;
+            }
+
+            int currentIndex = -1;
+            if (currentSelected instanceof Rovar && currentSelected.getOwner() == currentPlayer) {
+                currentIndex = playerRovars.indexOf(currentSelected);
+            }
+
+            int nextIndex = (currentIndex + 1) % playerRovars.size();
+            nextEntityToSelect = playerRovars.get(nextIndex);
+
+        } else if (currentPlayer instanceof Gombasz gombasz) {
+            List<GombaTest> playerGombaTests = gombasz.getGombak(); // Assumes Gombasz has getGombak()
+            if (playerGombaTests == null || playerGombaTests.isEmpty()) {
+                setSelectedEntity(null); // No gombatests to select
+                return;
+            }
+
+            int currentIndex = -1;
+            if (currentSelected instanceof GombaTest && currentSelected.getOwner() == currentPlayer) {
+                currentIndex = playerGombaTests.indexOf(currentSelected);
+            }
+
+            int nextIndex = (currentIndex + 1) % playerGombaTests.size();
+            nextEntityToSelect = playerGombaTests.get(nextIndex);
+        }
+
+        setSelectedEntity(nextEntityToSelect); // This method updates selectedTekton and notifies observers
+        if (nextEntityToSelect != null) {
+            System.out.println("DEBUG: Game: Cycled to entity: " + nextEntityToSelect.getID());
+        } else {
+            System.out.println("DEBUG: Game: No entity to cycle to for player " + currentPlayer.getName());
+        }
     }
 
     // NEW: Helper to auto-select the first entity for the current player
@@ -462,6 +514,7 @@ public class Game extends Observable {
         } else {
             this.selectedTekton = null; // Or keep current tekton selection?
         }
+        notifyStateChange();
         System.out.println("DEBUG: Entity selected: " + (entity != null ? entity.getID() : "None"));
     }
 
