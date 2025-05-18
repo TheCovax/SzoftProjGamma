@@ -6,17 +6,14 @@ import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.player.Rovarasz;
 import Fungorium.src.model.tekton.Tekton;
-
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List; // Ensure this is imported if Tekton.getNeighbours() returns List
 import java.util.Observable;
-import java.util.Observer;
+import java.util.Observer; // Ensure this is imported if Tekton.getNeighbours() returns List
+import javax.swing.*;
 
 public class GameView extends JFrame implements Observer {
     private Game gameModel;
@@ -55,12 +52,12 @@ public class GameView extends JFrame implements Observer {
     static {
         // Your mapping: P=5 (UL), O=4 (L), K=3 (LL), ,=2 (LR), .=1 (RR), ;=0 (R)
         // This implies a visual layout of neighbors for the keys.
-        neighborKeyToIndexMap.put(KeyEvent.VK_P, 5);         // Top-Left (index 5)
-        neighborKeyToIndexMap.put(KeyEvent.VK_O, 4);         // Left (index 4)
-        neighborKeyToIndexMap.put(KeyEvent.VK_K, 3);         // Bottom-Left (index 3)
-        neighborKeyToIndexMap.put(KeyEvent.VK_COMMA, 2);     // Bottom-Right (index 2)
-        neighborKeyToIndexMap.put(KeyEvent.VK_PERIOD, 1);    // Right (index 1)
-        neighborKeyToIndexMap.put(KeyEvent.VK_SEMICOLON, 0); // Top-Right (index 0)
+        neighborKeyToIndexMap.put(KeyEvent.VK_1, 4);         // Top-Left (index 5)
+        neighborKeyToIndexMap.put(KeyEvent.VK_2, 5);         // Top-Right 
+        neighborKeyToIndexMap.put(KeyEvent.VK_3, 0);         // Right 
+        neighborKeyToIndexMap.put(KeyEvent.VK_4, 1);         // Bottom-Right 
+        neighborKeyToIndexMap.put(KeyEvent.VK_5, 2);         // Bottom-Left 
+        neighborKeyToIndexMap.put(KeyEvent.VK_6, 3);         // Left 
         // Adjust indices if your Tekton.getNeighbours() has a different fixed directional order.
     }
 
