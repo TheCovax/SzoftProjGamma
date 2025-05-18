@@ -6,11 +6,12 @@ import Fungorium.src.model.Rovar;
 import Fungorium.src.model.player.Gombasz;
 import Fungorium.src.model.player.Player;
 import Fungorium.src.model.spora.Spora;
+import Fungorium.src.model.observer.Observable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Tekton {
+public class Tekton implements Observable {
 	private static final AtomicInteger idCounter = new AtomicInteger(0);
 	private static final Set<String> usedIds = new HashSet<>();
 	private final String id;
@@ -19,10 +20,30 @@ public class Tekton {
 	List<GombaFonal> fonalak;
 
 	List<Tekton> neighbours;
-	private GombaTest gombatest;
+	protected GombaTest gombatest;
 	List<Rovar> rovarok;
 	double splitRate;
 	boolean isConnected;
+
+	protected List<Observer> observers = new ArrayList();
+
+    @Override
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers(){
+        for (Observer o : observers) {
+            //o.update();
+			//Még nincs observer osztályunk
+        }
+    }
 
 	/**
 	 * Parameter nelkuli konstruktor
@@ -119,6 +140,7 @@ public class Tekton {
 			dst.addGombaFonal(ujFonal);
 			((Gombasz) owner).addFonal(ujFonal);
 
+			notifyObservers();
 			return ujFonal;
 		}
 		else{
@@ -129,7 +151,8 @@ public class Tekton {
 	}
 
 	public void addGombaTest(GombaTest gt) {
-		this.gombatest = gt;
+		gombatest = gt;
+		notifyObservers();
 	}
 
 
@@ -144,10 +167,13 @@ public class Tekton {
 	public void addSpora(Spora s, Player p){
 		sporak.add(s);
 		checkForGombatest(p);
+		notifyObservers();
 	}
 
 	public Spora removeSpora(){
-		return sporak.poll();
+		Spora s = sporak.poll();
+		notifyObservers();
+		return s;
 	}
 
 	public Spora peekSpora(){return sporak.peek();}
@@ -155,9 +181,11 @@ public class Tekton {
 	public void addGombaFonal(GombaFonal f){
 		fonalak.add(f);
 		checkForGombatest(f.getOwner());
+		notifyObservers();
 	}
 
-	void checkForGombatest(Player p){
+	public void checkForGombatest(Player p){
+
 		if(!(this instanceof KoparTekton)){
 			for (GombaFonal f : fonalak) {
 				if(this.gombatest == null){
@@ -221,6 +249,7 @@ public class Tekton {
 		//Hozzaadja a jelenlegi tekton szomszedjaihoz az ujjjonnan letrehozottat
 		neighbours.add(newTekton);
 		
+		notifyObservers();
 
 		return newTekton;
 	}
@@ -244,6 +273,7 @@ public class Tekton {
 	 */
 	public void removeGombaFonal(GombaFonal f){
 		fonalak.remove(f);
+		notifyObservers();
 	}
 
 	/**
@@ -253,18 +283,22 @@ public class Tekton {
 
 	public void addNeighbour(Tekton t){
 		neighbours.add(t);
+		notifyObservers();
 	}
 
 	public void removeNeighbour(Tekton t){
 		neighbours.remove(t);
+		notifyObservers();
 	}
 
 	public void addRovar(Rovar r){
 		rovarok.add(r);
+		notifyObservers();
 	}
 
 	public void removeRovar(Rovar r) {
 		rovarok.remove(r);
+		notifyObservers();
 	}
 
 	public List<Tekton> checkConnectivity(Player owner) {

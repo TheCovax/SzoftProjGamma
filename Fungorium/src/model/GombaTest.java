@@ -78,6 +78,7 @@ public class GombaTest extends Entity{
         if (tekton != null) {
             tekton.addSpora(spora, owner);
         } 
+        notifyObservers();
     }
 
     /**
@@ -106,6 +107,7 @@ public class GombaTest extends Entity{
         tekton.removeSpora();
 
         System.out.println("Successfully upgraded GombaTest to level " + level + "!");
+        notifyObservers();
     }
 
     //beallitja az elerheto tektonok isConnected valtozojat igazra
@@ -235,6 +237,7 @@ public class GombaTest extends Entity{
      */
     public void setLevel(int level) {
         this.level = level;
+        notifyObservers();
     }
 
     public int getShotCounter() {
